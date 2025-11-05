@@ -318,34 +318,80 @@ agent = create_agent(
 
 ### Tool call limit
 
-Limit the number of tool calls to specific tools or all tools.
+Control agent execution by limiting the number of tool calls, either globally across all tools or for specific tools.
 
 <Tip>
 **Perfect for:**
 - Preventing excessive calls to expensive external APIs
 - Limiting web searches or database queries
 - Enforcing rate limits on specific tool usage
+- Protecting against runaway agent loops
 </Tip>
+
+To limit tool calls globally across all tools or for specific tools, set `tool_name`. For each limit, specify one or both of:
+
+- **Thread limit** (`thread_limit`) - Max calls across all runs in a conversation. Persists across invocations. Requires a checkpointer.
+- **Run limit** (`run_limit`) - Max calls per single invocation. Resets each turn.
+
+
+
+
+
+**Exit behaviors:**
+
+| Behavior | Effect | Best For |
+|----------|--------|----------|
+| **`"continue"`** (default) | Blocks exceeded calls with error messages, agent continues | Most use cases - agent handles limits gracefully |
+| **`"error"`** | Raises exception immediately | Complex workflows where you want to handle the limit error manually |
+| **`"end"`** | Stops with ToolMessage + AI message | Single-tool scenarios (errors if other tools pending) |
 
 ```python
 from langchain.agents import create_agent
 from langchain.agents.middleware import ToolCallLimitMiddleware
 
+# Global limit: max 20 calls per thread, 10 per run
+global_limiter = ToolCallLimitMiddleware(
+    thread_limit=20,
+    run_limit=10,
+)
 
-# Limit all tool calls
-global_limiter = ToolCallLimitMiddleware(thread_limit=20, run_limit=10)
-
-# Limit specific tool
+# Tool-specific limit with default "continue" behavior
 search_limiter = ToolCallLimitMiddleware(
     tool_name="search",
     thread_limit=5,
     run_limit=3,
 )
 
+# Thread limit only (no per-run limit)
+database_limiter = ToolCallLimitMiddleware(
+    tool_name="query_database",
+    thread_limit=10,
+)
+
+# Strict enforcement with "error" behavior
+web_scraper_limiter = ToolCallLimitMiddleware(
+    tool_name="scrape_webpage",
+    run_limit=2,
+    exit_behavior="error",
+)
+
+# Immediate termination with "end" behavior
+critical_tool_limiter = ToolCallLimitMiddleware(
+    tool_name="delete_records",
+    run_limit=1,
+    exit_behavior="end",
+)
+
+# Use multiple limiters together
 agent = create_agent(
     model="gpt-4o",
-    tools=[...],
-    middleware=[global_limiter, search_limiter],
+    tools=[search_tool, database_tool, scraper_tool],
+    middleware=[
+        global_limiter,
+        search_limiter,
+        database_limiter,
+        web_scraper_limiter
+    ],
 )
 ```
 
@@ -355,19 +401,24 @@ agent = create_agent(
 <Accordion title="Configuration options">
 
 <ParamField body="tool_name" type="string">
-  Specific tool to limit. If not provided, limits apply to all tools.
+  Name of specific tool to limit. If not provided, limits apply to **all tools globally**.
 </ParamField>
 
 <ParamField body="thread_limit" type="number">
-  Maximum tool calls across all runs in a thread. Defaults to no limit.
+  Maximum tool calls across all runs in a thread (conversation). Persists across multiple invocations with the same thread ID. Requires a checkpointer to maintain state. `None` means no thread limit.
 </ParamField>
 
 <ParamField body="run_limit" type="number">
-  Maximum tool calls per single invocation. Defaults to no limit.
+  Maximum tool calls per single invocation (one user message → response cycle). Resets with each new user message. `None` means no run limit.
+
+  **Note:** At least one of `thread_limit` or `run_limit` must be specified.
 </ParamField>
 
-<ParamField body="exit_behavior" type="string" default="end">
-  Behavior when limit is reached. Options: `"end"` (graceful termination) or `"error"` (raise exception)
+<ParamField body="exit_behavior" type="string" default="continue">
+  Behavior when limit is reached:
+  - `"continue"` (default) - Block exceeded tool calls with error messages, let other tools and the model continue. The model decides when to end based on the error messages.
+  - `"error"` - Raise a `ToolCallLimitExceededError` exception, stopping execution immediately
+  - `"end"` - Stop execution immediately with a ToolMessage and AI message for the exceeded tool call. Only works when limiting a single tool; raises `NotImplementedError` if other tools have pending calls.
 </ParamField>
 
 
