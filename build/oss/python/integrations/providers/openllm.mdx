@@ -1,0 +1,74 @@
+---
+title: OpenLLM
+---
+
+OpenLLM lets developers run any **open-source LLMs** as **OpenAI-compatible API** endpoints with **a single command**.
+
+- 🔬 Build for fast and production usages
+- 🚂 Support llama3, qwen2, gemma, etc, and many **quantized** versions [full list](https://github.com/bentoml/openllm-models)
+- ⛓️ OpenAI-compatible API
+- 💬 Built-in ChatGPT like UI
+- 🔥 Accelerated LLM decoding with state-of-the-art inference backends
+- 🌥️ Ready for enterprise-grade cloud deployment (Kubernetes, Docker and BentoCloud)
+
+## Installation and Setup
+
+Install the OpenLLM package via PyPI:
+
+<CodeGroup>
+```bash pip
+pip install openllm
+```
+
+```bash uv
+uv add openllm
+```
+</CodeGroup>
+
+## LLM
+
+OpenLLM supports a wide range of open-source LLMs as well as serving users' own
+fine-tuned LLMs. Use `openllm model` command to see all available models that
+are pre-optimized for OpenLLM.
+
+## Wrappers
+
+There is a OpenLLM Wrapper which supports interacting with running server with OpenLLM:
+
+```python
+from langchain_community.llms import OpenLLM
+```
+
+### Wrapper for OpenLLM server
+
+This wrapper supports interacting with OpenLLM's OpenAI-compatible endpoint.
+
+To run a model, do:
+
+```bash
+openllm hello
+```
+
+Wrapper usage:
+
+```python
+from langchain_community.llms import OpenLLM
+
+llm = OpenLLM(base_url="http://localhost:3000/v1", api_key="na")
+
+llm("What is the difference between a duck and a goose? And why there are so many Goose in Canada?")
+```
+
+### Usage
+
+For a more detailed walkthrough of the OpenLLM Wrapper, see the
+[example notebook](/oss/python/integrations/llms/openllm)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/openllm.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

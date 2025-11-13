@@ -1,0 +1,39 @@
+---
+title: Docugami
+---
+
+>[Docugami](https://docugami.com) converts business documents into a Document XML Knowledge Graph, generating forests
+> of XML semantic trees representing entire documents. This is a rich representation that includes the semantic and
+> structural characteristics of various chunks in the document as an XML tree.
+
+## Installation and Setup
+
+
+<CodeGroup>
+```bash pip
+pip install dgml-utils
+pip install docugami-langchain
+```
+
+```bash uv
+uv add dgml-utils
+uv add docugami-langchain
+```
+</CodeGroup>
+
+## Document Loader
+
+See a [usage example](/oss/python/integrations/document_loaders/docugami).
+
+```python
+from docugami_langchain.document_loaders import DocugamiLoader
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/docugami.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

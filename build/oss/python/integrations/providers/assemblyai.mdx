@@ -1,0 +1,59 @@
+---
+title: AssemblyAI
+---
+
+>[AssemblyAI](https://www.assemblyai.com/) builds `Speech AI` models for tasks like
+speech-to-text, speaker diarization, speech summarization, and more.
+> `AssemblyAI’s` Speech AI models include accurate speech-to-text for voice data
+> (such as calls, virtual meetings, and podcasts), speaker detection, sentiment analysis,
+> chapter detection, PII redaction.
+
+
+
+## Installation and Setup
+
+Get your [API key](https://www.assemblyai.com/dashboard/signup).
+
+Install the `assemblyai` package.
+
+<CodeGroup>
+```bash pip
+pip install -U assemblyai
+```
+
+```bash uv
+uv add assemblyai
+```
+</CodeGroup>
+
+## Document Loader
+
+###  AssemblyAI Audio Transcript
+
+The `AssemblyAIAudioTranscriptLoader` transcribes audio files with the `AssemblyAI API`
+and loads the transcribed text into documents.
+
+See a [usage example](/oss/python/integrations/document_loaders/assemblyai).
+
+```python
+from langchain_community.document_loaders import AssemblyAIAudioTranscriptLoader
+```
+
+###  AssemblyAI Audio Loader By Id
+
+The `AssemblyAIAudioLoaderById` uses the AssemblyAI API to get an existing
+transcription and loads the transcribed text into one or more Documents,
+depending on the specified format.
+
+```python
+from langchain_community.document_loaders import AssemblyAIAudioLoaderById
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/assemblyai.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

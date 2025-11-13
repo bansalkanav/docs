@@ -1,0 +1,43 @@
+---
+title: spaCy
+---
+
+>[spaCy](https://spacy.io/) is an open-source software library for advanced natural language processing, written in the programming languages Python and Cython.
+
+## Installation and Setup
+
+
+<CodeGroup>
+```bash pip
+pip install spacy
+```
+
+```bash uv
+uv add spacy
+```
+</CodeGroup>
+
+
+
+## Text Splitter
+
+```python
+from langchain_text_splitters import SpacyTextSplitter
+```
+
+## Text Embedding Models
+
+See a [usage example](/oss/python/integrations/text_embedding/spacy_embedding)
+
+```python
+from langchain_community.embeddings.spacy_embeddings import SpacyEmbeddings
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/spacy.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

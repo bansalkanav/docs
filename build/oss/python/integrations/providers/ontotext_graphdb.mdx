@@ -1,0 +1,39 @@
+---
+title: Ontotext GraphDB
+---
+
+>[Ontotext GraphDB](https://graphdb.ontotext.com/) is a graph database and knowledge discovery tool compliant with RDF and SPARQL.
+
+## Dependencies
+
+Install the [rdflib](https://github.com/RDFLib/rdflib) package with
+
+<CodeGroup>
+```bash pip
+pip install rdflib==7.0.0
+```
+
+```bash uv
+uv add "rdflib==7.0.0"
+```
+</CodeGroup>
+
+## Graph QA Chain
+
+Connect your GraphDB Database with a chat model to get insights on your data.
+
+See the notebook example [here](/oss/python/integrations/graphs/ontotext).
+
+```python
+from langchain_community.graphs import OntotextGraphDBGraph
+from langchain.chains import OntotextGraphDBQAChain
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/ontotext_graphdb.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

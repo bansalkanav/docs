@@ -1,0 +1,73 @@
+---
+title: Observability
+---
+
+import observability from '/snippets/oss/observability.mdx';
+
+
+Traces are a series of steps that your application takes to go from input to output. Each of these individual steps is represented by a run. You can use [LangSmith](https://smith.langchain.com/) to visualize these execution steps. To use it, [enable tracing for your application](/langsmith/trace-with-langgraph). This enables you to do the following:
+
+* [Debug a locally running application](/langsmith/observability-studio#debug-langsmith-traces).
+* [Evaluate the application performance](/oss/javascript/langchain/evals).
+* [Monitor the application](/langsmith/dashboards).
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+* A [LangSmith account](https://smith.langchain.com/) (free to sign up)
+
+## Enable tracing
+
+To enable tracing for your application, set the following environment variables:
+
+```python
+export LANGSMITH_TRACING=true
+export LANGSMITH_API_KEY=<your-api-key>
+```
+
+By default, the trace will be logged to the project with the name `default`. To configure a custom project name, see [Log to a project](#log-to-a-project).
+
+For more information, see [Trace with LangGraph](/langsmith/trace-with-langgraph).
+
+<observability />
+
+## Use anonymizers to prevent logging of sensitive data in traces
+
+You may want to mask sensitive data to prevent it from being logged to LangSmith. You can create [anonymizers](/langsmith/mask-inputs-outputs#rule-based-masking-of-inputs-and-outputs) and apply them to
+your graph using configuration. This example will redact anything matching the Social Security Number format XXX-XX-XXXX from traces sent to LangSmith.
+
+
+```typescript TypeScript
+import { StateGraph } from "@langchain/langgraph";
+import { LangChainTracer } from "@langchain/core/tracers/tracer_langchain";
+import { StateAnnotation } from "./state.js";
+import { createAnonymizer } from "langsmith/anonymizer"
+import { Client } from "langsmith"
+
+
+const anonymizer = createAnonymizer([
+    # Matches SSNs
+    { pattern: /\b\d{3}-?\d{2}-?\d{4}\b/, replace: "<ssn>" }
+])
+
+const langsmithClient = new Client({ anonymizer })
+const tracer = new LangChainTracer({
+  client: langsmithClient,
+});
+
+export const graph = new StateGraph(StateAnnotation)
+  .compile()
+  .withConfig({
+    callbacks: [tracer],
+});
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/observability.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

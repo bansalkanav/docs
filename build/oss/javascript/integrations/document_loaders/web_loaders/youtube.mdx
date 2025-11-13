@@ -1,0 +1,39 @@
+---
+title: YouTube transcripts
+---
+
+This covers how to load YouTube transcripts into LangChain documents.
+
+## Setup
+
+You'll need to install the [youtubei.js](https://www.npmjs.com/package/youtubei.js) to extract metadata:
+
+```bash npm
+npm install @langchain/community @langchain/core youtubei.js
+```
+
+## Usage
+
+You need to specify a link to the video in the `url`. You can also specify `language` in [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) and `addVideoInfo` flag.
+
+```typescript
+import { YoutubeLoader } from "@langchain/community/document_loaders/web/youtube";
+
+const loader = YoutubeLoader.createFromUrl("https://youtu.be/bZQun8Y4L2A", {
+  language: "en",
+  addVideoInfo: true,
+});
+
+const docs = await loader.load();
+
+console.log(docs);
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/web_loaders/youtube.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

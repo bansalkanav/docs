@@ -1,0 +1,38 @@
+---
+title: Concurrent Loader
+---
+
+Works just like the GenericLoader but concurrently for those who choose to optimize their workflow.
+
+```python
+from langchain_community.document_loaders import ConcurrentLoader
+```
+
+```python
+loader = ConcurrentLoader.from_filesystem("example_data/", glob="**/*.txt")
+```
+
+```python
+files = loader.load()
+```
+
+```python
+len(files)
+```
+
+```output
+2
+```
+
+```python
+
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/concurrent.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

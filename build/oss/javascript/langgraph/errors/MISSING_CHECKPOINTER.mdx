@@ -1,0 +1,50 @@
+---
+title: MISSING_CHECKPOINTER
+---
+
+You are attempting to use built-in LangGraph persistence without providing a checkpointer.
+
+This happens when a `checkpointer` is missing in the `compile()` method of [`StateGraph`](https://langchain-ai.github.io/langgraphjs/reference/classes/langgraph.StateGraph.html) or @[`@entrypoint`].
+
+## Troubleshooting
+
+The following may help resolve this error:
+
+-   Initialize and pass a checkpointer to the `compile()` method of [`StateGraph`](https://langchain-ai.github.io/langgraphjs/reference/classes/langgraph.StateGraph.html) or @[`@entrypoint`].
+
+
+
+```typescript
+import { InMemorySaver, StateGraph } from "@langchain/langgraph";
+const checkpointer = new InMemorySaver();
+
+// Graph API
+import { StateGraph } from "@langchain/langgraph";
+const graph = new StateGraph(...).compile({ checkpointer });
+
+// Functional API
+import { entrypoint } from "@langchain/langgraph";
+const workflow = entrypoint(
+    { checkpointer, name: "workflow" },
+    async (messages: string[]) => {
+        // ...
+    }
+);
+```
+
+
+
+-   Use the LangGraph API so you don't need to implement or configure checkpointers manually. The API handles all persistence infrastructure for you.
+
+## Related
+
+- Read more about [persistence](/oss/javascript/langgraph/persistence).
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/errors/MISSING_CHECKPOINTER.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

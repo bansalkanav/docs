@@ -1,0 +1,43 @@
+---
+title: Fiddler
+---
+
+>[Fiddler](https://www.fiddler.ai/) provides a unified platform to monitor, explain, analyze,
+> and improve ML deployments at an enterprise scale.
+
+## Installation and Setup
+
+Set up your model [with Fiddler](https://demo.fiddler.ai):
+
+* The URL you're using to connect to Fiddler
+* Your organization ID
+* Your authorization token
+
+Install the Python package:
+
+<CodeGroup>
+```bash pip
+pip install fiddler-client
+```
+
+```bash uv
+uv add fiddler-client
+```
+</CodeGroup>
+
+## Callbacks
+
+```python
+from langchain_community.callbacks.fiddler_callback import FiddlerCallbackHandler
+```
+
+See an [example](/oss/python/integrations/callbacks/fiddler).
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/fiddler.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

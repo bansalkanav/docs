@@ -1,0 +1,59 @@
+---
+title: Install LangChain
+sidebarTitle: Install
+---
+
+
+
+To install the LangChain package:
+
+<CodeGroup>
+    ```bash pip
+    pip install -U langchain
+    # Requires Python 3.10+
+    ```
+
+    ```bash uv
+    uv add langchain
+    # Requires Python 3.10+
+    ```
+</CodeGroup>
+
+
+
+
+LangChain provides integrations to hundreds of LLMs and thousands of other integrations. These live in independent provider packages. For example:
+
+<CodeGroup>
+    ```bash pip
+    # Installing the OpenAI integration
+    pip install -U langchain-openai
+
+    # Installing the Anthropic integration
+    pip install -U langchain-anthropic
+    ```
+    ```bash uv
+    # Installing the OpenAI integration
+    uv add langchain-openai
+
+    # Installing the Anthropic integration
+    uv add langchain-anthropic
+    ```
+</CodeGroup>
+
+
+
+
+
+<Tip>
+See the [Integrations tab](/oss/python/integrations/providers/overview) for a full list of available integrations.
+</Tip>
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/install.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

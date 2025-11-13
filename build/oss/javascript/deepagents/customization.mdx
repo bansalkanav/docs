@@ -1,0 +1,124 @@
+---
+title: Customize Deep Agents
+sidebarTitle: Customization
+description: Learn how to customize deep agents with system prompts, tools, subagents, and more
+---
+
+## Model
+
+By default, `deepagents` uses `"claude-sonnet-4-5-20250929"`. You can customize this by passing any [LangChain model object](https://python.langchain.com/docs/integrations/chat/).
+
+
+
+```typescript
+import { ChatAnthropic } from "@langchain/anthropic";
+import { ChatOpenAI } from "@langchain/openai";
+import { createDeepAgent } from "deepagents";
+
+// Using Anthropic
+const agent = createDeepAgent({
+  model: new ChatAnthropic({
+    model: "claude-sonnet-4-20250514",
+    temperature: 0,
+  }),
+});
+
+// Using OpenAI
+const agent2 = createDeepAgent({
+  model: new ChatOpenAI({
+    model: "gpt-5",
+    temperature: 0,
+  }),
+});
+```
+
+
+## System prompt
+
+Deep agents come with a built-in system prompt inspired by Claude Code's system prompt. The default system prompt contains detailed instructions for using the built-in planning tool, file system tools, and subagents.
+
+Each deep agent tailored to a use case should include a custom system prompt specific to that use case.
+
+
+
+```typescript
+import { createDeepAgent } from "deepagents";
+
+const researchInstructions = `You are an expert researcher. Your job is to conduct thorough research, and then write a polished report.`;
+
+const agent = createDeepAgent({
+  systemPrompt: researchInstructions,
+});
+```
+
+
+## Tools
+
+Just like tool-calling agents, a deep agent gets a set of top level tools that it has access to.
+
+
+
+```typescript
+import { tool } from "langchain";
+import { TavilySearch } from "@langchain/tavily";
+import { createDeepAgent } from "deepagents";
+import { z } from "zod";
+
+const internetSearch = tool(
+  async ({
+    query,
+    maxResults = 5,
+    topic = "general",
+    includeRawContent = false,
+  }: {
+    query: string;
+    maxResults?: number;
+    topic?: "general" | "news" | "finance";
+    includeRawContent?: boolean;
+  }) => {
+    const tavilySearch = new TavilySearch({
+      maxResults,
+      tavilyApiKey: process.env.TAVILY_API_KEY,
+      includeRawContent,
+      topic,
+    });
+    return await tavilySearch._call({ query });
+  },
+  {
+    name: "internet_search",
+    description: "Run a web search",
+    schema: z.object({
+      query: z.string().describe("The search query"),
+      maxResults: z.number().optional().default(5),
+      topic: z
+        .enum(["general", "news", "finance"])
+        .optional()
+        .default("general"),
+      includeRawContent: z.boolean().optional().default(false),
+    }),
+  },
+);
+
+const agent = createDeepAgent({
+  tools: [internetSearch],
+});
+```
+
+
+In addition to any tools that you provide, deep agents also get access to a number of default tools:
+
+- `write_todos` – Update the agent's to-do list
+- `ls` – List all files in the agent's filesystem
+- `read_file` – Read a file from the agent's filesystem
+- `write_file` – Write a new file in the agent's filesystem
+- `edit_file` – Edit an existing file in the agent's filesystem
+- `task` – Spawn a subagent to handle a specific task
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/customization.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

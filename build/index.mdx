@@ -1,0 +1,143 @@
+---
+title:
+sidebarTitle: Home
+mode: "custom"
+---
+
+
+<div class="mx-auto max-w-8xl px-0 lg:px-5" style={{ paddingBottom: "8rem" }}>
+    <div class="mdx-content prose prose-gray dark:prose-invert mx-4 pt-10">
+        <h1 class="flex whitespace-pre-wrap group font-semibold text-2xl sm:text-3xl mt-8">Documentation</h1>
+
+        LangChain is the platform for agent engineering. AI teams at Replit, Clay, Rippling, Cloudflare, Workday, and more trust LangChain's products to engineer reliable agents.
+
+        <h2 class="flex whitespace-pre-wrap group font-semibold">Open source agent frameworks</h2>
+
+        <Tabs>
+            <Tab title="Python" icon="python">
+                <CardGroup cols={3}>
+                    <Card
+                        title="LangChain (Python)"
+                        href="/oss/python/langchain/overview"
+                        icon="link"
+                        cta="Learn more"
+                    >
+                        Quickly get started building agents, with any model provider of your choice.
+                    </Card>
+                    <Card
+                        title="LangGraph (Python)"
+                        href="/oss/python/langgraph/overview"
+                        icon="circle-nodes"
+                        cta="Learn more"
+                    >
+                        Control every step of your custom agent with low-level orchestration, memory, and human-in-the-loop support.
+                    </Card>
+                    <Card
+                        title="Deep Agents (Python)"
+                        href="/oss/python/deepagents/overview"
+                        icon="robot"
+                        cta="Learn more"
+                    >
+                        Build agents that can tackle complex, multi-step tasks.
+                    </Card>
+                </CardGroup>
+            </Tab>
+            <Tab title="TypeScript" icon="js">
+                <CardGroup cols={3}>
+                    <Card
+                        title="LangChain (TypeScript)"
+                        href="/oss/javascript/langchain/overview"
+                        icon="link"
+                        cta="Learn more"
+                    >
+                        Quickly get started building agents, with any model provider of your choice.
+                    </Card>
+                    <Card
+                        title="LangGraph (TypeScript)"
+                        href="/oss/javascript/langgraph/overview"
+                        icon="circle-nodes"
+                        cta="Learn more"
+                    >
+                        Control every step of your custom agent with low-level orchestration, memory, and human-in-the-loop support.
+                    </Card>
+                    <Card
+                        title="Deep Agents (TypeScript)"
+                        href="/oss/javascript/deepagents/overview"
+                        icon="robot"
+                        cta="Learn more"
+                    >
+                        Build agents that can tackle complex, multi-step tasks.
+                    </Card>
+                </CardGroup>
+            </Tab>
+        </Tabs>
+
+        <h2 class="flex whitespace-pre-wrap group font-semibold">LangSmith</h2>
+
+        [**LangSmith**](/langsmith/home) is a platform that helps AI teams use live production data for continuous testing and improvement. LangSmith provides:
+
+        <CardGroup cols={4}>
+            <Card
+                title="Observability"
+                href="/langsmith/observability"
+                icon="magnifying-glass"
+                cta="Learn more"
+            >
+                See exactly how your agent thinks and acts with detailed tracing and aggregate trend metrics.
+            </Card>
+            <Card
+                title="Evaluation"
+                href="/langsmith/evaluation"
+                icon="chart-simple"
+                cta="Learn more"
+            >
+                Test and score agent behavior on production data or offline datasets to continuously improve performance.
+            </Card>
+            <Card
+                title="Prompt Engineering"
+                href="/langsmith/prompt-engineering"
+                icon="terminal"
+                cta="Learn more"
+            >
+                Iterate on prompts with version control, prompt optimization, and collaboration features.
+            </Card>
+            <Card
+                title="Deployment"
+                href="/langsmith/deployments"
+                icon="rocket-launch"
+                cta="Learn more"
+            >
+                Ship your agent in one click, using scalable infrastructure built for long-running tasks.
+            </Card>
+        </CardGroup>
+
+        <Callout icon="lock" color="#DFC5FE" iconType="regular">
+        LangSmith meets the highest standards of data security and privacy with HIPAA, SOC 2 Type 2, and GDPR compliance. For more information, see the [Trust Center](https://trust.langchain.com/).
+        </Callout>
+
+        <h2 class="flex whitespace-pre-wrap group font-semibold">Get started</h2>
+
+        <CardGroup cols={4}>
+            <Card title="Build your first agent with LangChain" icon="gear" href="/oss/python/langchain/quickstart" cta="Get started" />
+            <Card title="Sign up for LangSmith" icon="screwdriver-wrench" href="https://smith.langchain.com/" cta="Try LangSmith" />
+            <Card title="Build an advanced agent with LangGraph" icon="robot" href="/oss/python/langgraph/quickstart" cta="Get started"/>
+            <Card title="Enroll in LangChain Academy" icon="graduation-cap" href="https://academy.langchain.com/" cta="Get started"/>
+        </CardGroup>
+
+    </div>
+</div>
+
+{/* Hack to hide the callout cards*/}
+<div className="relative">
+    <div className="absolute top-0 left-0 w-screen h-48 bg-background-light dark:bg-background-dark z-10">
+    </div>
+</div>
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/index.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

@@ -1,0 +1,36 @@
+---
+title: Git
+---
+
+>[Git](https://en.wikipedia.org/wiki/Git) is a distributed version control system that tracks changes in any set of computer files, usually used for coordinating work among programmers collaboratively developing source code during software development.
+
+## Installation and Setup
+
+First, you need to install `GitPython` python package.
+
+<CodeGroup>
+```bash pip
+pip install GitPython
+```
+
+```bash uv
+uv add GitPython
+```
+</CodeGroup>
+
+## Document Loader
+
+See a [usage example](/oss/python/integrations/document_loaders/git).
+
+```python
+from langchain_community.document_loaders import GitLoader
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/git.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

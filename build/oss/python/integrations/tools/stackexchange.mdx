@@ -1,0 +1,32 @@
+---
+title: StackExchange
+---
+
+>[Stack Exchange](https://stackexchange.com/) is a network of question-and-answer (Q&A) websites on topics in diverse fields, each site covering a specific topic, where questions, answers, and users are subject to a reputation award process. The reputation system allows the sites to be self-moderating.
+
+The `StackExchange` component integrates the StackExchange API into LangChain allowing access to the [StackOverflow](https://stackoverflow.com/) site of the Stack Excchange network. Stack Overflow focuses on computer programming.
+
+This notebook goes over how to use the `StackExchange` component.
+
+We first have to install the python package stackapi which implements the Stack Exchange API.
+
+```python
+pip install -U stackapi
+```
+
+```python
+from langchain_community.utilities import StackExchangeAPIWrapper
+
+stackexchange = StackExchangeAPIWrapper()
+
+stackexchange.run("zsh: command not found: python")
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/stackexchange.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

@@ -1,0 +1,36 @@
+---
+title: HTML to text
+---
+
+>[html2text](https://github.com/Alir3z4/html2text/) is a Python package that converts a page of `HTML` into clean, easy-to-read plain `ASCII text`.
+
+The ASCII also happens to be a valid `Markdown` (a text-to-HTML format).
+
+## Installation and Setup
+
+<CodeGroup>
+```bash pip
+pip install html2text
+```
+
+```bash uv
+uv add html2text
+```
+</CodeGroup>
+
+## Document Transformer
+
+See a [usage example](/oss/python/integrations/document_transformers/html2text).
+
+```python
+from langchain_community.document_loaders import Html2TextTransformer
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/html2text.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

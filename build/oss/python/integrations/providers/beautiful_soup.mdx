@@ -1,0 +1,37 @@
+---
+title: Beautiful Soup
+---
+
+>[Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) is a Python package for parsing
+> HTML and XML documents (including having malformed markup, i.e. non-closed tags, so named after tag soup).
+> It creates a parse tree for parsed pages that can be used to extract data from HTML,[3] which
+> is useful for web scraping.
+
+## Installation and Setup
+
+<CodeGroup>
+```bash pip
+pip install beautifulsoup4
+```
+
+```bash uv
+uv add beautifulsoup4
+```
+</CodeGroup>
+
+## Document Transformer
+
+See a [usage example](/oss/python/integrations/document_transformers/beautiful_soup).
+
+```python
+from langchain_community.document_loaders import BeautifulSoupTransformer
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/beautiful_soup.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

@@ -1,0 +1,38 @@
+---
+title: HuggingFaceInference
+---
+
+Here's an example of calling a HugggingFaceInference model as an LLM:
+
+```bash npm
+npm install @langchain/community @langchain/core @huggingface/inference@4
+```
+
+<Tip>
+We're unifying model params across all packages. We now suggest using `model` instead of `modelName`, and `apiKey` for API keys.
+</Tip>
+
+```typescript
+import { HuggingFaceInference } from "@langchain/community/llms/hf";
+
+const model = new HuggingFaceInference({
+  model: "gpt2",
+  apiKey: "YOUR-API-KEY", // In Node.js defaults to process.env.HUGGINGFACEHUB_API_KEY
+});
+const res = await model.invoke("1 + 1 =");
+console.log({ res });
+```
+
+## Related
+
+
+- [Models guide](/oss/javascript/langchain/models)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/llms/huggingface_inference.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

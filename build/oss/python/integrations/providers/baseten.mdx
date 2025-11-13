@@ -1,0 +1,50 @@
+---
+title: Baseten
+---
+
+>[Baseten](https://baseten.co) is a provider of all the infrastructure you need to deploy and serve
+> ML models performantly, reliably, and scalably.
+
+>As a model inference platform, `Baseten` is a `Provider` in the LangChain ecosystem.
+The `Baseten` integration currently implements `Chat Models` and `Embeddings` components.
+
+>`Baseten` lets you access both open source models like Kimi K2 or GPT OSS on model APIs by specifying a `model` [slug](https://docs.baseten.co/development/model-apis/overview#supported-models) and run proprietary or
+fine-tuned models on dedicated GPUs through dedicated deployments by specifying a `model_url`.
+
+## Installation and Setup
+
+You'll need two things to use Baseten models with LangChain:
+
+* A [Baseten account](https://baseten.co)
+* An [API key](https://docs.baseten.co/observability/api-keys)
+
+Export your API key to your as an environment variable called `BASETEN_API_KEY`.
+
+```sh
+export BASETEN_API_KEY="paste_your_api_key_here"
+```
+
+## Chat Models (Model APIs and Dedicated Deployments)
+
+See a [usage example](/oss/python/integrations/chat/baseten).
+
+```python
+from langchain_baseten import ChatBaseten
+```
+
+## Embeddings (Dedicated Deployments Only)
+
+See a [usage example](/oss/python/integrations/text_embedding/baseten).
+
+```python
+from langchain_baseten import BasetenEmbeddings
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/baseten.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

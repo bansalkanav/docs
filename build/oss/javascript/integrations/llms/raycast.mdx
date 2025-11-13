@@ -1,0 +1,44 @@
+---
+title: RaycastAI
+---
+
+> **Note:** This is a community-built integration and is not officially supported by Raycast.
+
+You can utilize the LangChain's RaycastAI class within the [Raycast Environment](https://developers.raycast.com/api-reference/ai) to enhance your Raycast extension with LangChain's capabilities.
+
+- The RaycastAI class is only available in the Raycast environment and only to [Raycast Pro](https://www.raycast.com/pro) users as of August 2023. You may check how to create an extension for Raycast [here](https://developers.raycast.com/).
+
+- There is a rate limit of approx 10 requests per minute for each Raycast Pro user. If you exceed this limit, you will receive an error. You can set your desired rpm limit by passing `rateLimitPerMinute` to the `RaycastAI` constructor as shown in the example, as this rate limit may change in the future.
+
+<Tip>
+See [this section for general instructions on installing LangChain packages](/oss/javascript/langchain/install).
+</Tip>
+
+```bash npm
+npm install @langchain/community @langchain/core
+```
+```ts
+import { RaycastAI } from "@langchain/community/llms/raycast";
+
+import { Tool } from "@langchain/core/tools";
+
+const model = new RaycastAI({
+  rateLimitPerMinute: 10, // It is 10 by default so you can omit this line
+  model: "<model_name>",
+  creativity: 0, // `creativity` is a term used by Raycast which is equivalent to `temperature` in some other LLMs
+});
+```
+
+## Related
+
+
+- [Models guide](/oss/javascript/langchain/models)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/llms/raycast.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>

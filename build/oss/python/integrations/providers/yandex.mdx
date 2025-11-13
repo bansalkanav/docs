@@ -1,0 +1,73 @@
+---
+title: Yandex
+---
+
+All functionality related to Yandex Cloud
+
+>[Yandex Cloud](https://cloud.yandex.com/en/) is a public cloud platform.
+
+## Installation and Setup
+
+Yandex Cloud SDK can be installed via pip from PyPI:
+
+<CodeGroup>
+```bash pip
+pip install yandexcloud
+```
+
+```bash uv
+uv add yandexcloud
+```
+</CodeGroup>
+
+## LLMs
+
+### YandexGPT
+
+See a [usage example](/oss/python/integrations/llms/yandex).
+
+```python
+from langchain_community.llms import YandexGPT
+```
+
+## Chat models
+
+### YandexGPT
+
+See a [usage example](/oss/python/integrations/chat/yandex).
+
+```python
+from langchain_community.chat_models import ChatYandexGPT
+```
+
+## Embedding models
+
+### YandexGPT
+
+See a [usage example](/oss/python/integrations/text_embedding/yandex).
+
+```python
+from langchain_community.embeddings import YandexGPTEmbeddings
+```
+
+## Parser
+
+### YandexSTTParser
+
+It transcribes and parses audio files.
+
+`YandexSTTParser` is similar to the `OpenAIWhisperParser`.
+See a [usage example with OpenAIWhisperParser](/oss/python/integrations/document_loaders/youtube_audio).
+
+```python
+from langchain_community.document_loaders import YandexSTTParser
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/yandex.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for    real-time answers.
+</Tip>
