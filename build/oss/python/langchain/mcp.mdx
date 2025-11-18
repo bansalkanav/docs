@@ -1,0 +1,165 @@
+---
+title: Model Context Protocol (MCP)
+---
+
+
+
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) is an open protocol that standardizes how applications provide tools and context to LLMs. LangChain agents can use tools defined on MCP servers using the [`langchain-mcp-adapters`](https://github.com/langchain-ai/langchain-mcp-adapters) library.
+
+
+
+## Install
+
+Install the `langchain-mcp-adapters` library to use MCP tools in LangGraph:
+
+<CodeGroup>
+```bash pip
+pip install langchain-mcp-adapters
+```
+
+```bash uv
+uv add langchain-mcp-adapters
+```
+</CodeGroup>
+
+
+
+
+## Transport types
+
+MCP supports different transport mechanisms for client-server communication:
+
+- **stdio** – Client launches server as a subprocess and communicates via standard input/output. Best for local tools and simple setups.
+- **Streamable HTTP** – Server runs as an independent process handling HTTP requests. Supports remote connections and multiple clients.
+- **Server-Sent Events (SSE)** – a variant of streamable HTTP optimized for real-time streaming communication.
+
+## Use MCP tools
+
+`langchain-mcp-adapters` enables agents to use tools defined across one or more MCP server.
+
+```python Accessing multiple MCP servers icon="server"
+from langchain_mcp_adapters.client import MultiServerMCPClient  # [!code highlight]
+from langchain.agents import create_agent
+
+
+client = MultiServerMCPClient(  # [!code highlight]
+    {
+        "math": {
+            "transport": "stdio",  # Local subprocess communication
+            "command": "python",
+            # Absolute path to your math_server.py file
+            "args": ["/path/to/math_server.py"],
+        },
+        "weather": {
+            "transport": "streamable_http",  # HTTP-based remote server
+            # Ensure you start your weather server on port 8000
+            "url": "http://localhost:8000/mcp",
+        }
+    }
+)
+
+tools = await client.get_tools()  # [!code highlight]
+agent = create_agent(
+    "claude-sonnet-4-5-20250929",
+    tools  # [!code highlight]
+)
+math_response = await agent.ainvoke(
+    {"messages": [{"role": "user", "content": "what's (3 + 5) x 12?"}]}
+)
+weather_response = await agent.ainvoke(
+    {"messages": [{"role": "user", "content": "what is the weather in nyc?"}]}
+)
+```
+
+
+
+
+
+<Note>
+    `MultiServerMCPClient` is **stateless by default**. Each tool invocation creates a fresh MCP `ClientSession`, executes the tool, and then cleans up.
+</Note>
+
+## Custom MCP servers
+
+To create your own MCP servers, you can use the `mcp` library. This library provides a simple way to define [tools](https://modelcontextprotocol.io/docs/learn/server-concepts#tools-ai-actions) and run them as servers.
+
+<CodeGroup>
+```bash pip
+pip install mcp
+```
+
+```bash uv
+uv add mcp
+```
+</CodeGroup>
+
+
+
+
+Use the following reference implementations to test your agent with MCP tool servers.
+
+```python title="Math server (stdio transport)" icon="floppy-disk"
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("Math")
+
+@mcp.tool()
+def add(a: int, b: int) -> int:
+    """Add two numbers"""
+    return a + b
+
+@mcp.tool()
+def multiply(a: int, b: int) -> int:
+    """Multiply two numbers"""
+    return a * b
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
+```
+
+```python title="Weather server (streamable HTTP transport)" icon="wifi"
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("Weather")
+
+@mcp.tool()
+async def get_weather(location: str) -> str:
+    """Get weather for location."""
+    return "It's always sunny in New York"
+
+if __name__ == "__main__":
+    mcp.run(transport="streamable-http")
+```
+
+
+
+
+## Stateful tool usage
+
+For stateful servers that maintain context between tool calls, use `client.session()` to create a persistent `ClientSession`.
+
+```python Using MCP ClientSession for stateful tool usage
+from langchain_mcp_adapters.tools import load_mcp_tools
+
+client = MultiServerMCPClient({...})
+async with client.session("math") as session:
+    tools = await load_mcp_tools(session)
+```
+
+
+
+
+## Additional resources
+
+* [MCP documentation](https://modelcontextprotocol.io/introduction)
+* [MCP Transport documentation](https://modelcontextprotocol.io/docs/concepts/transports)
+* [`langchain-mcp-adapters`](https://github.com/langchain-ai/langchain-mcp-adapters)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/mcp.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

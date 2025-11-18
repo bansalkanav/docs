@@ -1,0 +1,65 @@
+---
+title: Overview
+---
+
+All functionality related to OpenAI
+
+> [OpenAI](https://en.wikipedia.org/wiki/OpenAI) is American artificial intelligence (AI) research laboratory
+> consisting of the non-profit `OpenAI Incorporated`
+> and its for-profit subsidiary corporation `OpenAI Limited Partnership`.
+> OpenAI conducts AI research with the declared intention of promoting and developing a friendly AI.
+> OpenAI systems run on an `Azure`-based supercomputing platform from `Microsoft`.
+
+> The [OpenAI API](https://platform.openai.com/docs/models) is powered by a diverse set of models with different capabilities and price points.
+>
+> [ChatGPT](https://chat.openai.com) is the Artificial Intelligence (AI) chatbot developed by `OpenAI`.
+
+## Installation and Setup
+
+- Get an OpenAI api key and set it as an environment variable (`OPENAI_API_KEY`)
+
+## Chat model
+
+See a [usage example](/oss/javascript/integrations/chat/openai).
+
+```typescript
+import { ChatOpenAI } from "@langchain/openai";
+```
+
+## LLM
+
+See a [usage example](/oss/javascript/integrations/llms/openai).
+
+<Tip>
+See [this section for general instructions on installing LangChain packages](/oss/javascript/langchain/install).
+</Tip>
+
+```bash npm
+npm install @langchain/openai @langchain/core
+```
+```typescript
+import { OpenAI } from "@langchain/openai";
+```
+
+## Text Embedding Model
+
+See a [usage example](/oss/javascript/integrations/text_embedding/openai)
+
+```typescript
+import { OpenAIEmbeddings } from "@langchain/openai";
+```
+
+## Chain
+
+```typescript
+import { OpenAIModerationChain } from "@langchain/classic/chains";
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/providers/openai.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
