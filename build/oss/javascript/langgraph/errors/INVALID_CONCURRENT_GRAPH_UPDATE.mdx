@@ -1,0 +1,76 @@
+---
+title: INVALID_CONCURRENT_GRAPH_UPDATE
+---
+
+A LangGraph [`StateGraph`](https://langchain-ai.github.io/langgraph/reference/graphs/#langgraph.graph.state.StateGraph) received concurrent updates to its state from multiple nodes to a state property that doesn't
+support it.
+
+One way this can occur is if you are using a [fanout](/oss/javascript/langgraph/graph-api#map-reduce-and-the-send-api)
+or other parallel execution in your graph and you have defined a graph like this:
+
+
+
+```typescript
+import { StateGraph, Annotation, START } from "@langchain/langgraph";
+import * as z from "zod";  // [!code highlight]
+
+const State = z.object({
+  someKey: z.string(),
+});
+
+const builder = new StateGraph(State)
+  .addNode("node", (state) => {
+    return { someKey: "some_string_value" };
+  })
+  .addNode("otherNode", (state) => {
+    return { someKey: "some_string_value" };
+  })
+  .addEdge(START, "node")
+  .addEdge(START, "otherNode");
+
+const graph = builder.compile();
+```
+
+
+
+
+If a node in the above graph returns `{ someKey: "some_string_value" }`, this will overwrite the state value for `someKey` with `"some_string_value"`.
+However, if multiple nodes in e.g. a fanout within a single step return values for `someKey`, the graph will throw this error because
+there is uncertainty around how to update the internal state.
+
+
+To get around this, you can define a reducer that combines multiple values:
+
+
+
+```typescript
+import { registry } from "@langchain/langgraph/zod";
+import * as z from "zod";
+
+const State = z.object({  // [!code highlight]
+  someKey: z.array(z.string()).register(registry, {  // [!code highlight]
+    reducer: {  // [!code highlight]
+      fn: (existing, update) => existing.concat(update),  // [!code highlight]
+    },
+    default: () => [] as string[],
+  }),
+});
+```
+
+
+This will allow you to define logic that handles the same key returned from multiple nodes executed in parallel.
+
+## Troubleshooting
+
+The following may help resolve this error:
+
+* If your graph executes nodes in parallel, make sure you have defined relevant state keys with a reducer.
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

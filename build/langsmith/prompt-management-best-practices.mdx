@@ -1,0 +1,67 @@
+---
+title: Prompt Hub best practices
+sidebarTitle: Prompt Hub best practices
+---
+
+Prompts are a fundamental component of your LLM application's logic. A minor change can significantly change an LLM's response or tool selection, making lifecycle management important. LangSmith provides tools to manage prompts across development, testing, and production environments:
+
+- **Prompt Hub**: A centralized store that makes it easy to version, track, and update prompts, especially useful when collaborating with others.
+- **Playground**: A sandbox for testing and experimenting with prompts and models, helping you refine their behavior before deploying.
+
+This guide shows you how to build a workflow for developing, testing, and deploying prompts with LangSmith.
+
+## Develop and iterate on prompts in the playground
+
+Prompt development is an iterative, experimental process. Using the Playground, you can:
+- **Test with different inputs** and **compare the results** of different prompts and LLMs side-by-side.
+- **Refine your prompt** using the embedded [Prompt Canvas](/langsmith/write-prompt-with-ai) to have an LLM improve your prompt.
+- **Prototype tools, set structured outputs** and test the interaction within the Playground.
+- **[Run evaluations](/langsmith/run-evaluation-from-prompt-playground)** over your prompt in the Playground. Share experiments with teammates to get feedback and collaboratively optimize performance.
+
+Once ready, you can save a prompt to the Prompt Hub. A new commit is created each time you save a prompt. Establishing a complete commit history enables you to track changes and revert to previous versions if needed.
+
+## Manage prompts across environments
+
+When managing prompts across your dev/staging/production environments, you want to balance speed of iteration across a team with stability. We recommend using the Prompt Hub along with [commit tags](/langsmith/manage-prompts#commit-tags) to manage prompts across dev/testing/staging environments and a separate workflow for managing prompts in production.
+
+### Update prompts in dev/testing/staging environments
+
+After testing in the Playground, you'll want to see how the prompt interacts within the context of your application. A recommended workflow is:
+
+1. Set up your dev/testing/staging environments to [pull prompts from the Prompt Hub](/langsmith/manage-prompts-programmatically#pull-a-prompt) using defined commit tags (e.g., `dev`, `staging`) for each environment. This creates a dynamic reference to the prompt version you want to use in a particular environment.
+2. After saving a new version of your prompt, [move the commit tag](/langsmith/manage-prompts#move-a-tag) for the desired environment to the new version of the prompt. Your application will automatically pull the new version on its next request to the Prompt Hub.
+3. Test the prompt across environments.
+
+### Update prompts in production
+
+<Warning> It is **not recommended to put an API call to the Prompt Hub in the hot path of your application** on every request. Instead, we recommend either pulling the prompt into your code directly or fetching the prompt once and reusing it. </Warning>
+
+[Prompt webhooks](/langsmith/manage-prompts#configure-a-webhook) can be used in order to keep prompts in sync with your production environment. For example a notification can be sent when a prompt gets the `prod` tag added to it, which can then be used as a trigger to pull the latest version of the prompt into your production environment.
+
+<Tip> Integrate prompt evaluations into CI/CD. [Prompt webhooks](/langsmith/manage-prompts#configure-a-webhook) can be used in order to trigger CI when a prompt has new commit, or when a commit tag is moved. Use [pytest](/langsmith/pytest) or [jest/vitest](/langsmith/vitest-jest) to run LangSmith [evaluations](/langsmith/evaluation) as part of your test suite, blocking promotion if quality thresholds fail. </Tip>
+
+#### Sync prompts with your code
+
+A common approach is to [sync prompts from the Prompt Hub with your source code](/langsmith/prompt-commit), so they can be **version-controlled and deployed alongside your application code**.
+
+The workflow would look like:
+1. A LangSmith user moves the `prod` tag to a new prompt commit.
+2. The webhook triggers a CI/CD pipeline (e.g., GitHub Actions, GitLab CI) that pulls the commit with the `prod` tag into your repository.
+3. The pipeline commits the prompt change to your repo.
+
+
+#### Store prompts in a database or cache prompts in your application
+
+If you want your prompts **versioned independently of your application code**, you can sync them to a database or cache them in your application. This allows you to update A/B test prompts without redeploying your application.
+
+- **Database**: Store prompts in a database as a form of dynamic configuration, and update them with a CI/CD process when a webhook is triggered.
+- **Cache**: Cache prompts in the application in memory, and update them by invalidating the cache on webhook receipt.
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/prompt-management-best-practices.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
