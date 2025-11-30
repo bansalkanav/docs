@@ -1,0 +1,41 @@
+---
+title: SQLite
+---
+
+>[SQLite](https://en.wikipedia.org/wiki/SQLite) is a database engine written in the
+> C programming language. It is not a standalone app; rather, it is a library that
+> software developers embed in their apps. As such, it belongs to the family of
+> embedded databases. It is the most widely deployed database engine, as it is
+> used by several of the top web browsers, operating systems, mobile phones, and other embedded systems.
+
+## Installation and Setup
+
+We need to install the `SQLAlchemy` python package.
+
+<CodeGroup>
+```bash pip
+pip install SQLAlchemy
+```
+
+```bash uv
+uv add SQLAlchemy
+```
+</CodeGroup>
+
+## Vector Store
+
+See a [usage example](/oss/python/integrations/vectorstores/sqlitevec).
+
+```python
+from langchain_community.vectorstores import SQLiteVec
+from langchain_community.vectorstores import SQLiteVSS # legacy
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/sqlite.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

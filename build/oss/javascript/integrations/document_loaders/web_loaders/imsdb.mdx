@@ -1,0 +1,29 @@
+---
+title: IMSDB
+---
+
+This example goes over how to load data from the internet movie script database website, using Cheerio. One document will be created for each page.
+
+## Setup
+
+```bash npm
+npm install @langchain/community @langchain/core cheerio
+```
+## Usage
+
+```typescript
+import { IMSDBLoader } from "@langchain/community/document_loaders/web/imsdb";
+
+const loader = new IMSDBLoader("https://imsdb.com/scripts/BlacKkKlansman.html");
+
+const docs = await loader.load();
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/web_loaders/imsdb.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

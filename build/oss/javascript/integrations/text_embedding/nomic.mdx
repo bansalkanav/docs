@@ -1,0 +1,51 @@
+---
+title: Nomic
+---
+
+The `NomicEmbeddings` class uses the Nomic AI API to generate embeddings for a given text.
+
+## Setup
+
+In order to use the Nomic API you'll need an API key.
+You can sign up for a Nomic account and create an API key [here](https://atlas.nomic.ai/).
+
+You'll first need to install the [`@langchain/nomic`](https://www.npmjs.com/package/@langchain/nomic) package:
+
+<Tip>
+See [this section for general instructions on installing LangChain packages](/oss/javascript/langchain/install).
+</Tip>
+
+```bash npm
+npm install @langchain/nomic @langchain/core
+```
+
+## Usage
+
+```typescript
+import { NomicEmbeddings } from "@langchain/nomic";
+
+/* Embed queries */
+const nomicEmbeddings = new NomicEmbeddings();
+const res = await nomicEmbeddings.embedQuery("Hello world");
+console.log(res);
+/* Embed documents */
+const documentRes = await nomicEmbeddings.embedDocuments([
+  "Hello world",
+  "Bye bye",
+]);
+console.log(documentRes);
+```
+
+## Related
+
+- Embedding model [conceptual guide](/oss/javascript/integrations/text_embedding)
+- Embedding model [how-to guides](/oss/javascript/integrations/text_embedding)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/text_embedding/nomic.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

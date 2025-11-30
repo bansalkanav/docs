@@ -1,0 +1,34 @@
+---
+title: Wikipedia tool
+---
+
+The `WikipediaQueryRun` tool connects your agents and chains to Wikipedia.
+
+## Usage
+
+```typescript
+import { WikipediaQueryRun } from "@langchain/community/tools/wikipedia_query_run";
+
+const tool = new WikipediaQueryRun({
+  topKResults: 3,
+  maxDocContentLength: 4000,
+});
+
+const res = await tool.invoke("LangChain");
+
+console.log(res);
+```
+
+## Related
+
+- Tool [conceptual guide](/oss/javascript/langchain/tools)
+- Tool [how-to guides](/oss/javascript/langchain/tools)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/tools/wikipedia.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

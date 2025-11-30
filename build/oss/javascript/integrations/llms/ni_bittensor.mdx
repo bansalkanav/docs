@@ -1,0 +1,41 @@
+---
+title: NIBittensor
+---
+
+<Warning>
+This module has been deprecated and is no longer supported. The documentation below will not work in versions 0.2.0 or later.
+</Warning>
+
+LangChain.js offers experimental support for Neural Internet's Bittensor LLM models.
+
+Here's an example:
+
+```typescript
+import { NIBittensorLLM } from "@langchain/classic/experimental/llms/bittensor";
+
+const model = new NIBittensorLLM();
+
+const res = await model.invoke(`What is Bittensor?`);
+
+console.log({ res });
+
+/*
+  {
+    res: "\nBittensor is opensource protocol..."
+  }
+ */
+```
+
+## Related
+
+
+- [Models guide](/oss/javascript/langchain/models)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/llms/ni_bittensor.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
