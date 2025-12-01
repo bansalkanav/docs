@@ -35,8 +35,6 @@ Add keys for any tools you enable. These are read from workspace secrets at runt
 
 ## MCP server configuration
 
-Agent Builder can pull tools from one or more MCP servers.
+Agent Builder can pull tools from one or more remote [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) servers. Configure MCP servers and headers in your workspace settings. Agent Builder automatically discovers tools and applies the configured headers when calling them.
 
-- Per‑server headers: add MCP servers and headers in your workspace (stored server‑side). Agent Builder automatically forwards those headers when fetching tools for the matching server URL.
-
-See “Remote MCP” for a full walkthrough and examples.
+See the [MCP Framework](/langsmith/agent-builder-mcp-framework#using-remote-mcp-servers) page for details on using remote MCP servers.
