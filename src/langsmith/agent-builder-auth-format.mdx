@@ -25,6 +25,8 @@ If a tool detects missing authorization, return a JSON string containing the fol
 
 When Agent Builder detects this response, it interrupts the run, displays the authentication UI to the user, and automatically retries the tool call once authorization completes.
 
+If you want your custom tools to reuse the same authentication required interrupt + UI, ensure your tools return the same shape of JSON.
+
 <Note>
 Return only this JSON as the tool's output. Avoid including additional text or content. Agent Builder parses the response to trigger the authentication flow.
 </Note>

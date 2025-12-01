@@ -26,21 +26,27 @@ If you use custom authentication, ensure your auth middleware distinguishes user
 
 ## How to add workspace secrets
 
-In the [LangSmith UI](https://smith.langchain.com), ensure that your Anthropic API key is set as a [workspace secret](/langsmith/administration-overview#workspace-secrets).
+In the [LangSmith UI](https://smith.langchain.com), ensure that you have an LLM API key set as a [workspace secret](/langsmith/administration-overview#workspace-secrets) (either Anthropic or OpenAI API key).
 
 1. Navigate to <Icon icon="gear" /> **Settings** and then move to the **Secrets** tab.
-1. Select **Add secret** and enter the `ANTHROPIC_API_KEY` and your API key as the **Value**.
+1. Select **Add secret** and enter either `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` as the **name**, and your API key as the **value**.
 1. Select **Save secret**.
 
 <Note> When adding workspace secrets in the LangSmith UI, make sure the secret keys match the environment variable names expected by your model provider.</Note>
 
 ## Required model key
 
-- `ANTHROPIC_API_KEY`: Required for Agent Builder models. The agent graphs load this key from workspace secrets for inference.
+- One of an OpenAI or Anthropic API key: Required for Agent Builder to make API calls to LLMs. The agent graphs load this key from workspace secrets for inference.
 
-<Callout icon="wand-magic-sparkles" color="#4F46E5" iconType="regular">
-  Agent Builder supports custom models. You can override the default Anthropic model by providing a different `modelId` and a matching secret name via `envVarName` (see "Custom models" for examples). Secrets prefixed with `AGENT_BUILDER_` are prioritized.
-</Callout>
+<Note icon="wand-magic-sparkles" iconType="regular">
+  Agent Builder supports custom models. You can override the default Anthropic model by providing a different `modelId` and a matching secret name via `envVarName` (see “Custom models” for examples).
+</Note>
+
+## `AGENT_BUILDER_` secret prefix
+
+Secrets prefixed with `AGENT_BUILDER_` are prioritized over workspace secrets. This way, you can better track the usage of Agent Builder vs other parts of LangSmith which use the same secrets.
+
+If you have both `OPENAI_API_KEY` and `AGENT_BUILDER_OPENAI_API_KEY`, the `AGENT_BUILDER_OPENAI_API_KEY` secret will be used.
 
 ## Optional tool keys
 
