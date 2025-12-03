@@ -1,0 +1,356 @@
+---
+title: Add custom at-rest encryption
+sidebarTitle: Custom encryption
+---
+
+Custom encryption lets you control how sensitive data is encrypted before it's stored in the database.
+
+<Note>
+Custom encryption is available for **self-hosted** LangGraph Platform deployments only (Python graphs only).
+</Note>
+
+## When to use custom encryption
+
+For basic encryption with a single static key, set the `LANGGRAPH_AES_KEY` environment variable. LangGraph will automatically encrypt checkpoint data using AES.
+
+Use **custom encryption** when you need:
+
+- **Per-tenant key isolation** — different encryption keys for different customers
+- **KMS integration** — AWS KMS, Google Cloud KMS, or HashiCorp Vault for key management, rotation, and audit logging
+- **Selective field encryption** — encrypt sensitive metadata fields while keeping others searchable
+
+## How it works
+
+1. Create an encryption module with handlers decorated with `@encryption.encrypt.blob`, `@encryption.decrypt.blob`, `@encryption.encrypt.json`, and `@encryption.decrypt.json`
+2. Add the module path to `langgraph.json`
+3. Pass encryption context (like tenant ID) via the `X-Encryption-Context` header
+4. LangGraph calls your handlers before storing and after retrieving data
+
+## Configuration
+
+Add your encryption module to `langgraph.json`:
+
+```json
+{
+  "dependencies": ["."],
+  "graphs": {
+    "agent": "./agent.py:graph"
+  },
+  "encryption": {
+    "path": "./encryption.py:encryption"
+  }
+}
+```
+
+## Blob encryption (checkpoints)
+
+Blob handlers encrypt checkpoint data—the serialized state from graph execution. Here's a simplified example using per-tenant keys:
+
+```python
+import os
+from cryptography.fernet import Fernet
+from langgraph_sdk import Encryption, EncryptionContext
+
+encryption = Encryption()
+
+# In production, fetch from a secrets manager
+TENANT_KEYS = {
+    "tenant-a": Fernet(os.environ["TENANT_A_KEY"]),
+    "tenant-b": Fernet(os.environ["TENANT_B_KEY"]),
+}
+
+
+def _get_fernet(ctx: EncryptionContext) -> Fernet:
+    tenant_id = ctx.metadata.get("tenant_id")
+    if not tenant_id or tenant_id not in TENANT_KEYS:
+        raise ValueError(f"Unknown tenant: {tenant_id}")
+    return TENANT_KEYS[tenant_id]
+
+
+@encryption.encrypt.blob
+async def encrypt_blob(ctx: EncryptionContext, data: bytes) -> bytes:
+    return _get_fernet(ctx).encrypt(data)
+
+
+@encryption.decrypt.blob
+async def decrypt_blob(ctx: EncryptionContext, data: bytes) -> bytes:
+    return _get_fernet(ctx).decrypt(data)
+```
+
+The `ctx.metadata` dict comes from the `X-Encryption-Context` header and is stored alongside encrypted data, so the correct key is used on decryption.
+
+For production deployments with key rotation and audit logging, see [Envelope encryption with AWS KMS](#envelope-encryption-with-aws-kms).
+
+## JSON encryption (metadata)
+
+JSON handlers encrypt structured data like thread metadata, assistant context, and run kwargs. Unlike blob encryption, you choose which fields to encrypt—keeping some unencrypted for search and filtering.
+
+<Warning>
+**Encrypted fields cannot be searched or filtered.** Design your metadata schema so that fields you need to query remain unencrypted.
+</Warning>
+
+Common fields to leave **unencrypted** for search and filtering:
+
+- `user_id`, `tenant_id`, `project_id` — for access control queries
+- `status`, `priority`, `type` — for filtering by state
+- `tags`, `labels` — for categorization queries
+- `created_by`, `owner` — for ownership lookups
+
+Encrypt fields containing **sensitive data**:
+
+- Conversation messages and content
+- Personal information (email, phone, address)
+- API keys, tokens, credentials
+- Business-sensitive data
+
+```python
+import os
+from cryptography.fernet import Fernet
+from langgraph_sdk import Encryption, EncryptionContext
+
+encryption = Encryption()
+
+TENANT_KEYS = {
+    "tenant-a": Fernet(os.environ["TENANT_A_KEY"]),
+    "tenant-b": Fernet(os.environ["TENANT_B_KEY"]),
+}
+
+SENSITIVE_FIELDS = {"messages", "email", "phone", "content"}
+
+
+def _get_fernet(ctx: EncryptionContext) -> Fernet:
+    tenant_id = ctx.metadata.get("tenant_id")
+    if not tenant_id or tenant_id not in TENANT_KEYS:
+        raise ValueError(f"Unknown tenant: {tenant_id}")
+    return TENANT_KEYS[tenant_id]
+
+
+@encryption.encrypt.json
+async def encrypt_json(ctx: EncryptionContext, data: dict) -> dict:
+    fernet = _get_fernet(ctx)
+    result = {}
+    for key, value in data.items():
+        if key in SENSITIVE_FIELDS and value is not None:
+            result[key] = fernet.encrypt(str(value).encode()).decode()
+        else:
+            result[key] = value
+    return result
+
+
+@encryption.decrypt.json
+async def decrypt_json(ctx: EncryptionContext, data: dict) -> dict:
+    fernet = _get_fernet(ctx)
+    result = {}
+    for key, value in data.items():
+        if key in SENSITIVE_FIELDS and isinstance(value, str):
+            try:
+                result[key] = fernet.decrypt(value.encode()).decode()
+            except Exception:
+                result[key] = value
+        else:
+            result[key] = value
+    return result
+```
+
+### What gets encrypted
+
+**JSON handlers** (`@encryption.encrypt.json` / `@encryption.decrypt.json`):
+
+- `thread.metadata`, `thread.values`
+- `assistant.metadata`, `assistant.context`
+- `run.metadata`, `run.kwargs`
+- `cron.metadata`, `cron.payload`
+
+**Blob handlers** (`@encryption.encrypt.blob` / `@encryption.decrypt.blob`):
+
+- Checkpoint blobs (graph execution state)
+
+## Passing encryption context
+
+Pass encryption context via the `X-Encryption-Context` header. The context is available in your handlers as `ctx.metadata` and is stored alongside encrypted data for use during decryption.
+
+```python
+import base64
+import json
+from langgraph_sdk import get_client
+
+encryption_context = base64.b64encode(
+    json.dumps({"tenant_id": "tenant-a"}).encode()
+).decode()
+
+client = get_client(url="http://localhost:2024")
+
+result = await client.runs.wait(
+    thread_id=None,
+    assistant_id="agent",
+    input={"messages": [{"role": "user", "content": "Hello"}]},
+    headers={"X-Encryption-Context": encryption_context},
+)
+```
+
+<Note>
+The encryption context is stored with encrypted data. On decryption, it's automatically restored—callers don't need to pass the header when reading.
+</Note>
+
+## Deriving context from authentication
+
+Instead of passing `X-Encryption-Context` explicitly, derive encryption context from the authenticated user:
+
+```python
+from langgraph_sdk import Encryption, EncryptionContext
+from starlette.authentication import BaseUser
+
+encryption = Encryption()
+
+@encryption.context
+async def get_encryption_context(user: BaseUser, ctx: EncryptionContext) -> dict:
+    return {
+        **ctx.metadata,
+        "tenant_id": getattr(user, "tenant_id", "default"),
+    }
+```
+
+This handler runs once per request after authentication. The returned dict becomes `ctx.metadata` for all encryption operations in that request.
+
+## Model-specific handlers
+
+Register different handlers for different model types using `@encryption.encrypt.json.assistant`, `@encryption.encrypt.json.run`, etc. Use `ctx.field` to vary behavior by field:
+
+```python
+from langgraph_sdk import Encryption, EncryptionContext
+
+encryption = Encryption()
+
+@encryption.encrypt.json
+async def default_encrypt(ctx: EncryptionContext, data: dict) -> dict:
+    return encrypt_sensitive_fields(data)
+
+@encryption.encrypt.json.assistant
+async def encrypt_assistant(ctx: EncryptionContext, data: dict) -> dict:
+    if ctx.field == "context":
+        # Assistant context may contain API keys or system prompts
+        return encrypt_all_fields(data)
+    # Assistant metadata—selective encryption
+    return encrypt_sensitive_fields(data)
+
+@encryption.decrypt.json
+async def default_decrypt(ctx: EncryptionContext, data: dict) -> dict:
+    return decrypt_sensitive_fields(data)
+
+@encryption.decrypt.json.assistant
+async def decrypt_assistant(ctx: EncryptionContext, data: dict) -> dict:
+    if ctx.field == "context":
+        return decrypt_all_fields(data)
+    return decrypt_sensitive_fields(data)
+```
+
+Supported model types: `thread`, `assistant`, `run`, `cron`, `checkpoint`.
+
+## Envelope encryption with AWS Encryption SDK
+
+For production deployments on AWS, use the [AWS Encryption SDK](https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/python.html) with AWS KMS, or an equivalent within your cloud provider. This approach:
+
+- Handles envelope encryption automatically (no manual key packing)
+- Provides key rotation and audit logging
+- Binds ciphertext to encryption context (tenant isolation)
+
+### Complete example
+
+```python
+import base64
+import os
+
+import aws_encryption_sdk
+from aws_encryption_sdk import (
+    CachingCryptoMaterialsManager,
+    CommitmentPolicy,
+    LocalCryptoMaterialsCache,
+    StrictAwsKmsMasterKeyProvider,
+)
+from langgraph_sdk import Encryption, EncryptionContext
+
+encryption = Encryption()
+
+# The SDK uses envelope encryption: one KMS API call generates a data key,
+# then encrypts/decrypts locally. The cache reuses data keys across operations.
+client = aws_encryption_sdk.EncryptionSDKClient(
+    commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT
+)
+key_provider = StrictAwsKmsMasterKeyProvider(key_ids=[os.environ["KMS_KEY_ARN"]])
+cache = LocalCryptoMaterialsCache(capacity=100)
+cmm = CachingCryptoMaterialsManager(
+    master_key_provider=key_provider,
+    cache=cache,
+    max_age=300.0,
+    max_messages_encrypted=100,
+)
+
+SENSITIVE_FIELDS = {"messages", "email", "phone", "content"}
+
+
+@encryption.encrypt.blob
+async def encrypt_blob(ctx: EncryptionContext, data: bytes) -> bytes:
+    ciphertext, _ = client.encrypt(
+        source=data,
+        materials_manager=cmm,
+        encryption_context={"tenant_id": ctx.metadata["tenant_id"]},
+    )
+    return ciphertext
+
+
+@encryption.decrypt.blob
+async def decrypt_blob(ctx: EncryptionContext, data: bytes) -> bytes:
+    plaintext, _ = client.decrypt(source=data, key_provider=key_provider)
+    return plaintext
+
+
+@encryption.encrypt.json
+async def encrypt_json(ctx: EncryptionContext, data: dict) -> dict:
+    result = {}
+    for key, value in data.items():
+        if key in SENSITIVE_FIELDS and value is not None:
+            ciphertext, _ = client.encrypt(
+                source=str(value).encode(),
+                materials_manager=cmm,
+                encryption_context={"tenant_id": ctx.metadata["tenant_id"]},
+            )
+            result[key] = base64.b64encode(ciphertext).decode()
+        else:
+            result[key] = value
+    return result
+
+
+@encryption.decrypt.json
+async def decrypt_json(ctx: EncryptionContext, data: dict) -> dict:
+    result = {}
+    for key, value in data.items():
+        if key in SENSITIVE_FIELDS and isinstance(value, str):
+            try:
+                ciphertext = base64.b64decode(value)
+                plaintext, _ = client.decrypt(source=ciphertext, key_provider=key_provider)
+                result[key] = plaintext.decode()
+            except Exception:
+                result[key] = value
+        else:
+            result[key] = value
+    return result
+```
+
+The `encryption_context` is cryptographically bound to the ciphertext via KMS—decryption fails if the context doesn't match. The context is embedded in the ciphertext, so decrypt handlers don't need to reference `ctx.metadata`.
+
+### Key rotation
+
+KMS handles master key rotation automatically. When you enable automatic rotation on your KMS key, old encrypted data keys can still be decrypted while new operations use the rotated key material. No re-encryption of existing data is required.
+
+## Related
+
+- [Custom authentication](/langsmith/custom-auth)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/custom-encryption.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

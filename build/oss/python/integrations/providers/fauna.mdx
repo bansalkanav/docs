@@ -1,0 +1,42 @@
+---
+title: Fauna
+---
+
+>[Fauna](https://fauna.com/) is a distributed document-relational database
+> that combines the flexibility of documents with the power of a relational,
+> ACID compliant database that scales across regions, clouds or the globe.
+
+
+## Installation and Setup
+
+We have to get the secret key.
+See the detailed [guide](https://docs.fauna.com/fauna/current/learn/security_model/).
+
+We have to install the `fauna` package.
+
+<CodeGroup>
+```bash pip
+pip install -U fauna
+```
+
+```bash uv
+uv add fauna
+```
+</CodeGroup>
+
+## Document Loader
+
+See a [usage example](/oss/python/integrations/document_loaders/fauna).
+
+```python
+from langchain_community.document_loaders.fauna import FaunaLoader
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/fauna.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

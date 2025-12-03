@@ -1,0 +1,44 @@
+---
+title: GitBook
+---
+
+This example goes over how to load data from any GitBook, using Cheerio. One document will be created for each page.
+
+## Setup
+
+```bash npm
+npm install @langchain/community @langchain/core cheerio
+```
+## Load from single GitBook page
+
+```typescript
+import { GitbookLoader } from "@langchain/community/document_loaders/web/gitbook";
+
+const loader = new GitbookLoader(
+  "https://docs.gitbook.com/product-tour/navigation"
+);
+
+const docs = await loader.load();
+```
+## Load from all paths in a given GitBook
+
+For this to work, the GitbookLoader needs to be initialized with the root path (https://docs.gitbook.com in this example) and have `shouldLoadAllPaths` set to `true`.
+
+```typescript
+import { GitbookLoader } from "@langchain/community/document_loaders/web/gitbook";
+
+const loader = new GitbookLoader("https://docs.gitbook.com", {
+  shouldLoadAllPaths: true,
+});
+
+const docs = await loader.load();
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/web_loaders/gitbook.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
