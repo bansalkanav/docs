@@ -122,7 +122,7 @@ const weatherResponse = await agent.invoke({
 <Note>
     `MultiServerMCPClient` is **stateless by default**. Each tool invocation creates a fresh MCP `ClientSession`, executes the tool, and then cleans up.
 
-    To enable session support, see the [stateful sessions](#stateful-sessions) section.
+    See the [stateful sessions](#stateful-sessions) section for more details.
 </Note>
 
 ## Custom servers
@@ -388,7 +388,7 @@ MCP supports different transport mechanisms for client-server communication.
 
 ### HTTP
 
-Server runs as an independent process handling HTTP requests. Supports remote connections and multiple clients.
+The `http` transport (also referred to as `streamable-http`) uses HTTP requests for client-server communication.
 
 :::python
 ```python
