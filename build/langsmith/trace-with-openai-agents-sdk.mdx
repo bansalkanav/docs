@@ -1,0 +1,65 @@
+---
+title: Trace with OpenAI Agents SDK
+sidebarTitle: OpenAI Agents SDK
+---
+
+The OpenAI Agents SDK allows you to build agentic applications powered by OpenAI's models.
+
+Learn how to trace your LLM applications using the OpenAI Agents SDK with LangSmith.
+
+## Installation
+
+<Info>
+Requires Python SDK version `langsmith>=0.3.15`.
+</Info>
+
+Install LangSmith with OpenAI Agents support:
+
+<CodeGroup>
+```bash pip
+pip install "langsmith[openai-agents]"
+```
+
+```bash uv
+uv add "langsmith[openai-agents]"
+```
+</CodeGroup>
+
+This will install both the LangSmith library and the OpenAI Agents SDK.
+
+## Quick Start
+
+You can integrate LangSmith tracing with the OpenAI Agents SDK by using the `OpenAIAgentsTracingProcessor` class.
+
+```python
+import asyncio
+from agents import Agent, Runner, set_trace_processors
+from langsmith.integrations.openai_agents_sdk import OpenAIAgentsTracingProcessor
+
+async def main():
+    agent = Agent(
+        name="Captain Obvious",
+        instructions="You are Captain Obvious, the world's most literal technical support agent.",
+    )
+
+    question = "Why is my code failing when I try to divide by zero? I keep getting this error message."
+    result = await Runner.run(agent, question)
+    print(result.final_output)
+
+if __name__ == "__main__":
+    set_trace_processors([OpenAIAgentsTracingProcessor()])
+    asyncio.run(main())
+```
+
+The agent's execution flow, including all spans and their details, will be logged to LangSmith.
+
+![OpenAI Agents SDK Trace in LangSmith](/langsmith/images/agent-trace.png)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-openai-agents-sdk.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
