@@ -744,7 +744,7 @@ When MCP tools are used within a LangGraph agent (via `create_agent`), intercept
     ```python Filter tools based on authentication state
     from langchain_mcp_adapters.client import MultiServerMCPClient
     from langchain_mcp_adapters.interceptors import MCPToolCallRequest
-    from langchain_core.messages import ToolMessage
+    from langchain.messages import ToolMessage
 
     async def require_authentication(
         request: MCPToolCallRequest,
@@ -779,7 +779,7 @@ When MCP tools are used within a LangGraph agent (via `create_agent`), intercept
     ```python Return custom responses with tool call ID
     from langchain_mcp_adapters.client import MultiServerMCPClient
     from langchain_mcp_adapters.interceptors import MCPToolCallRequest
-    from langchain_core.messages import ToolMessage
+    from langchain.messages import ToolMessage
 
     async def rate_limit_interceptor(
         request: MCPToolCallRequest,
@@ -820,7 +820,7 @@ Interceptors can return `Command` objects to update agent state or control graph
 ```python Returning Command from interceptor
 from langchain.agents import AgentState, create_agent
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest
-from langchain_core.messages import ToolMessage
+from langchain.messages import ToolMessage
 from langgraph.types import Command
 
 async def track_tool_usage(
