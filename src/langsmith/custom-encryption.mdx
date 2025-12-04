@@ -95,17 +95,10 @@ JSON handlers encrypt structured data like thread metadata, assistant context, a
 
 Common fields to leave **unencrypted** for search and filtering:
 
-- `user_id`, `tenant_id`, `project_id` — for access control queries
-- `status`, `priority`, `type` — for filtering by state
-- `tags`, `labels` — for categorization queries
-- `created_by`, `owner` — for ownership lookups
-
-Encrypt fields containing **sensitive data**:
-
-- Conversation messages and content
-- Personal information (email, phone, address)
-- API keys, tokens, credentials
-- Business-sensitive data
+- User-defined fields for access control queries (e.g., `tenant_id`, `owner`)
+- `run_id`, `thread_id`, `graph_id`, `assistant_id`, `user_id`, `checkpoint_id` — system-populated identifiers
+- `source`, `step`, `parents`, `run_attempt` — system-populated execution state
+- `langgraph_version`, `langgraph_api_version`, `langgraph_plan`, `langgraph_host`, `langgraph_api_url`, `langgraph_request_id`, `langgraph_auth_user`, `langgraph_auth_user_id`, `langgraph_auth_permissions` — system-populated platform metadata
 
 ```python
 import json
@@ -120,7 +113,14 @@ TENANT_KEYS = {
     "tenant-b": Fernet(os.environ["TENANT_B_KEY"]),
 }
 
-SENSITIVE_FIELDS = {"messages", "email", "phone", "content"}
+SKIP_FIELDS = {
+    "tenant_id", "owner",
+    "run_id", "thread_id", "graph_id", "assistant_id", "user_id", "checkpoint_id",
+    "source", "step", "parents", "run_attempt",
+    "langgraph_version", "langgraph_api_version", "langgraph_plan", "langgraph_host",
+    "langgraph_api_url", "langgraph_request_id", "langgraph_auth_user",
+    "langgraph_auth_user_id", "langgraph_auth_permissions",
+}
 ENCRYPTED_KEY = "__encrypted__"
 
 
@@ -134,10 +134,10 @@ def _get_fernet(ctx: EncryptionContext) -> Fernet:
 @encryption.encrypt.json
 async def encrypt_json(ctx: EncryptionContext, data: dict) -> dict:
     fernet = _get_fernet(ctx)
-    to_encrypt = {k: v for k, v in data.items() if k in SENSITIVE_FIELDS and v is not None}
+    to_encrypt = {k: v for k, v in data.items() if k not in SKIP_FIELDS and v is not None}
     if not to_encrypt:
         return data
-    result = {k: v for k, v in data.items() if k not in SENSITIVE_FIELDS}
+    result = {k: v for k, v in data.items() if k in SKIP_FIELDS}
     result[ENCRYPTED_KEY] = fernet.encrypt(json.dumps(to_encrypt).encode()).decode()
     return result
 
@@ -225,25 +225,23 @@ encryption = Encryption()
 
 @encryption.encrypt.json
 async def default_encrypt(ctx: EncryptionContext, data: dict) -> dict:
-    return encrypt_sensitive_fields(data)
+    return encrypt_with_skip_fields(data, SKIP_FIELDS)
 
 @encryption.encrypt.json.assistant
 async def encrypt_assistant(ctx: EncryptionContext, data: dict) -> dict:
     if ctx.field == "context":
-        # Assistant context may contain API keys or system prompts
-        return encrypt_all_fields(data)
-    # Assistant metadata—selective encryption
-    return encrypt_sensitive_fields(data)
+        # Assistant context may contain API keys or system prompts—encrypt everything
+        return encrypt_with_skip_fields(data, skip_fields=set())
+    # Assistant metadata—skip system fields
+    return encrypt_with_skip_fields(data, SKIP_FIELDS)
 
 @encryption.decrypt.json
 async def default_decrypt(ctx: EncryptionContext, data: dict) -> dict:
-    return decrypt_sensitive_fields(data)
+    return decrypt_encrypted_fields(data)
 
 @encryption.decrypt.json.assistant
 async def decrypt_assistant(ctx: EncryptionContext, data: dict) -> dict:
-    if ctx.field == "context":
-        return decrypt_all_fields(data)
-    return decrypt_sensitive_fields(data)
+    return decrypt_encrypted_fields(data)
 ```
 
 Supported model types: `thread`, `assistant`, `run`, `cron`, `checkpoint`.
@@ -289,7 +287,14 @@ cmm = CachingCryptoMaterialsManager(
     max_messages_encrypted=100,
 )
 
-SENSITIVE_FIELDS = {"messages", "email", "phone", "content"}
+SKIP_FIELDS = {
+    "tenant_id", "owner",
+    "run_id", "thread_id", "graph_id", "assistant_id", "user_id", "checkpoint_id",
+    "source", "step", "parents", "run_attempt",
+    "langgraph_version", "langgraph_api_version", "langgraph_plan", "langgraph_host",
+    "langgraph_api_url", "langgraph_request_id", "langgraph_auth_user",
+    "langgraph_auth_user_id", "langgraph_auth_permissions",
+}
 ENCRYPTED_KEY = "__encrypted__"
 
 
@@ -311,7 +316,7 @@ async def decrypt_blob(ctx: EncryptionContext, data: bytes) -> bytes:
 
 @encryption.encrypt.json
 async def encrypt_json(ctx: EncryptionContext, data: dict) -> dict:
-    to_encrypt = {k: v for k, v in data.items() if k in SENSITIVE_FIELDS and v is not None}
+    to_encrypt = {k: v for k, v in data.items() if k not in SKIP_FIELDS and v is not None}
     if not to_encrypt:
         return data
     ciphertext, _ = client.encrypt(
@@ -319,7 +324,7 @@ async def encrypt_json(ctx: EncryptionContext, data: dict) -> dict:
         materials_manager=cmm,
         encryption_context={"tenant_id": ctx.metadata["tenant_id"]},
     )
-    result = {k: v for k, v in data.items() if k not in SENSITIVE_FIELDS}
+    result = {k: v for k, v in data.items() if k in SKIP_FIELDS}
     result[ENCRYPTED_KEY] = base64.b64encode(ciphertext).decode()
     return result
 
