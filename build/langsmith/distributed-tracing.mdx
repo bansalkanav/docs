@@ -1,0 +1,362 @@
+---
+title: Implement distributed tracing
+sidebarTitle: Implement distributed tracing
+---
+
+Sometimes, you need to trace a request across multiple services.
+
+LangSmith supports distributed tracing out of the box, linking runs within a trace across services using context propagation headers (`langsmith-trace` and optional `baggage` for metadata/tags).
+
+Example client-server setup:
+
+* Trace starts on client
+* Continues on server
+
+## Distributed tracing in Python
+
+```python
+# client.py
+from langsmith.run_helpers import get_current_run_tree, traceable
+import httpx
+
+@traceable
+async def my_client_function():
+    headers = {}
+    async with httpx.AsyncClient(base_url="...") as client:
+        if run_tree := get_current_run_tree():
+            # add langsmith-id to headers
+            headers.update(run_tree.to_headers())
+        return await client.post("/my-route", headers=headers)
+```
+
+Then the server (or other service) can continue the trace by handling the headers appropriately. If you are using an asgi app Starlette or FastAPI, you can connect the distributed trace using LangSmith's `TracingMiddleware`.
+
+<Info>
+The `TracingMiddleware` class was added in `langsmith==0.1.133`.
+</Info>
+
+Example using FastAPI:
+
+```python
+from langsmith import traceable
+from langsmith.middleware import TracingMiddleware
+from fastapi import FastAPI, Request
+
+app = FastAPI()  # Or Flask, Django, or any other framework
+app.add_middleware(TracingMiddleware)
+
+@traceable
+async def some_function():
+    ...
+
+@app.post("/my-route")
+async def fake_route(request: Request):
+    return await some_function()
+```
+
+Or in Starlette:
+
+```python
+from starlette.applications import Starlette
+from starlette.middleware import Middleware
+from langsmith.middleware import TracingMiddleware
+
+routes = ...
+middleware = [
+    Middleware(TracingMiddleware),
+]
+app = Starlette(..., middleware=middleware)
+```
+
+If you are using other server frameworks, you can always "receive" the distributed trace by passing the headers in through `langsmith_extra`:
+
+```python
+# server.py
+import langsmith as ls
+from fastapi import FastAPI, Request
+
+@ls.traceable
+async def my_application():
+    ...
+
+app = FastAPI()  # Or Flask, Django, or any other framework
+
+@app.post("/my-route")
+async def fake_route(request: Request):
+    # request.headers:  {"langsmith-trace": "..."}
+    # as well as optional metadata/tags in `baggage`
+    with ls.tracing_context(parent=request.headers):
+        return await my_application()
+```
+
+The example above uses the `tracing_context` context manager. You can also directly specify the parent run context in the `langsmith_extra` parameter of a method wrapped with `@traceable`.
+
+```python
+# ... same as above
+
+@app.post("/my-route")
+async def fake_route(request: Request):
+    # request.headers:  {"langsmith-trace": "..."}
+    my_application(langsmith_extra={"parent": request.headers})
+```
+
+## Distributed tracing in TypeScript
+
+<Note>
+Distributed tracing in TypeScript requires `langsmith` version `>=0.1.31`
+</Note>
+
+First, we obtain the current run tree from the client and convert it to `langsmith-trace` and `baggage` header values, which we can pass to the server:
+
+```typescript
+// client.mts
+import { getCurrentRunTree, traceable } from "langsmith/traceable";
+
+const client = traceable(
+    async () => {
+        const runTree = getCurrentRunTree();
+        return await fetch("...", {
+            method: "POST",
+            headers: runTree.toHeaders(),
+        }).then((a) => a.text());
+    },
+    { name: "client" }
+);
+
+await client();
+```
+
+Then, the server converts the headers back to a run tree, which it uses to further continue the tracing.
+
+To pass the newly created run tree to a traceable function, we can use the `withRunTree` helper, which will ensure the run tree is propagated within traceable invocations.
+
+<CodeGroup>
+
+```typescript Express.JS
+// server.mts
+import { RunTree } from "langsmith";
+import { traceable, withRunTree } from "langsmith/traceable";
+import express from "express";
+import bodyParser from "body-parser";
+
+    const server = traceable(
+        (text: string) => `Hello from the server! Received "${text}"`,
+        { name: "server" }
+    );
+
+    const app = express();
+    app.use(bodyParser.text());
+
+app.post("/", async (req, res) => {
+    const runTree = RunTree.fromHeaders(req.headers);
+    const result = await withRunTree(runTree, () => server(req.body));
+    res.send(result);
+});
+```
+
+```typescript Hono
+// server.mts
+import { RunTree } from "langsmith";
+import { traceable, withRunTree } from "langsmith/traceable";
+import { Hono } from "hono";
+
+    const server = traceable(
+        (text: string) => `Hello from the server! Received "${text}"`,
+        { name: "server" }
+    );
+
+    const app = new Hono();
+
+app.post("/", async (c) => {
+    const body = await c.req.text();
+    const runTree = RunTree.fromHeaders(c.req.raw.headers);
+    const result = await withRunTree(runTree, () => server(body));
+    return c.body(result);
+});
+```
+
+</CodeGroup>
+
+## Distributed tracing in Java
+
+Java supports distributed tracing using OpenTelemetry context propagation with the W3C Trace Context standard (`traceparent` header).
+
+<CodeGroup>
+
+```java Client
+import com.langchain.smith.wrappers.openai.OpenTelemetryConfig;
+import com.langchain.smith.wrappers.openai.WrappedOpenAIClient;
+import com.openai.models.ChatModel;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Context;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.context.propagation.TextMapGetter;
+import io.opentelemetry.context.propagation.TextMapSetter;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
+
+public class DistributedTracingClient {
+    public static void main(String[] args) throws Exception {
+        // Configure OpenTelemetry
+        OpenTelemetryConfig.builder()
+            .fromEnv()
+            .build();
+
+        Tracer tracer = GlobalOpenTelemetry.get().getTracer("client-app");
+
+        // Create parent span
+        Span clientSpan = tracer.spanBuilder("client_request")
+            .setAttribute("langsmith.span.kind", "chain")
+            .startSpan();
+
+        try (Scope scope = clientSpan.makeCurrent()) {
+            // Prepare headers for propagation
+            Map<String, String> headers = new HashMap<>();
+
+            // Inject trace context into headers
+            GlobalOpenTelemetry.getPropagators()
+                .getTextMapPropagator()
+                .inject(Context.current(), headers, new TextMapSetter<Map<String, String>>() {
+                    @Override
+                    public void set(Map<String, String> carrier, String key, String value) {
+                        carrier.put(key, value);
+                    }
+                });
+
+            // Make HTTP request to server with propagated context
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/process"))
+                .POST(HttpRequest.BodyPublishers.ofString("Hello from client"));
+
+            // Add propagated headers
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                requestBuilder.header(entry.getKey(), entry.getValue());
+            }
+
+            HttpResponse<String> response = client.send(
+                requestBuilder.build(),
+                HttpResponse.BodyHandlers.ofString()
+            );
+
+            System.out.println("Response: " + response.body());
+        } finally {
+            clientSpan.end();
+        }
+
+        OpenTelemetryConfig.flush(5, java.util.concurrent.TimeUnit.SECONDS);
+    }
+}
+```
+
+```java Server (Spring Boot)
+import com.langchain.smith.wrappers.openai.OpenTelemetryConfig;
+import com.langchain.smith.wrappers.openai.WrappedOpenAIClient;
+import com.openai.models.ChatModel;
+import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Context;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.context.propagation.TextMapGetter;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+@SpringBootApplication
+@RestController
+public class DistributedTracingServer {
+
+    static {
+        // Configure OpenTelemetry
+        OpenTelemetryConfig.builder()
+            .fromEnv()
+            .build();
+    }
+
+    private final Tracer tracer = GlobalOpenTelemetry.get().getTracer("server-app");
+    private final WrappedOpenAIClient openaiClient = WrappedOpenAIClient.fromEnv();
+
+    @PostMapping("/process")
+    public String processRequest(@RequestBody String message, HttpServletRequest request) {
+        // Extract trace context from incoming headers
+        Map<String, String> headers = new HashMap<>();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headers.put(headerName, request.getHeader(headerName));
+        }
+
+        // Extract parent context
+        Context extractedContext = GlobalOpenTelemetry.getPropagators()
+            .getTextMapPropagator()
+            .extract(Context.current(), headers, new TextMapGetter<Map<String, String>>() {
+                @Override
+                public Iterable<String> keys(Map<String, String> carrier) {
+                    return carrier.keySet();
+                }
+
+                @Override
+                public String get(Map<String, String> carrier, String key) {
+                    return carrier.get(key);
+                }
+            });
+
+        // Create server span as child of extracted context
+        Span serverSpan = tracer.spanBuilder("server_process")
+            .setParent(extractedContext)
+            .setAttribute("langsmith.span.kind", "chain")
+            .startSpan();
+
+        try (Scope scope = serverSpan.makeCurrent()) {
+            // Process with OpenAI (will be a child span)
+            ChatCompletion completion = openaiClient.chat().completions().create(
+                ChatCompletionCreateParams.builder()
+                    .model(ChatModel.GPT_4O_MINI)
+                    .addSystemMessage("Respond to the user's message.")
+                    .addUserMessage(message)
+                    .build()
+            );
+
+            String response = completion.choices().get(0).message().content().orElse("");
+            serverSpan.setAttribute("response", response);
+
+            return response;
+        } finally {
+            serverSpan.end();
+        }
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(DistributedTracingServer.class, args);
+    }
+}
+```
+
+</CodeGroup>
+
+<Note>
+Java distributed tracing uses the W3C Trace Context standard (`traceparent` and `tracestate` headers) via OpenTelemetry's context propagation API. The trace context is automatically propagated across service boundaries when you inject and extract the context using `GlobalOpenTelemetry.getPropagators()`.
+</Note>
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/distributed-tracing.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
