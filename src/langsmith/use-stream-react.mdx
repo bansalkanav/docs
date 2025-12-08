@@ -672,7 +672,7 @@ const thread = useStream<
 
 ## Event Handling
 
-The [`useStream()`](https://reference.langchain.com/javascript/functions/_langchain_langgraph-sdk.react.useStream.html) hook provides callback options that give you access to different types of streaming events beyond just messages. You don't need to explicitly configure stream modes—simply pass callbacks for the event types you want to handle:
+The [`useStream()`](https://reference.langchain.com/javascript/functions/_langchain_langgraph-sdk.react.useStream.html) hook provides callback options that give you access to different types of streaming events beyond just messages. You don't need to explicitly configure stream modes— just pass callbacks for the event types you want to handle:
 
 ```tsx
 const thread = useStream<{ messages: Message[] }>({
