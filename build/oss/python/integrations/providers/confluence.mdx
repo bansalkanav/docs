@@ -1,0 +1,39 @@
+---
+title: Confluence
+---
+
+>[Confluence](https://www.atlassian.com/software/confluence) is a wiki collaboration platform that saves and organizes all of the project-related material. `Confluence` is a knowledge base that primarily handles content management activities.
+
+
+## Installation and Setup
+
+<CodeGroup>
+```bash pip
+pip install atlassian-python-api
+```
+
+```bash uv
+uv add atlassian-python-api
+```
+</CodeGroup>
+
+We need to set up `username/api_key` or `Oauth2 login`.
+See [instructions](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
+
+
+## Document Loader
+
+See a [usage example](/oss/python/integrations/document_loaders/confluence).
+
+```python
+from langchain_community.document_loaders import ConfluenceLoader
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/confluence.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
