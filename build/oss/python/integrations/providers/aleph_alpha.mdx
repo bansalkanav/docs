@@ -1,0 +1,53 @@
+---
+title: Aleph Alpha
+---
+
+>[Aleph Alpha](https://docs.aleph-alpha.com/) was founded in 2019 with the mission to research and build the foundational technology for an era of strong AI. The team of international scientists, engineers, and innovators researches, develops, and deploys transformative AI like large language and multimodal models and runs the fastest European commercial AI cluster.
+
+>[The Luminous series](https://docs.aleph-alpha.com/docs/introduction/luminous/) is a family of Large Language Models.
+
+## Installation and Setup
+
+<CodeGroup>
+```bash pip
+pip install aleph-alpha-client
+```
+
+```bash uv
+uv add aleph-alpha-client
+```
+</CodeGroup>
+
+You have to create a new token. Please, see [instructions](https://docs.aleph-alpha.com/docs/account/#create-a-new-token).
+
+```python
+from getpass import getpass
+
+ALEPH_ALPHA_API_KEY = getpass()
+```
+
+
+## LLM
+
+See a [usage example](/oss/python/integrations/llms/aleph_alpha).
+
+```python
+from langchain_community.llms import AlephAlpha
+```
+
+## Text Embedding Models
+
+See a [usage example](/oss/python/integrations/text_embedding/aleph_alpha).
+
+```python
+from langchain_community.embeddings import AlephAlphaSymmetricSemanticEmbedding, AlephAlphaAsymmetricSemanticEmbedding
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/aleph_alpha.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

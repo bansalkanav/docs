@@ -1,0 +1,59 @@
+---
+title: Arxiv
+---
+
+>[arXiv](https://arxiv.org/) is an open-access archive for 2 million scholarly articles in the fields of physics,
+> mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and
+> systems science, and economics.
+
+
+## Installation and Setup
+
+First, you need to install `arxiv` python package.
+
+<CodeGroup>
+```bash pip
+pip install arxiv
+```
+
+```bash uv
+uv add arxiv
+```
+</CodeGroup>
+
+Second, you need to install `PyMuPDF` python package which transforms PDF files downloaded from the `arxiv.org` site into the text format.
+
+<CodeGroup>
+```bash pip
+pip install pymupdf
+```
+
+```bash uv
+uv add pymupdf
+```
+</CodeGroup>
+
+## Document Loader
+
+See a [usage example](/oss/python/integrations/document_loaders/arxiv).
+
+```python
+from langchain_community.document_loaders import ArxivLoader
+```
+
+## Retriever
+
+See a [usage example](/oss/python/integrations/retrievers/arxiv).
+
+```python
+from langchain_community.retrievers import ArxivRetriever
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/arxiv.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

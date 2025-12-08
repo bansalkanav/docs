@@ -1,0 +1,596 @@
+---
+title: Contributing to code
+sidebarTitle: Code
+---
+
+Code contributions are always welcome! Whether you're fixing bugs, adding features, or improving performance, your contributions help deliver a better developer experience for thousands of developers.
+
+## Getting started
+
+<Note>
+    Before submitting large **new features or refactors**, please first discuss your ideas in [the forum](https://forum.langchain.com/). This ensures alignment with project goals and prevents duplicate work.
+
+    This does not apply to bugfixes or small improvements, which you can contribute directly via pull requests. See the quickstart guide below.
+</Note>
+
+### Quick fix: submit a bugfix
+
+For simple bugfixes, you can get started immediately:
+
+<Steps>
+    <Step title="Reproduce the issue">
+        Create a minimal test case that demonstrates the bug. Maintainers and other contributors should be able to run this test and see the failure without additional setup or modification
+    </Step>
+
+    <Step title="Fork the repository">
+
+        Fork the [LangChain](https://github.com/langchain-ai/langchainjs) or [LangGraph](https://github.com/langchain-ai/langgraphjs) repo to your personal GitHub account
+
+    </Step>
+
+    <Step title="Clone and setup">
+
+        ```bash
+        git clone https://github.com/your-username/name-of-forked-repo.git
+
+        # For instance, for LangChain:
+        git clone https://github.com/parrot123/langchainjs.git
+
+        # For LangGraph:
+        git clone https://github.com/parrot123/langgraphjs.git
+        ```
+
+        ```bash
+        # Inside your repo, install dependencies
+        pnpm install
+        # Create a build for all packages to resolve workspace dependencies
+        pnpm build
+        ```
+
+    </Step>
+
+    <Step title="Create a branch">
+        Create a new branch for your fix. This helps keep your changes organized and makes it easier to submit a pull request later.
+
+        ```bash
+        git checkout -b your-username/short-bugfix-name
+        ```
+    </Step>
+
+    <Step title="Write failing tests">
+        Add [unit tests](#test-writing-guidelines) that will fail without your fix. This allows us to verify the bug is resolved and prevents regressions
+    </Step>
+
+    <Step title="Make your changes">
+        Fix the bug while following our [code quality standards](#code-quality-standards). Make the **minimal change necessary** to resolve the issue
+    </Step>
+
+    <Step title="Run build">
+        Run the build command to ensure the package still builds properly
+        ```bash
+        pnpm build
+        # or build a specific workspace package
+        pnpm --filter @langchain/core build
+        ```
+    </Step>
+
+
+    <Step title="Verify the fix">
+        Ensure that tests pass and no regressions are introduced. Ensure all tests pass locally before submitting your PR
+
+
+        ```bash
+        pnpm lint
+        pnpm test
+
+        # For bugfixes involving integrations, also run:
+        pnpm test:int
+
+        # Or run tests in a specific workspace package
+        cd libs/langchain-core
+        pnpm test
+        pnpm lint
+
+        # Or run tests for a specific package from the root of the repo
+        pnpm --filter @langchain/core test
+        pnpm --filter @langchain/core lint
+        ```
+
+    </Step>
+
+    <Step title="Document the change">
+        Update docstrings if behavior changes, add comments for complex logic
+    </Step>
+
+    <Step title="Submit a pull request">
+        Follow the PR template provided. If applicable, reference the issue you're fixing using a [closing keyword](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword) (e.g. `Fixes #ISSUE_NUMBER`) so that the issue is automatically closed when your PR is merged.
+    </Step>
+</Steps>
+
+### Full development setup
+
+For ongoing development or larger contributions:
+
+1. Review our [contribution guidelines](#contribution-guidelines) for features, bugfixes, and integrations
+2. Set up your environment following our [setup guide](#development-environment) below
+3. Understand the [repository structure](#repository-structure) and package organization
+4. Learn our [development workflow](#development-workflow) including testing and linting
+
+---
+
+## Contribution guidelines
+
+Before you start contributing to LangChain, take a moment to think about why you want to. If your only goal is to add a "first contribution" to your resume (or if you're just looking for a quick win) you might be better off doing a boot-camp or an online tutorial.
+
+Contributing to open source projects takes time and effort, but it can also help you become a better developer and learn new skills. However, it's important to know that it might be harder and slower than following a training course. That said, contributing to open source is worth it if you're willing to take the time to do things well.
+
+### Backwards compatibility
+
+<Warning>
+    Breaking changes to public APIs are not allowed except for critical security fixes.
+
+    See our [versioning policy](/oss/javascript/versioning) for details on major version releases.
+</Warning>
+
+Maintain compatibility via:
+
+<AccordionGroup>
+    <Accordion title="Stable interfaces">
+        **Always preserve**:
+        - Function signatures and parameter names
+        - Class interfaces and method names
+        - Return value structure and types
+        - Import paths for public APIs
+    </Accordion>
+
+    <Accordion title="Safe changes">
+        **Acceptable modifications**:
+
+        - Adding new optional parameters/type parameters
+
+        - Adding new methods to classes
+        - Improving performance without changing behavior
+        - Adding new modules or functions
+    </Accordion>
+
+    <Accordion title="Before making changes">
+        - **Would this break existing user code?**
+        - Check if your target is public
+
+        - Are there existing usage patterns in tests?
+    </Accordion>
+</AccordionGroup>
+
+### New features
+
+We aim to keep the bar high for new features. We generally don't accept new core abstractions from outside contributors without an existing issue that demonstrates an acute need for them. This also applies to changes to infra and dependencies.
+
+In general, feature contribution requirements include:
+
+<Steps>
+    <Step title="Design discussion">
+        Open an issue describing:
+
+        - The problem you're solving
+        - Proposed API design
+        - Expected usage patterns
+    </Step>
+
+    <Step title="Implementation">
+        - Follow existing code patterns
+        - Include comprehensive tests and documentation
+        - Consider security implications
+    </Step>
+
+    <Step title="Integration considerations">
+        - How does this interact with existing features?
+        - Are there performance implications?
+        - Does this introduce new dependencies?
+
+        We will reject features that are likely to lead to security vulnerabilities or reports.
+    </Step>
+</Steps>
+
+### Security guidelines
+
+<Warning>
+    Security is paramount. Never introduce vulnerabilities or unsafe patterns.
+</Warning>
+
+Security checklist:
+
+<AccordionGroup>
+    <Accordion title="Input validation">
+        - Validate and sanitize all user inputs
+        - Properly escape data in templates and queries
+
+        - Never use `eval()`, as this can lead to arbitrary code execution vulnerabilities
+
+    </Accordion>
+
+    <Accordion title="Error handling">
+        - Use specific exception types
+        - Don't expose sensitive information in error messages
+        - Implement proper resource cleanup
+    </Accordion>
+
+    <Accordion title="Dependencies">
+        - Avoid adding hard dependencies
+        - Keep optional dependencies minimal
+        - Review third-party packages for security issues
+    </Accordion>
+</AccordionGroup>
+
+---
+
+## Development environment
+
+
+<Warning>
+    Our JS/TS projects uses [`pnpm`](https://pnpm.io/) for dependency management. Make sure you have the latest version installed, or run `corepack enable` (on Node 24+) to setup the required pnpm version.
+</Warning>
+
+
+Once you've reviewed the [contribution guidelines](#contribution-guidelines), set up a development environment for the package(s) you're working on.
+
+<Tabs>
+    <Tab title="LangChain" icon="link">
+        <AccordionGroup>
+            <Accordion title="Core abstractions">
+                For changes to `langchain-core`:
+
+
+                ```bash
+                pnpm install
+                # Run tests for a package from the package directory
+                cd libs/langchain-core
+                pnpm test
+
+                # Or run tests for a package from the root of the repo
+                pnpm --filter @langchain/core test
+
+                ```
+
+            </Accordion>
+
+            <Accordion title="Main package">
+                For changes to `langchain`:
+
+
+                ```bash
+                pnpm install
+                pnpm --filter langchain test  # Ensure tests pass before starting development
+                ```
+
+            </Accordion>
+
+
+            <Accordion title="Provider packages">
+                For changes to [partner integrations](/oss/javascript/integrations/providers/overview):
+
+                ```bash
+                pnpm install
+                pnpm --filter @langchain/{provider} test  # Ensure tests pass before starting development
+                ```
+            </Accordion>
+
+
+            <Accordion title="Community packages">
+                For changes to [community integrations](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-community):
+
+                ```bash
+                pnpm install
+                pnpm --filter @langchain/community test  # Ensure tests pass before starting development
+                ```
+            </Accordion>
+
+        </AccordionGroup>
+    </Tab>
+    <Tab title="LangGraph" icon="circle-nodes">
+        WIP - coming soon! In the meantime, follow instructions for LangChain.
+    </Tab>
+</Tabs>
+
+---
+
+## Repository structure
+
+<Tabs>
+    <Tab title="LangChain" icon="link">
+        LangChain is organized as a monorepo with multiple packages:
+
+        <AccordionGroup>
+            <Accordion title="Core packages" defaultOpen>
+
+                - **[`langchain`](https://github.com/langchain-ai/langchainjs/tree/main/langchain#readme)** (located in `libs/langchain/`): Main package with chains, agents, and retrieval logic
+                - **[`@langchain/core`](https://github.com/langchain-ai/langchainjs/tree/main/langchain-core#readme)** (located in `libs/langchain-core/`): Base interfaces and core abstractions
+
+            </Accordion>
+
+            <Accordion title="Partner packages">
+
+                Located in `libs/providers/`, these are independently versioned packages for specific integrations. For example:
+                - **[`@langchain/openai`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-openai#readme)**: [OpenAI](/oss/javascript/integrations/providers/openai) integrations
+                - **[`@langchain/anthropic`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-anthropic#readme)**: [Anthropic](/oss/javascript/integrations/providers/anthropic) integrations
+                - **[`@langchain/google-genai`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-google-genai#readme)**: [Google Generative AI](/oss/javascript/integrations/chat/google_generative_ai) integrations
+
+
+            </Accordion>
+
+            <Accordion title="Supporting packages">
+
+                - **[`@langchain/textsplitters`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-textsplitters#readme)**: Text splitting utilities
+                - **[`@langchain/standard-tests`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-standard-tests#readme)**: Standard test suites for integrations
+                - **[`langchain-community`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-community)**: Community maintained integrations
+
+
+            </Accordion>
+        </AccordionGroup>
+    </Tab>
+    <Tab title="LangGraph" icon="circle-nodes">
+        WIP - coming soon! In the meantime, follow instructions for LangChain.
+    </Tab>
+</Tabs>
+
+---
+
+## Development workflow
+
+### Testing requirements
+
+<Info>
+    Directories are relative to the package you're working in.
+</Info>
+
+Every code change must include comprehensive tests.
+
+#### Unit tests
+
+
+**Location**: `src/tests/FILENAME_BEING_TESTED.test.ts`
+
+
+**Requirements**:
+- No network calls allowed
+- Test all code paths including edge cases
+- Use mocks for external dependencies
+
+
+```bash
+# Run the entire test suite
+pnpm test
+
+# Or run a specific test file
+pnpm test src/tests/FILENAME_BEING_TESTED.test.ts
+
+# Or run a specific test function
+pnpm test -t "the test that should be run"
+```
+
+
+#### Integration tests
+
+
+**Location**: `src/tests/FILENAME_BEING_TESTED.int.test.ts`
+
+
+Integration tests require access to external services/ provider APIs (which can cost money) and therefore are not run by default.
+
+Not every code change will require an integration test, but keep in mind that we'll require/ run integration tests separately as apart of our review process.
+
+**Requirements**:
+- Test real integrations with external services
+- Use environment variables for API keys
+- Skip gracefully if credentials unavailable
+
+
+```bash
+pnpm test:int
+```
+
+
+### Code quality standards
+
+Contributions must adhere to the following quality requirements:
+
+<Tabs>
+    <Tab title="Type hints">
+
+        **Required**: Complete types for all functions
+
+        ```typescript
+        function processDocuments(
+            docs: Document[],
+            processor: DocumentProcessor,
+            batchSize: number = 100
+        ): ProcessingResult {
+            // ...
+        }
+        ```
+
+    </Tab>
+
+    <Tab title="Documentation">
+
+        **Required**: [JSDocs](https://jsdoc.app/about-getting-started) for all exported functions and interfaces
+
+        ```typescript
+        /**
+         * Document processing instance.
+         */
+        interface FooDocumentProcessor {
+            /**
+             * Process documents in batches.
+             *
+             * @param docs - List of documents to process.
+             * @returns Processing results with success/failure counts.
+             */
+            process(docs: Document[]): ProcessingResult;
+        }
+
+        /**
+         * Process documents in batches.
+         *
+         * @param docs - List of documents to process.
+         * @param processor - Document processing instance.
+         * @param batchSize - Number of documents per batch.
+         * @returns Processing results with success/failure counts.
+         */
+        export function processDocuments(
+            docs: Document[],
+            processor: DocumentProcessor,
+            batchSize: number = 100
+        ): ProcessingResult {
+            // ...
+        }
+        ```
+
+
+        - Document all parameters and return values
+        - Include usage examples for complex functions
+        - Document raised exceptions
+        - Focus on "why" rather than "what"
+    </Tab>
+
+    <Tab title="Code style">
+
+        **Automated**: Formatting and linting:
+
+        ```bash
+        pnpm lint    # Check style and types
+        pnpm format  # Apply formatting
+        ```
+
+
+        **Standards**:
+        - Descriptive variable names
+        - Break up complex functions (aim for fewer than 20 lines)
+        - Follow existing patterns in the codebase
+    </Tab>
+</Tabs>
+
+---
+
+## Testing and validation
+
+### Running tests locally
+
+Before submitting your PR, ensure you have completed the following steps. Note that the requirements differ slightly between LangChain and LangGraph.
+
+<Tabs>
+    <Tab title="LangChain" icon="link">
+        <Steps>
+            <Step title="Unit tests">
+
+                ```bash
+                pnpm test
+                ```
+
+                All unit tests must pass
+            </Step>
+
+            <Step title="Integration tests">
+
+                ```bash
+                pnpm test:int
+                ```
+
+                (Run if your changes affect integrations)
+            </Step>
+
+            <Step title="Formatting">
+
+                ```bash
+                pnpm format
+                pnpm lint
+                ```
+
+                Code must pass all style checks
+            </Step>
+
+
+
+            <Step title="PR submission">
+                Push your branch and open a pull request. Follow the provided form template. Note related issues using a [closing keyword](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword). After submitting, wait, and check to ensure the CI checks pass. If any checks fail, address the issues promptly - maintainers may close PRs that do not pass CI within a reasonable timeframe.
+            </Step>
+        </Steps>
+    </Tab>
+    <Tab title="LangGraph" icon="circle-nodes">
+        WIP - coming soon! In the meantime, follow instructions for LangChain.
+    </Tab>
+</Tabs>
+
+
+### Test writing guidelines
+
+In order to write effective tests, there's a few good practices to follow:
+
+
+- Encapsulate the test in a `describe` block that describes the component being tested
+- Use natural language to describe the test name
+- Be exhaustive with assertions
+- Only use snapshots for reasonably sized data objects
+
+
+<Tabs>
+    <Tab title="Unit tests">
+
+        ```typescript
+        describe("DocumentProcessor", () => {
+            it("Should handle empty document list", () => {
+                const processor = new DocumentProcessor();
+                const result = processor.process([]);
+
+                expect(result.success).toBe(true);
+                expect(result.processedCount).toBe(0);
+                expect(result.errors).toHaveLength(0);
+            });
+        });
+        ```
+
+    </Tab>
+
+    <Tab title="Integration tests">
+
+        ```typescript
+        describe("ChatOpenAI", () => {
+            it("Should test with real API", () => {
+                const chat = new ChatOpenAI();
+                const response = chat.invoke("Hello");
+            });
+        });
+        ```
+
+    </Tab>
+
+    <Tab title="Mock usage">
+
+        ```typescript
+        describe("APIService", () => {
+            it("Should call with retry", () => {
+                const mockClient = new MockClient();
+                const service = new APIService(client: mockClient);
+                const result = service.callWithRetry();
+            });
+        });
+        ```
+
+    </Tab>
+</Tabs>
+
+## Getting help
+
+Our goal is to have the most accessible developer setup possible. Should you experience any difficulty getting setup, please ask in the [community slack](https://www.langchain.com/join-community) or open a [forum post](https://forum.langchain.com/).
+
+<Check>
+    You're now ready to contribute high-quality code to LangChain!
+</Check>
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/contributing/code.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

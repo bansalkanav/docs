@@ -1,0 +1,54 @@
+---
+title: Huawei
+---
+
+>[Huawei Technologies Co., Ltd.](https://www.huawei.com/) is a Chinese multinational
+> digital communications technology corporation.
+>
+>[Huawei Cloud](https://www.huaweicloud.com/intl/en-us/product/) provides a comprehensive suite of
+> global cloud computing services.
+
+
+## Installation and Setup
+
+To access the `Huawei Cloud`, you need an access token.
+
+You also have to install a python library:
+
+<CodeGroup>
+```bash pip
+pip install -U esdk-obs-python
+```
+
+```bash uv
+uv add esdk-obs-python
+```
+</CodeGroup>
+
+
+## Document Loader
+
+### Huawei OBS Directory
+
+See a [usage example](/oss/python/integrations/document_loaders/huawei_obs_directory).
+
+```python
+from langchain_community.document_loaders import OBSDirectoryLoader
+```
+
+### Huawei OBS File
+
+See a [usage example](/oss/python/integrations/document_loaders/huawei_obs_file).
+
+```python
+from langchain_community.document_loaders.obs_file import OBSFileLoader
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/huawei.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
