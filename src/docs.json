@@ -844,6 +844,7 @@
                 {
                   "group": "Additional resources",
                   "pages": [
+                    "langsmith/polly",
                     {
                       "group": "Releases & changelogs",
                       "pages": [
