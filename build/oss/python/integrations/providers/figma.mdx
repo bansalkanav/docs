@@ -1,0 +1,32 @@
+---
+title: Figma
+---
+
+>[Figma](https://www.figma.com/) is a collaborative web application for interface design.
+
+## Installation and Setup
+
+The Figma API requires an `access token`, `node_ids`, and a `file key`.
+
+The `file key` can be pulled from the URL.  https://www.figma.com/file/\{filekey\}/sampleFilename
+
+`Node IDs` are also available in the URL. Click on anything and look for the '?node-id=\{node_id\}' param.
+
+`Access token` [instructions](https://help.figma.com/hc/en-us/articles/8085703771159-Manage-personal-access-tokens).
+
+## Document Loader
+
+See a [usage example](/oss/python/integrations/document_loaders/figma).
+
+```python
+from langchain_community.document_loaders import FigmaFileLoader
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/figma.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
