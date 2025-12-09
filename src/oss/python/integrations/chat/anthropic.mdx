@@ -314,6 +314,8 @@ Provide image inputs along with text using a @[`HumanMessage`] with list content
 
     image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
     image_data = base64.b64encode(httpx.get(image_url).content).decode("utf-8")
+    image_url = "https://picsum.photos/id/237/200/300"
+    image_data = base64.b64encode(httpx.get(image_url, follow_redirects=True).content).decode("utf-8")
 
     message = HumanMessage(
         content=[
@@ -326,6 +328,11 @@ Provide image inputs along with text using a @[`HumanMessage`] with list content
                     "data": image_data, # [!code highlight]
                 }, # [!code highlight]
             },
+            { # [!code highlight]
+                "type": "image", # [!code highlight]
+                "base64": image_data, # [!code highlight]
+                "mime_type": "image/jpeg", # [!code highlight]
+            }, # [!code highlight]
         ]
     )
     response = model.invoke([message])
@@ -885,6 +892,40 @@ model_with_tools = model.bind_tools([get_weather], strict=True)  # [!code highli
     print(response.tool_calls[0]["args"]["passengers"])
     ```
 
+
+    ```python
+    from langchain_anthropic import ChatAnthropic
+    from typing import Literal
+
+    model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
+
+    def book_flight(
+        destination: str,
+        departure_date: str,
+        passengers: int, # [!code highlight]
+        cabin_class: Literal["economy", "business", "first"]
+    ) -> str:
+        """Book a flight to a destination.
+
+        Args:
+            destination: The destination city
+            departure_date: Date in YYYY-MM-DD format
+            passengers: Number of passengers (must be an integer)
+            cabin_class: The cabin class for the flight
+        """
+        return f"Booked {passengers} passengers to {destination}"
+
+    model_with_tools = model.bind_tools(
+        [book_flight],
+        strict=True, # [!code highlight]
+        tool_choice="any",
+    )
+    response = model_with_tools.invoke("Book 2 passengers to Tokyo, business class, 2025-01-15")
+
+    # With strict=True, passengers is guaranteed to be int, not "2" or "two"
+    print(response.tool_calls[0]["args"]["passengers"])
+    ```
+
     ```output
     2
     ```
@@ -893,6 +934,9 @@ model_with_tools = model.bind_tools([get_weather], strict=True)  # [!code highli
 ### Schema limitations
 
 Strict tool use has some JSON schema limitations to be aware of. See the [Claude docs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs#json-schema-limitations) for more details.
+
+If your tool schema uses unsupported features, you'll receive a 400 error. In these cases, simplify the schema or use standard (non-strict) tool calling.
+
 
 If your tool schema uses unsupported features, you'll receive a 400 error. In these cases, simplify the schema or use standard (non-strict) tool calling.
 
@@ -1140,6 +1184,82 @@ def retrieval_tool(query: str) -> list[dict]:
     documents = [document_1, document_2, document_3]
     vector_store.add_documents(documents=documents)
 
+    ```python
+    from typing import Literal
+
+    from langchain.chat_models import init_chat_model
+    from langchain.embeddings import init_embeddings
+    from langchain_core.documents import Document
+    from langchain_core.vectorstores import InMemoryVectorStore
+    from langgraph.checkpoint.memory import InMemorySaver
+    from langchain.agents import create_agent
+
+
+    # Set up vector store
+    # Ensure you set your OPENAI_API_KEY environment variable
+    embeddings = init_embeddings("openai:text-embedding-3-small")
+    vector_store = InMemoryVectorStore(embeddings)
+
+    document_1 = Document(
+        id="1",
+        page_content=(
+            "To request vacation days, submit a leave request form through the "
+            "HR portal. Approval will be sent by email."
+        ),
+        metadata={
+            "category": "HR Policy",
+            "doc_title": "Leave Policy",
+            "provenance": "Leave Policy - page 1",
+        },
+    )
+    document_2 = Document(
+        id="2",
+        page_content="Managers will review vacation requests within 3 business days.",
+        metadata={
+            "category": "HR Policy",
+            "doc_title": "Leave Policy",
+            "provenance": "Leave Policy - page 2",
+        },
+    )
+    document_3 = Document(
+        id="3",
+        page_content=(
+            "Employees with over 6 months tenure are eligible for 20 paid vacation days "
+            "per year."
+        ),
+        metadata={
+            "category": "Benefits Policy",
+            "doc_title": "Benefits Guide 2025",
+            "provenance": "Benefits Policy - page 1",
+        },
+    )
+
+    documents = [document_1, document_2, document_3]
+    vector_store.add_documents(documents=documents)
+
+    # Define tool
+    async def retrieval_tool(
+        query: str, category: Literal["HR Policy", "Benefits Policy"]
+    ) -> list[dict]:
+        """Access my knowledge base."""
+
+        def _filter_function(doc: Document) -> bool:
+            return doc.metadata.get("category") == category
+
+        results = vector_store.similarity_search(
+            query=query, k=2, filter=_filter_function
+        )
+
+        return [
+            {
+                "type": "search_result",
+                "title": doc.metadata["doc_title"],
+                "source": doc.metadata["provenance"],
+                "citations": {"enabled": True},
+                "content": [{"type": "text", "text": doc.page_content}],
+            }
+            for doc in results
+        ]
 
     # Define tool
     async def retrieval_tool(
@@ -1166,6 +1286,11 @@ def retrieval_tool(query: str) -> list[dict]:
         ]
 
 
+    # Create agent
+    model = init_chat_model("claude-haiku-4-5-20251001")
+
+    checkpointer = InMemorySaver()
+    agent = create_agent(model, [retrieval_tool], checkpointer=checkpointer)
 
     # Create agent
     model = init_chat_model("claude-haiku-4-5-20251001")
