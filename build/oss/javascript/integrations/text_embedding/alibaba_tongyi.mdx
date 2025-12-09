@@ -1,0 +1,45 @@
+---
+title: Alibaba Tongyi
+---
+
+The `AlibabaTongyiEmbeddings` class uses the Alibaba Tongyi API to generate embeddings for a given text.
+
+## Setup
+
+You'll need to sign up for an Alibaba API key and set it as an environment variable named `ALIBABA_API_KEY`.
+
+Then, you'll need to install the [`@langchain/community`](https://www.npmjs.com/package/@langchain/community) package:
+
+<Tip>
+See [this section for general instructions on installing LangChain packages](/oss/javascript/langchain/install).
+</Tip>
+
+```bash npm
+npm install @langchain/community @langchain/core
+```
+
+## Usage
+
+```typescript
+import { AlibabaTongyiEmbeddings } from "@langchain/community/embeddings/alibaba_tongyi";
+
+const model = new AlibabaTongyiEmbeddings({});
+const res = await model.embedQuery(
+  "What would be a good company name a company that makes colorful socks?"
+);
+console.log({ res });
+```
+
+## Related
+
+- Embedding model [conceptual guide](/oss/javascript/integrations/text_embedding)
+- Embedding model [how-to guides](/oss/javascript/integrations/text_embedding)
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/text_embedding/alibaba_tongyi.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

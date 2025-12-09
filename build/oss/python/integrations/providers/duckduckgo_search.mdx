@@ -1,0 +1,42 @@
+---
+title: DuckDuckGo Search
+---
+
+>[DuckDuckGo Search](https://github.com/deedy5/duckduckgo_search) is a package that
+> searches for words, documents, images, videos, news, maps and text
+> translation using the `DuckDuckGo.com` search engine. It is downloading files
+> and images to a local hard drive.
+
+## Installation and Setup
+
+You have to install a python package:
+
+<CodeGroup>
+```bash pip
+pip install duckduckgo-search
+```
+
+```bash uv
+uv add duckduckgo-search
+```
+</CodeGroup>
+
+## Tools
+
+See a [usage example](/oss/python/integrations/tools/ddg).
+
+There are two tools available:
+
+```python
+from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_community.tools import DuckDuckGoSearchResults
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/duckduckgo_search.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

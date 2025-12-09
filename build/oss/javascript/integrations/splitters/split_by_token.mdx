@@ -1,0 +1,74 @@
+---
+title: Splitting by token
+---
+
+Language models have a token limit. You should not exceed the token limit. When you [split your text](/oss/javascript/integrations/splitters/) into chunks it is therefore a good idea to count the number of tokens. There are many tokenizers. When you count tokens in your text you should use the same tokenizer as used in the language model.
+
+
+
+## js-tiktoken
+
+<Note>
+**[js-tiktoken](https://github.com/dqbd/tiktoken) is a JavaScript vesrion of the `BPE` tokenizer created by `OpenAI`.**
+</Note>
+
+We can use `tiktoken` to estimate tokens used using [TokenTextSplitter](https://reference.langchain.com/javascript/classes/_langchain_textsplitters.TokenTextSplitter.html). It will probably be more accurate for OpenAI mdoels.
+
+1. How the text is split: by character passed in.
+2. How the chunk size is measured: by `tiktoken` tokenizer.
+
+<CodeGroup>
+```bash npm
+npm install @langchain/textsplitters
+```
+
+```bash pnpm
+pnpm install @langchain/textsplitters
+```
+
+```bash yarn
+yarn add @langchain/textsplitters
+```
+
+```bash bun
+bun add @langchain/textsplitters
+```
+</CodeGroup>
+
+```ts
+import { TokenTextSplitter } from "@langchain/textsplitters";
+import { readFileSync } from "fs";
+
+// Example: read a long document
+const stateOfTheUnion = readFileSync("state_of_the_union.txt", "utf8");
+```
+
+To split with a [TokenTextSplitter](https://reference.langchain.com/javascript/classes/_langchain_textsplitters.TokenTextSplitter.html) and then merge chunks with `tiktoken`, pass in an `encodingName` (e.g. cl100k_base) when initializing the [TokenTextSplitter](https://reference.langchain.com/javascript/classes/_langchain_textsplitters.TokenTextSplitter.html). Note that splits from this method can be larger than the chunk size measured by the `tiktoken` tokenizer.
+
+```ts
+import { TokenTextSplitter } from "@langchain/textsplitters";
+
+// Example: use cl100k_base encoding
+const splitter = new TokenTextSplitter({ encodingName: "cl100k_base", chunkSize: 10, chunkOverlap: 0 });
+
+const texts = splitter.splitText(stateOfTheUnion);
+console.log(texts[0]);
+```
+```output
+Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.
+
+Last year COVID-19 kept us apart. This year we are finally together again.
+
+Tonight, we meet as Democrats Republicans and Independents. But most importantly as Americans.
+
+With a duty to one another to the American people to the Constitution.
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/split_by_token.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
