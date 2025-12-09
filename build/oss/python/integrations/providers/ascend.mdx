@@ -1,0 +1,41 @@
+---
+title: Ascend
+---
+
+>[Ascend](https://https://www.hiascend.com/) is Natural Process Unit provide by Huawei
+
+This page covers how to use ascend NPU with LangChain.
+
+### Installation
+
+Install using torch-npu using:
+
+<CodeGroup>
+```bash pip
+pip install torch-npu
+```
+
+```bash uv
+uv add torch-npu
+```
+</CodeGroup>
+
+Please follow the installation instructions as specified below:
+* Install CANN as shown [here](https://www.hiascend.com/document/detail/zh/canncommercial/700/quickstart/quickstart/quickstart_18_0002.html).
+
+### Embedding Models
+
+See a [usage example](/oss/python/integrations/text_embedding/ascend).
+
+```python
+from langchain_community.embeddings import AscendEmbeddings
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/ascend.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
