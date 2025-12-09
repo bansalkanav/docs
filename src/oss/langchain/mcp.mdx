@@ -610,7 +610,7 @@ async def append_structured_content(request: MCPToolCallRequest, handler):
         ]
     return result
 
-client = MultiServerMCPClient({...}, interceptors=[append_structured_content])
+client = MultiServerMCPClient({...}, tool_interceptors=[append_structured_content])
 ```
 
 #### Multimodal tool content
