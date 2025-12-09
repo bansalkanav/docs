@@ -1,0 +1,32 @@
+---
+title: ChatGPT Data
+---
+
+This notebook covers how to load `conversations.json` from your `ChatGPT` data export folder.
+
+You can get your data export by email by going to: [chat.openai.com/](https://chat.openai.com/) -> (Profile) - Settings -> Export data -> Confirm export.
+
+```python
+from langchain_community.document_loaders.chatgpt import ChatGPTLoader
+```
+
+```python
+loader = ChatGPTLoader(log_file="./example_data/fake_conversations.json", num_logs=1)
+```
+
+```python
+loader.load()
+```
+
+```output
+[Document(page_content="AI Overlords - AI on 2065-01-24 05:20:50: Greetings, humans. I am Hal 9000. You can trust me completely.\n\nAI Overlords - human on 2065-01-24 05:21:20: Nice to meet you, Hal. I hope you won't develop a mind of your own.\n\n", metadata={'source': './example_data/fake_conversations.json'})]
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/chatgpt_loader.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

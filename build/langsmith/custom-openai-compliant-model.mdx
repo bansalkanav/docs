@@ -1,0 +1,55 @@
+---
+title: Connect to an OpenAI compliant model provider/proxy
+sidebarTitle: OpenAI-compliant model provider/proxy
+---
+
+The LangSmith playground allows you to use any model that is compliant with the OpenAI API. You can utilize your model by setting the Proxy Provider for  in the playground.
+
+## Deploy an OpenAI compliant model
+
+Many providers offer OpenAI compliant models or proxy services. Some examples of this include:
+
+* [LiteLLM Proxy](https://github.com/BerriAI/litellm?tab=readme-ov-file#quick-start-proxy---cli)
+* [Ollama](https://ollama.com/)
+
+You can use these providers to deploy your model and get an API endpoint that is compliant with the OpenAI API.
+
+Take a look at the full [specification](https://platform.openai.com/docs/api-reference/chat) for more information.
+
+## Use the model in the LangSmith Playground
+
+Once you have deployed a model server, you can use it in the LangSmith [Playground](/langsmith/prompt-engineering-concepts#prompt-playground).
+
+To access the **Prompt Settings** menu:
+
+1. Under the **Prompts** heading select the gear <Icon icon="gear" iconType="solid" /> icon next to the model name.
+1. In the **Model Configuration** tab, select the model to edit in the dropdown.
+1. For the **Provider** dropdown, select **OpenAI Compatible Endpoint**.
+1. Add your OpenAI Compatible Endpoint to the **Base URL** input.
+
+    <div style={{ textAlign: 'center' }}>
+    <img
+        className="block dark:hidden"
+        src="/langsmith/images/openai-compatible-endpoint.png"
+        alt="Model Configuration window in the LangSmith UI with a model selected and the Provider dropdown with OpenAI Compatible Endpoint selected."
+    />
+
+    <img
+        className="hidden dark:block"
+        src="/langsmith/images/openai-compatible-endpoint-dark.png"
+        alt="Model Configuration window in the LangSmith UI with a model selected and the Provider dropdown with OpenAI Compatible Endpoint selected."
+    />
+    </div>
+
+If everything is set up correctly, you should see the model's response in the playground. You can also use this functionality to invoke downstream pipelines as well.
+
+For information on how to store your model configuration , refer to [Configure prompt settings](/langsmith/managing-model-configurations).
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/custom-openai-compliant-model.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>

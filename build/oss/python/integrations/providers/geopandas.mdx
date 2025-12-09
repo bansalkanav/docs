@@ -1,0 +1,40 @@
+---
+title: Geopandas
+---
+
+>[GeoPandas](https://geopandas.org/) is an open source project to make working
+> with geospatial data in python easier. `GeoPandas` extends the datatypes used by
+> `pandas` to allow spatial operations on geometric types.
+> Geometric operations are performed by `shapely`.
+
+
+## Installation and Setup
+
+We have to install several python packages.
+
+<CodeGroup>
+```bash pip
+pip install -U sodapy pandas geopandas
+```
+
+```bash uv
+uv add sodapy pandas geopandas
+```
+</CodeGroup>
+
+## Document Loader
+
+See a [usage example](/oss/python/integrations/document_loaders/geopandas).
+
+```python
+from langchain_community.document_loaders import OpenCityDataLoader
+```
+
+---
+
+<Callout icon="pen-to-square" iconType="regular">
+    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/geopandas.mdx)
+</Callout>
+<Tip icon="terminal" iconType="regular">
+    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Tip>
