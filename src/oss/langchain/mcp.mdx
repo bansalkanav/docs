@@ -590,6 +590,23 @@ for message in result["messages"]:
         structured_content = message.artifact["structured_content"]
 ```
 
+**Appending structured content via interceptor**
+
+You can use an interceptor to automatically append structured content to the tool message, making it visible to the model:
+
+```python
+import json
+from langchain_mcp_adapters.interceptors import MCPToolCallRequest
+from mcp.types import TextContent
+
+async def append_structured_content(request: MCPToolCallRequest, handler):
+    """Append structured content from artifact to tool message."""
+    result = await handler(request)
+    if result.structuredContent:
+        result.content += [TextContent(type="text", text=json.dumps(result.structuredContent))]
+    return result
+```
+
 #### Multimodal tool content
 
 MCP tools can return [multimodal content](https://modelcontextprotocol.io/specification/2025-03-26/server/tools#tool-result) (images, text, etc.) in their responses. When an MCP server returns content with multiple parts (e.g., text and images), the adapter converts them to LangChain's [standard content blocks](/oss/langchain/messages#standard-content-blocks). You can access the standardized representation via the `content_blocks` property on the `ToolMessage`:
