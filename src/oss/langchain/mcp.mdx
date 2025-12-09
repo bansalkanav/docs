@@ -597,6 +597,7 @@ You can use an interceptor to automatically append structured content to the too
 ```python
 import json
 
+from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest
 from mcp.types import TextContent
 
@@ -608,6 +609,8 @@ async def append_structured_content(request: MCPToolCallRequest, handler):
             TextContent(type="text", text=json.dumps(result.structuredContent)),
         ]
     return result
+
+client = MultiServerMCPClient({...}, interceptors=[append_structured_content])
 ```
 
 #### Multimodal tool content
