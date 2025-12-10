@@ -82,6 +82,8 @@ model = ChatAnthropic(
 )
 ```
 
+See the @[`ChatAnthropic`] API reference for details on all available parameters.
+
 ## Invocation
 
 ```python
@@ -108,9 +110,11 @@ print(ai_msg.text)
 J'adore la programmation.
 ```
 
+Learn more about supported invocation methods in our [models](/oss/langchain/models#invocation) guide.
+
 ## Token counting
 
-You can count tokens in messages before sending them to the model using the `get_num_tokens_from_messages()` method. This uses Anthropic's official [token counting API](https://platform.claude.com/docs/en/build-with-claude/token-counting).
+You can count tokens in messages before sending them to the model using @[`get_num_tokens_from_messages()`][ChatAnthropic.get_num_tokens_from_messages]. This uses Anthropic's official [token counting API](https://platform.claude.com/docs/en/build-with-claude/token-counting).
 
 ```python
 from langchain_anthropic import ChatAnthropic
@@ -159,7 +163,9 @@ print(token_count)
 
 ## Content blocks
 
-When using tools, [extended thinking](#extended-thinking), and other features, content from a single Anthropic @[`AIMessage`] can either be a single string or a list of Anthropic content blocks. For example, when an Anthropic model invokes a tool, the tool invocation is part of the message content (as well as being exposed in the standardized `AIMessage.tool_calls`):
+When using tools, [extended thinking](#extended-thinking), and other features, content from a single Anthropic @[`AIMessage`] can either be a single string or a list of Anthropic content blocks.
+
+For example, when an Anthropic model invokes a tool, the tool invocation is part of the message content (as well as being exposed in the standardized @[`AIMessage.tool_calls`]):
 
 ```python
 from langchain_anthropic import ChatAnthropic
@@ -217,11 +223,109 @@ response.tool_calls
 
 ## Tools
 
-The `extras` parameter on LangChain tools supports Anthropic-specific fields that enhance tool functionality.
+Anthropic's tool use features allow you to define external functions that Claude can call during a conversation. This enables dynamic information retrieval, computations, and interactions with external systems.
+
+See @[`ChatAnthropic.bind_tools`] for details on how to bind tools to your model instance.
+
+<Note>
+    For information about Claude's built-in tools (code execution, web browsing, files API, etc), see the [Built-in tools](#built-in-tools).
+</Note>
+
+### Strict tool use
+
+<Info>
+    Strict tool use requires:
+
+    - Claude Sonnet 4.5 or Opus 4.1.
+    - `langchain-anthropic>=1.1.0`
+</Info>
+
+Anthropic supports opt-in [strict schema adherence to tool calls](https://platform.claude.com/docs/en/build-with-claude/structured-outputs). This guarantees that tool names and arguments are validated and correctly typed through constrained decoding.
+
+Without strict mode, Claude can occasionally generate invalid tool inputs that break your applications:
+
+- **Type mismatches**: `passengers: "2"` instead of `passengers: 2`
+- **Missing required fields**: Omitting fields your function expects
+- **Invalid enum values**: Values outside the allowed set
+- **Schema violations**: Nested objects not matching expected structure
+
+Strict tool use guarantees schema-compliant tool calls:
+
+- Tool inputs strictly follow your `input_schema`
+- Guaranteed field types and required fields
+- Eliminate error handling for malformed inputs
+- Tool `name` used is always from provided tools
+
+| Use strict tool use | Use standard tool calling |
+|---------------------|---------------------------|
+| Building agentic workflows where reliability is critical | Simple, single-turn tool calls |
+| Tools with many parameters or nested objects | Prototyping and experimentation |
+| Functions that require specific types (e.g., `int` vs `str`) |  |
+
+To enable strict tool use, specify `strict=True` when calling @[`bind_tools`][ChatAnthropic.bind_tools].
+
+```python
+from langchain_anthropic import ChatAnthropic
+
+model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
+
+def get_weather(location: str) -> str:
+    """Get the weather at a location."""
+    return "It's sunny."
+
+model_with_tools = model.bind_tools([get_weather], strict=True)  # [!code highlight]
+```
+
+<Accordion
+    title="Example: Type-safe booking system"
+>
+    Consider a booking system where `passengers` must be an integer:
+
+    ```python
+    from langchain_anthropic import ChatAnthropic
+    from typing import Literal
+
+    model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
+
+    def book_flight(
+        destination: str,
+        departure_date: str,
+        passengers: int, # [!code highlight]
+        cabin_class: Literal["economy", "business", "first"]
+    ) -> str:
+        """Book a flight to a destination.
+
+        Args:
+            destination: The destination city
+            departure_date: Date in YYYY-MM-DD format
+            passengers: Number of passengers (must be an integer)
+            cabin_class: The cabin class for the flight
+        """
+        return f"Booked {passengers} passengers to {destination}"
+
+    model_with_tools = model.bind_tools(
+        [book_flight],
+        strict=True, # [!code highlight]
+        tool_choice="any",
+    )
+    response = model_with_tools.invoke("Book 2 passengers to Tokyo, business class, 2025-01-15")
+
+    # With strict=True, passengers is guaranteed to be int, not "2" or "two"
+    print(response.tool_calls[0]["args"]["passengers"])
+    ```
+
+    ```output
+    2
+    ```
+</Accordion>
+
+Strict tool use has some JSON schema limitations to be aware of. See the [Claude docs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs#json-schema-limitations) for more details.
+
+If your tool schema uses unsupported features, you'll receive a 400 error. In these cases, simplify the schema or use standard (non-strict) tool calling.
 
 ### Input examples
 
-For complex tools, you can provide usage examples to help Claude understand how to use them correctly:
+For complex tools, you can provide usage examples to help Claude understand how to use them correctly. This is done by setting `input_examples` in the tool's `extras` parameter.
 
 ```python
 from langchain_anthropic import ChatAnthropic
@@ -264,6 +368,103 @@ response = model_with_tools.invoke(
 The `extras` parameter also supports:
 - `defer_loading` (bool): Load tool on-demand for [tool search](#tool-search)
 - `cache_control` (dict): Enable [prompt caching](#caching-tools) for the tool
+
+### Token-efficient tool use
+
+Anthropic supports a [token-efficient tool use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/token-efficient-tool-use) feature. It is supported by default on all Claude 4 models and above.
+
+<Accordion title="Enabling token-efficient tool use with Claude 3.7">
+    To use token-efficient tool use with Claude 3.7, specify the `token-efficient-tools-2025-02-19` beta-header when instantiating the model:
+
+    ```python
+    from langchain_anthropic import ChatAnthropic
+    from langchain.tools import tool
+
+    model = ChatAnthropic(
+        model="claude-3-7-sonnet-20250219",
+        betas=["token-efficient-tools-2025-02-19"],  # [!code highlight]
+    )
+
+
+    @tool
+    def get_weather(location: str) -> str:
+        """Get the weather at a location."""
+        return "It's sunny."
+
+
+    model_with_tools = model.bind_tools([get_weather])
+    response = model_with_tools.invoke("What's the weather in San Francisco?")
+    print(response.tool_calls)
+    print(f"\nTotal tokens: {response.usage_metadata['total_tokens']}")
+    ```
+
+    ```output
+    [{'name': 'get_weather', 'args': {'location': 'San Francisco'}, 'id': 'toolu_01EoeE1qYaePcmNbUvMsWtmA', 'type': 'tool_call'}]
+
+    Total tokens: 408
+    ```
+</Accordion>
+
+<Tip>
+    Anthropic automatically caches tool descriptions to reduce token usage on subsequent calls. See [Caching tools](#caching-tools) for details.
+</Tip>
+
+### Fine-grained tool streaming
+
+Anthropic supports [fine-grained tool streaming](https://platform.claude.com/docs/en/agents-and-tools/tool-use/fine-grained-tool-streaming), a beta feature that reduces latency when streaming tool calls with large parameters.
+
+Rather than buffering entire parameter values before transmission, fine-grained streaming sends parameter data as it becomes available. This can reduce the initial delay from 15 seconds to around 3 seconds for large tool parameters.
+
+<Warning>
+    Fine-grained streaming may return invalid or partial JSON inputs, especially if the response reaches `max_tokens` before completing. Implement appropriate error handling for incomplete JSON data.
+</Warning>
+
+To enable fine-grained tool streaming, specify the `fine-grained-tool-streaming-2025-05-14` beta header when initializing the model:
+
+```python
+from langchain_anthropic import ChatAnthropic
+
+model = ChatAnthropic(
+    model="claude-sonnet-4-5-20250929",
+    betas=["fine-grained-tool-streaming-2025-05-14"],  # [!code highlight]
+)
+
+def write_document(title: str, content: str) -> str:
+    """Write a document with the given title and content."""
+    return f"Document '{title}' written successfully"
+
+model_with_tools = model.bind_tools([write_document])
+
+# Stream tool calls with reduced latency
+for chunk in model_with_tools.stream(
+    "Write a detailed technical document about the benefits of streaming APIs"
+):
+    print(chunk.content)
+```
+
+The streaming data arrives as `input_json_delta` blocks in `chunk.content`. You can accumulate these to build the complete tool arguments:
+
+```python
+import json
+
+accumulated_json = ""
+
+for chunk in model_with_tools.stream("Write a document about AI"):
+    for block in chunk.content:
+        if isinstance(block, dict) and block.get("type") == "input_json_delta":
+            accumulated_json += block.get("partial_json", "")
+            try:
+                # Try to parse accumulated JSON
+                parsed = json.loads(accumulated_json)
+                print(f"Complete args: {parsed}")
+            except json.JSONDecodeError:
+                # JSON is still incomplete, continue accumulating
+                pass
+```
+
+```output
+Complete args: {'title': 'Artificial Intelligence: An Overview', 'content': '# Artificial Intelligence: An Overview...
+```
 
 ## Multimodal
 
@@ -451,7 +652,7 @@ from langchain_anthropic import ChatAnthropic
 model = ChatAnthropic(
     model="claude-sonnet-4-5-20250929",
     max_tokens=5000,
-    thinking={"type": "enabled", "budget_tokens": 2000},
+    thinking={"type": "enabled", "budget_tokens": 2000}, # [!code highlight]
 )
 
 response = model.invoke("What is the cube root of 50.653?")
@@ -467,7 +668,7 @@ model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
 response = model.invoke(
     "What is the cube root of 50.653?",
     max_tokens=5000,
-    thinking={"type": "enabled", "budget_tokens": 2000}
+    thinking={"type": "enabled", "budget_tokens": 2000} # [!code highlight]
 )
 print(json.dumps(response.content_blocks, indent=2))
 ```
@@ -514,6 +715,10 @@ See the [Claude documentation](https://platform.claude.com/docs/en/build-with-cl
 Anthropic supports [caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) of elements of your prompts, including messages, tool definitions, tool results, images and documents. This allows you to re-use large documents, instructions, [few-shot documents](/langsmith/create-few-shot-evaluators), and other data to reduce latency and costs.
 
 To enable caching on an element of a prompt, mark its associated content block using the `cache_control` key. See examples below:
+
+<Warning>
+    Only certain Claude models support prompt caching. See the [Claude documentation](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#supported-models) for details.
+</Warning>
 
 ### Messages
 
@@ -793,199 +998,6 @@ Below, we implement a simple chatbot that incorporates this feature. We follow t
     In the [LangSmith trace](https://smith.langchain.com/public/4d0584d8-5f9e-4b91-8704-93ba2ccf416a/r), toggling "raw output" will show exactly what messages are sent to the chat model, including `cache_control` keys.
 </Accordion>
 
-## Strict tool use
-
-<Info>
-    Strict tool use requires:
-
-    - Claude Sonnet 4.5 or Opus 4.1.
-    - `langchain-anthropic>=1.1.0`
-</Info>
-
-Anthropic supports opt-in [strict schema adherence to tool calls](https://platform.claude.com/docs/en/build-with-claude/structured-outputs). This guarantees that tool names and arguments are validated and correctly typed through constrained decoding.
-
-### Why use strict tool use
-
-Without strict mode, Claude can occasionally generate invalid tool inputs that break your applications:
-
-- **Type mismatches**: `passengers: "2"` instead of `passengers: 2`
-- **Missing required fields**: Omitting fields your function expects
-- **Invalid enum values**: Values outside the allowed set
-- **Schema violations**: Nested objects not matching expected structure
-
-Strict tool use guarantees schema-compliant tool calls:
-
-- Tool inputs strictly follow your `input_schema`
-- Guaranteed field types and required fields
-- Eliminate error handling for malformed inputs
-- Tool `name` used is always from provided tools
-
-### When to use strict tool use
-
-| Use strict tool use | Use standard tool calling |
-|---------------------|---------------------------|
-| Building agentic workflows where reliability is critical | Simple, single-turn tool calls |
-| Tools with many parameters or nested objects | Prototyping and experimentation |
-| Functions that require specific types (e.g., `int` vs `str`) |  |
-
-### Basic usage
-
-To enable strict tool use, specify `strict=True` when calling [`bind_tools`](/oss/langchain/models#tool-calling).
-
-```python
-from langchain_anthropic import ChatAnthropic
-
-model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
-
-def get_weather(location: str) -> str:
-    """Get the weather at a location."""
-    return "It's sunny."
-
-model_with_tools = model.bind_tools([get_weather], strict=True)  # [!code highlight]
-```
-
-<Accordion
-    title="Example: Type-safe booking system"
->
-    Consider a booking system where `passengers` must be an integer:
-
-    ```python
-    from langchain_anthropic import ChatAnthropic
-    from typing import Literal
-
-    model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
-
-    def book_flight(
-        destination: str,
-        departure_date: str,
-        passengers: int, # [!code highlight]
-        cabin_class: Literal["economy", "business", "first"]
-    ) -> str:
-        """Book a flight to a destination.
-
-        Args:
-            destination: The destination city
-            departure_date: Date in YYYY-MM-DD format
-            passengers: Number of passengers (must be an integer)
-            cabin_class: The cabin class for the flight
-        """
-        return f"Booked {passengers} passengers to {destination}"
-
-    model_with_tools = model.bind_tools(
-        [book_flight],
-        strict=True, # [!code highlight]
-        tool_choice="any",
-    )
-    response = model_with_tools.invoke("Book 2 passengers to Tokyo, business class, 2025-01-15")
-
-    # With strict=True, passengers is guaranteed to be int, not "2" or "two"
-    print(response.tool_calls[0]["args"]["passengers"])
-    ```
-
-    ```output
-    2
-    ```
-</Accordion>
-
-### Schema limitations
-
-Strict tool use has some JSON schema limitations to be aware of. See the [Claude docs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs#json-schema-limitations) for more details.
-
-If your tool schema uses unsupported features, you'll receive a 400 error. In these cases, simplify the schema or use standard (non-strict) tool calling.
-
-## Token-efficient tool use
-
-Anthropic supports a [token-efficient tool use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/token-efficient-tool-use) feature. It is supported by default on all Claude 4 models and above.
-
-<Accordion title="Enabling token-efficient tool use with Claude 3.7">
-    To use token-efficient tool use with Claude 3.7, specify the `token-efficient-tools-2025-02-19` beta-header when instantiating the model:
-
-    ```python
-    from langchain_anthropic import ChatAnthropic
-    from langchain.tools import tool
-
-    model = ChatAnthropic(
-        model="claude-3-7-sonnet-20250219",
-        betas=["token-efficient-tools-2025-02-19"],  # [!code highlight]
-    )
-
-
-    @tool
-    def get_weather(location: str) -> str:
-        """Get the weather at a location."""
-        return "It's sunny."
-
-
-    model_with_tools = model.bind_tools([get_weather])
-    response = model_with_tools.invoke("What's the weather in San Francisco?")
-    print(response.tool_calls)
-    print(f"\nTotal tokens: {response.usage_metadata['total_tokens']}")
-    ```
-
-    ```output
-    [{'name': 'get_weather', 'args': {'location': 'San Francisco'}, 'id': 'toolu_01EoeE1qYaePcmNbUvMsWtmA', 'type': 'tool_call'}]
-
-    Total tokens: 408
-    ```
-</Accordion>
-
-## Fine-grained tool streaming
-
-Anthropic supports [fine-grained tool streaming](https://platform.claude.com/docs/en/agents-and-tools/tool-use/fine-grained-tool-streaming), a beta feature that reduces latency when streaming tool calls with large parameters.
-
-Rather than buffering entire parameter values before transmission, fine-grained streaming sends parameter data as it becomes available. This can reduce the initial delay from 15 seconds to around 3 seconds for large tool parameters.
-
-<Warning>
-    Fine-grained streaming may return invalid or partial JSON inputs, especially if the response reaches `max_tokens` before completing. Implement appropriate error handling for incomplete JSON data.
-</Warning>
-
-To enable fine-grained tool streaming, specify the `fine-grained-tool-streaming-2025-05-14` beta header when initializing the model:
-
-```python
-from langchain_anthropic import ChatAnthropic
-
-model = ChatAnthropic(
-    model="claude-sonnet-4-5-20250929",
-    betas=["fine-grained-tool-streaming-2025-05-14"],  # [!code highlight]
-)
-
-def write_document(title: str, content: str) -> str:
-    """Write a document with the given title and content."""
-    return f"Document '{title}' written successfully"
-
-model_with_tools = model.bind_tools([write_document])
-
-# Stream tool calls with reduced latency
-for chunk in model_with_tools.stream(
-    "Write a detailed technical document about the benefits of streaming APIs"
-):
-    print(chunk.content)
-```
-
-The streaming data arrives as `input_json_delta` blocks in `chunk.content`. You can accumulate these to build the complete tool arguments:
-
-```python
-import json
-
-accumulated_json = ""
-
-for chunk in model_with_tools.stream("Write a document about AI"):
-    for block in chunk.content:
-        if isinstance(block, dict) and block.get("type") == "input_json_delta":
-            accumulated_json += block.get("partial_json", "")
-            try:
-                # Try to parse accumulated JSON
-                parsed = json.loads(accumulated_json)
-                print(f"Complete args: {parsed}")
-            except json.JSONDecodeError:
-                # JSON is still incomplete, continue accumulating
-                pass
-```
-
-```output
-Complete args: {'title': 'Artificial Intelligence: An Overview', 'content': '# Artificial Intelligence: An Overview...
-```
-
 ## Citations
 
 Anthropic supports a [citations](https://platform.claude.com/docs/en/build-with-claude/citations) feature that lets Claude attach context to its answers based on source documents supplied by the user.
@@ -1191,7 +1203,7 @@ def retrieval_tool(query: str) -> list[dict]:
 
 Anthropic also lets you specify your own splits using [custom document](https://platform.claude.com/docs/en/build-with-claude/citations#custom-content-documents) types. LangChain [text splitters](/oss/integrations/splitters/) can be used to generate meaningful splits for this purpose. See the below example, where we split the LangChain `README.md` (a markdown document) and pass it to Claude as context:
 
-This example requires `langchain-text-splitters` to be installed:
+This example requires @[`langchain-text-splitters`] to be installed:
 
 ```bash
 pip install langchain-text-splitters
@@ -1523,43 +1535,14 @@ for i, file_id in enumerate(file_ids):
     file_content.write_to_file(f"/path/to/file_{i}.png")
 ```
 
+<Note>
+    **Available tool versions:**
+
+    - `code_execution_20250522` (legacy)
+    - `code_execution_20250825` (recommended)
+</Note>
+
 </Accordion>
-
-### Remote MCP
-
-Claude can use a [MCP connector tool](https://platform.claude.com/docs/en/agents-and-tools/mcp-connector) for model-generated calls to remote MCP servers.
-
-<Info>
-    **Remote MCP is supported since `langchain-anthropic>=0.3.14`**
-</Info>
-
-```python
-from langchain_anthropic import ChatAnthropic
-
-mcp_servers = [
-    {
-        "type": "url",
-        "url": "https://docs.langchain.com/mcp",
-        "name": "LangChain Docs",
-        # "tool_configuration": {  # optional configuration
-        #     "enabled": True,
-        #     "allowed_tools": ["ask_question"],
-        # },
-        # "authorization_token": "PLACEHOLDER",  # optional authorization if needed
-    }
-]
-
-model = ChatAnthropic(
-    model="claude-sonnet-4-5-20250929",
-    mcp_servers=mcp_servers, # [!code highlight]
-)
-
-response = model.invoke(
-    "What are LangChain content blocks?",
-    tools=[{"type": "mcp_toolset", "mcp_server_name": "LangChain Docs"}], # [!code highlight]
-)
-response.content_blocks
-```
 
 ### Computer use
 
@@ -1621,6 +1604,42 @@ response = model_with_computer.invoke(
     - `computer_20251124` (for Claude Opus 4.5)
 </Note>
 
+### Remote MCP
+
+Claude can use a [MCP connector tool](https://platform.claude.com/docs/en/agents-and-tools/mcp-connector) for model-generated calls to remote MCP servers.
+
+<Info>
+    **Remote MCP is supported since `langchain-anthropic>=0.3.14`**
+</Info>
+
+```python
+from langchain_anthropic import ChatAnthropic
+
+mcp_servers = [
+    {
+        "type": "url",
+        "url": "https://docs.langchain.com/mcp",
+        "name": "LangChain Docs",
+        # "tool_configuration": {  # optional configuration
+        #     "enabled": True,
+        #     "allowed_tools": ["ask_question"],
+        # },
+        # "authorization_token": "PLACEHOLDER",  # optional authorization if needed
+    }
+]
+
+model = ChatAnthropic(
+    model="claude-sonnet-4-5-20250929",
+    mcp_servers=mcp_servers, # [!code highlight]
+)
+
+response = model.invoke(
+    "What are LangChain content blocks?",
+    tools=[{"type": "mcp_toolset", "mcp_server_name": "LangChain Docs"}], # [!code highlight]
+)
+response.content_blocks
+```
+
 ### Text editor
 
 The text editor tool can be used to view and modify text files. See docs [here](https://platform.claude.com/docs/en/agents-and-tools/tool-use/text-editor-tool) for details.
@@ -1651,9 +1670,16 @@ I'll help you fix the syntax error in your primes.py file. Let me first take a l
   'type': 'tool_call'}]
 ```
 
+<Note>
+    **Available tool versions:**
+
+    - `text_editor_20250124` (legacy)
+    - `text_editor_20250728` (recommended)
+</Note>
+
 ### Web fetching
 
-Claude can use a [web fetching tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool) to run searches and ground its responses with citations.
+Claude can use a [web fetching tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool) to retrieve full content from specified web pages and PDF documents and ground its responses with citations.
 
 ```python
 from langchain_anthropic import ChatAnthropic
