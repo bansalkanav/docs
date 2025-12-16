@@ -18,7 +18,7 @@ Under the hood, tools are callable functions with well-defined inputs and output
 The simplest way to create a tool is with the @[`@tool`] decorator. By default, the function's docstring becomes the tool's description that helps the model understand when to use it:
 
 ```python
-from langchain.tools import tool
+from langchain_core.tools import tool
 
 @tool
 def search_database(query: str, limit: int = 10) -> str:
@@ -231,7 +231,8 @@ The runtime automatically provides these capabilities to your tool functions wit
 Tools can access the current graph state using `ToolRuntime`:
 
 ```python
-from langchain.tools import tool, ToolRuntime
+from langchain_core.tools import tool
+from langchain.tools import ToolRuntime
 
 # Access the current conversation state
 @tool
@@ -270,7 +271,8 @@ Use @[`Command`] to update the agent's state or control the graph's execution fl
 from langgraph.types import Command
 from langchain.messages import RemoveMessage
 from langgraph.graph.message import REMOVE_ALL_MESSAGES
-from langchain.tools import tool, ToolRuntime
+from langchain_core.tools import tool
+from langchain.tools import ToolRuntime
 
 # Update the conversation history by removing all messages
 @tool
@@ -305,7 +307,8 @@ Tools can access runtime context through `ToolRuntime`:
 from dataclasses import dataclass
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
-from langchain.tools import tool, ToolRuntime
+from langchain_core.tools import tool
+from langchain.tools import ToolRuntime
 
 
 USER_DATABASE = {
@@ -403,7 +406,8 @@ Tools can access and update the store through `ToolRuntime`:
 from typing import Any
 from langgraph.store.memory import InMemoryStore
 from langchain.agents import create_agent
-from langchain.tools import tool, ToolRuntime
+from langchain_core.tools import tool
+from langchain.tools import ToolRuntime
 
 
 # Access memory
@@ -528,7 +532,8 @@ console.log(result);
 Stream custom updates from tools as they execute using `runtime.stream_writer`. This is useful for providing real-time feedback to users about what a tool is doing.
 
 ```python
-from langchain.tools import tool, ToolRuntime
+from langchain_core.tools import tool
+from langchain.tools import ToolRuntime
 
 @tool
 def get_weather(city: str, runtime: ToolRuntime) -> str:
