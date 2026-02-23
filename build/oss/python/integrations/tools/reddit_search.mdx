@@ -1,5 +1,6 @@
 ---
-title: Reddit Search
+title: "Reddit search integration"
+description: "Integrate with the Reddit search tool using LangChain Python."
 ---
 
 In this notebook, we learn how the Reddit search tool works.
@@ -94,12 +95,11 @@ To run the example, add your reddit API access information and also get an OpenA
 # Adapted code from /docs/modules/agents/how_to/sharedmemory_for_tools
 
 from langchain.agents import AgentExecutor, StructuredChatAgent
-from langchain.chains import LLMChain
+from langchain_classic.chains import LLMChain
 from langchain.memory import ConversationBufferMemory, ReadOnlySharedMemory
 from langchain_community.tools.reddit_search.tool import RedditSearchRun
 from langchain_community.utilities.reddit_search import RedditSearchAPIWrapper
 from langchain_core.prompts import PromptTemplate
-from langchain.tools import Tool
 from langchain_openai import ChatOpenAI
 
 # Provide keys for Reddit
@@ -159,9 +159,9 @@ agent_chain.run(input="Who is the author of the post?")
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/reddit_search.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/reddit_search.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

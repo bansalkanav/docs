@@ -1,8 +1,8 @@
 ---
-title: Splitting code
+title: "Splitting code text splitter integration guide"
 ---
 
-[RecursiveCharacterTextSplitter](https://reference.langchain.com/python/langchain_text_splitters/#langchain_text_splitters.RecursiveCharacterTextSplitter) includes pre-built lists of separators that are useful for [splitting text](/oss/python/integrations/splitters/) in a specific programming language.
+[RecursiveCharacterTextSplitter](https://reference.langchain.com/python/langchain-text-splitters/character/RecursiveCharacterTextSplitter) includes pre-built lists of separators that are useful for [splitting text](/oss/python/integrations/splitters/) in a specific programming language.
 
 Supported languages are stored in the `langchain_text_splitters.Language` enum. They include:
 
@@ -70,7 +70,7 @@ To view the full list of supported languages:
 
 
 
-```output
+```python
 ['cpp',
  'go',
  'java',
@@ -110,7 +110,7 @@ RecursiveCharacterTextSplitter.get_separators_for_language(Language.PYTHON)
 
 
 
-```output
+```python
 ['\nclass ', '\ndef ', '\n\tdef ', '\n\n', '\n', ' ', '']
 ```
 
@@ -135,7 +135,7 @@ python_docs
 
 
 
-```output
+```text
 [Document(metadata={}, page_content='def hello_world():\n    print("Hello, World!")'),
  Document(metadata={}, page_content='# Call the function\nhello_world()')]
 ```
@@ -162,7 +162,7 @@ js_docs = js_splitter.create_documents([JS_CODE])
 js_docs
 ```
 
-```output
+```javascript
 [Document(metadata={}, page_content='function helloWorld() {\n  console.log("Hello, World!");\n}'),
  Document(metadata={}, page_content='// Call the function\nhelloWorld();')]
 ```
@@ -189,7 +189,7 @@ ts_docs = ts_splitter.create_documents([TS_CODE])
 ts_docs
 ```
 
-```output
+```javascript
 [Document(metadata={}, page_content='function helloWorld(): void {'),
  Document(metadata={}, page_content='console.log("Hello, World!");\n}'),
  Document(metadata={}, page_content='// Call the function\nhelloWorld();')]
@@ -223,7 +223,7 @@ md_docs = md_splitter.create_documents([markdown_text])
 md_docs
 ```
 
-```output
+```text
 [Document(metadata={}, page_content='# 🦜️🔗 LangChain'),
  Document(metadata={}, page_content='⚡ Building applications with LLMs through composability ⚡'),
  Document(metadata={}, page_content='## What is LangChain?'),
@@ -267,7 +267,7 @@ latex_docs = latex_splitter.create_documents([latex_text])
 latex_docs
 ```
 
-```output
+```text
 [Document(metadata={}, page_content='\\documentclass{article}\n\n\x08egin{document}\n\n\\maketitle'),
  Document(metadata={}, page_content='\\section{Introduction}'),
  Document(metadata={}, page_content='Large language models (LLMs) are a type of machine learning'),
@@ -333,7 +333,7 @@ html_docs = html_splitter.create_documents([html_text])
 html_docs
 ```
 
-```output
+```text
 [Document(metadata={}, page_content='<!DOCTYPE html>\n<html>'),
  Document(metadata={}, page_content='<head>\n        <title>🦜️🔗 LangChain</title>'),
  Document(metadata={}, page_content='<style>\n            body {\n                font-family: Aria'),
@@ -371,7 +371,7 @@ sol_docs = sol_splitter.create_documents([SOL_CODE])
 sol_docs
 ```
 
-```output
+```text
 [Document(metadata={}, page_content='pragma solidity ^0.8.20;'),
  Document(metadata={}, page_content='contract HelloWorld {\n   function add(uint a, uint b) pure public returns(uint) {\n       return a + b;\n   }\n}')]
 ```
@@ -413,7 +413,7 @@ c_docs = c_splitter.create_documents([C_CODE])
 c_docs
 ```
 
-```output
+```text
 [Document(metadata={}, page_content='using System;'),
  Document(metadata={}, page_content='class Program\n{\n    static void Main()\n    {\n        int age = 30; // Change the age value as needed'),
  Document(metadata={}, page_content='// Categorize the age without any console output\n        if (age < 18)\n        {\n            // Age is under 18'),
@@ -442,7 +442,7 @@ haskell_docs = haskell_splitter.create_documents([HASKELL_CODE])
 haskell_docs
 ```
 
-```output
+```text
 [Document(metadata={}, page_content='main :: IO ()'),
  Document(metadata={}, page_content='main = do\n    putStrLn "Hello, World!"\n-- Some'),
  Document(metadata={}, page_content='sample functions\nadd :: Int -> Int -> Int\nadd x y'),
@@ -479,7 +479,7 @@ php_docs = php_splitter.create_documents([PHP_CODE])
 php_docs
 ```
 
-```output
+```text
 [Document(metadata={}, page_content='<?php\nnamespace foo;'),
  Document(metadata={}, page_content='class Hello {'),
  Document(metadata={}, page_content='public function __construct() { }\n}'),
@@ -515,7 +515,7 @@ powershell_docs = powershell_splitter.create_documents([POWERSHELL_CODE])
 powershell_docs
 ```
 
-```output
+```text
 [Document(metadata={}, page_content='$directoryPath = Get-Location\n\n$items = Get-ChildItem -Path $directoryPath'),
  Document(metadata={}, page_content='$files = $items | Where-Object { -not $_.PSIsContainer }'),
  Document(metadata={}, page_content='$sortedFiles = $files | Sort-Object LastWriteTime'),
@@ -525,7 +525,7 @@ powershell_docs
 
 
 
-## Visual Basic 6
+## Visual basic 6
 ```python
 VISUALBASIC6_CODE = """Option Explicit
 
@@ -546,7 +546,7 @@ visualbasic6_docs = visualbasic6_splitter.create_documents([VISUALBASIC6_CODE])
 visualbasic6_docs
 ```
 
-```output
+```text
 [Document(metadata={}, page_content='Option Explicit'),
  Document(metadata={}, page_content='Public Sub HelloWorld()\n    MsgBox "Hello, World!"\nEnd Sub'),
  Document(metadata={}, page_content='Private Function Add(a As Integer, b As Integer) As Integer\n    Add = a + b\nEnd Function')]
@@ -554,9 +554,9 @@ visualbasic6_docs
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/code_splitter.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/code_splitter.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -5,7 +5,7 @@ description: Learn how to extend deep agents with persistent memory across threa
 
 Deep agents come with a local filesystem to offload memory. By default, this filesystem is stored in agent state and is **transient to a single thread**—files are lost when the conversation ends.
 
-You can extend deep agents with **long-term memory** by using a **CompositeBackend** that routes specific paths to persistent storage. This enables hybrid storage where some files persist across threads while others remain ephemeral.
+You can extend deep agents with **long-term memory** by using a `CompositeBackend` that routes specific paths to persistent storage. This enables hybrid storage where some files persist across threads while others remain ephemeral.
 
 ```mermaid
 graph LR
@@ -26,6 +26,9 @@ Configure long-term memory by using a `CompositeBackend` that routes the `/memor
 from deepagents import create_deep_agent
 from deepagents.backends import CompositeBackend, StateBackend, StoreBackend
 from langgraph.store.memory import InMemoryStore
+from langgraph.checkpoint.memory import MemorySaver
+
+checkpointer = MemorySaver()
 
 def make_backend(runtime):
     return CompositeBackend(
@@ -36,8 +39,9 @@ def make_backend(runtime):
     )
 
 agent = create_deep_agent(
-    store=InMemoryStore(),  # Required for StoreBackend
-    backend=make_backend
+    store=InMemoryStore(),  # Good for local dev; omit for LangSmith Deployment
+    backend=make_backend,
+    checkpointer=checkpointer
 )
 ```
 
@@ -66,6 +70,10 @@ The `CompositeBackend` routes file operations based on path prefixes:
 - Files with paths starting with `/memories/` are stored in the Store (persistent)
 - Files without this prefix remain in transient state
 - All filesystem tools (`ls`, `read_file`, `write_file`, `edit_file`) work with both
+
+<Note>
+    `CompositeBackend` strips the route prefix before storing. For example, `/memories/preferences.txt` is stored as `/preferences.txt` in the `StoreBackend`. The agent always uses the full path. See [CompositeBackend](/oss/python/deepagents/backends#compositebackend-router) for details.
+</Note>
 
 ```python
 # Transient file (lost after thread ends)
@@ -105,6 +113,47 @@ agent.invoke({
 
 
 
+
+## Accessing memories from external code (LangSmith)
+
+If deploying your agent on LangSmith, you can read or write memories from server-side code (outside the agent) using the [Store API](/langsmith/agent-server-api/store). The `StoreBackend` stores files using the namespace `(assistant_id, "filesystem")`.
+
+```python
+from langgraph_sdk import get_client
+
+client = get_client(url="<DEPLOYMENT_URL>")
+
+# Read a memory file (path without /memories/ prefix)
+item = await client.store.get_item(
+    (assistant_id, "filesystem"),
+    "/preferences.txt"
+)
+
+# Write a memory file
+await client.store.put_item(
+    (assistant_id, "filesystem"),
+    "/preferences.txt",
+    {
+        "content": ["line 1", "line 2"],
+        "created_at": "2024-01-15T10:30:00Z",
+        "modified_at": "2024-01-15T10:30:00Z"
+    }
+)
+
+# Search for items
+items = await client.store.search_items(
+    (assistant_id, "filesystem")
+)
+```
+
+
+
+
+<Note>
+    The key does not include the `/memories/` prefix because `CompositeBackend` strips it before storing. See [Path routing](#path-routing) for details.
+</Note>
+
+For more information, see the [Store API reference](/langsmith/agent-server-api/store).
 
 ## Use cases
 
@@ -230,7 +279,11 @@ For production, use a persistent store:
 from langgraph.store.postgres import PostgresStore
 import os
 
-store = PostgresStore(connection_string=os.environ["DATABASE_URL"])
+# Use PostgresStore.from_conn_string as a context manager
+store_ctx = PostgresStore.from_conn_string(os.environ["DATABASE_URL"])
+store = store_ctx.__enter__()
+store.setup()
+
 agent = create_deep_agent(
     store=store,
     backend=lambda rt: CompositeBackend(
@@ -242,6 +295,32 @@ agent = create_deep_agent(
 
 
 
+
+## FileData schema
+
+Files stored via `StoreBackend` use the following schema:
+
+```python
+{
+    "content": ["line 1", "line 2", "line 3"],  # List of strings (one per line)
+    "created_at": "2024-01-15T10:30:00Z",       # ISO 8601 timestamp
+    "modified_at": "2024-01-15T11:45:00Z"       # ISO 8601 timestamp
+}
+```
+
+You can use the `create_file_data` helper to create properly formatted file data:
+
+```python
+from deepagents.backends.utils import create_file_data
+
+file_data = create_file_data("Hello\nWorld")
+# {'content': ['Hello', 'World'], 'created_at': '...', 'modified_at': '...'}
+```
+
+
+
+
+For more details on backend protocols, see [Backends](/oss/python/deepagents/backends#protocol-reference).
 
 ## Best practices
 
@@ -275,13 +354,13 @@ Implement periodic cleanup of outdated persistent files to keep storage manageab
 
 - **Development**: Use `InMemoryStore` for quick iteration
 - **Production**: Use `PostgresStore` or other persistent stores
-- **Multi-tenant**: Consider using assistant_id-based namespacing in your store
+- **Multi-tenant**: Consider using `assistant_id`-based namespacing in your store
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/long-term-memory.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/long-term-memory.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,6 @@
 ---
-title: Apache Doris
+title: "Apache doris integration"
+description: "Integrate with the Apache doris vector store using LangChain Python."
 ---
 
 >[Apache Doris](https://doris.apache.org/) is a modern data warehouse for real-time analytics.
@@ -25,7 +26,7 @@ Set `update_vectordb = False` at the beginning. If there is no docs updated, the
 ```
 
 ```python
-from langchain.chains import RetrievalQA
+from langchain_classic.chains import RetrievalQA
 from langchain_community.document_loaders import (
     DirectoryLoader,
     UnstructuredMarkdownLoader,
@@ -70,7 +71,7 @@ print("# docs  = %d, # splits = %d" % (len(documents), len(split_docs)))
 
 ## Create vectordb instance
 
-### Use Apache Doris as vectordb
+### Use apache doris as vectordb
 
 ```python
 def gen_apache_doris(update_vectordb, embeddings, settings):
@@ -134,9 +135,9 @@ print(resp)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/apache_doris.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/apache_doris.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,6 @@
 ---
-title: GitHub
+title: "GitHub integration"
+description: "Integrate with the GitHub document loader using LangChain JavaScript."
 ---
 
 This example goes over how to load data from a GitHub repository.
@@ -35,7 +36,7 @@ export const run = async () => {
 
 The loader will ignore binary files like images.
 
-### Using .gitignore Syntax
+### Using .gitignore syntax
 
 To ignore specific files, you can pass in an `ignorePaths` array into the constructor:
 
@@ -53,7 +54,7 @@ export const run = async () => {
 };
 ```
 
-### Using a Different GitHub Instance
+### Using a different GitHub instance
 
 You may want to target a different GitHub instance than `github.com`, e.g. if you have a GitHub Enterprise instance for your company.
 For this you need two additional parameters:
@@ -81,7 +82,7 @@ export const run = async () => {
 };
 ```
 
-### Dealing with Submodules
+### Dealing with submodules
 
 In case your repository has submodules, you have to decide if the loader should follow them or not. You can control this with the boolean `processSubmodules` parameter. By default, submodules are not processed.
 Note that processing submodules works only in conjunction with setting the `recursive` parameter to true.
@@ -135,9 +136,9 @@ export const run = async () => {
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/web_loaders/github.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/web_loaders/github.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

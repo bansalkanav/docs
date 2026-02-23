@@ -1,5 +1,6 @@
 ---
-title: Cross Encoder Reranker
+title: "Cross encoder reranker integration"
+description: "Integrate with the Cross encoder reranker document transformer using LangChain Python."
 ---
 
 This notebook shows how to implement reranker in a retriever with your own cross encoder from [Hugging Face cross encoder models](https://huggingface.co/cross-encoder) or Hugging Face models that implements cross encoder function ([example: BAAI/bge-reranker-base](https://huggingface.co/BAAI/bge-reranker-base)). `SagemakerEndpointCrossEncoder` enables you to use these HuggingFace models loaded on Sagemaker.
@@ -72,7 +73,7 @@ compressed_docs = compression_retriever.invoke("What is the plan for the economy
 pretty_print_docs(compressed_docs)
 ```
 
-```output
+```text
 Document 1:
 
 More infrastructure and innovation in America.
@@ -188,9 +189,9 @@ def transform_fn(
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_transformers/cross_encoder_reranker.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_transformers/cross_encoder_reranker.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

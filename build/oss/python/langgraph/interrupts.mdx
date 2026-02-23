@@ -2,8 +2,6 @@
 title: Interrupts
 ---
 
-
-
 Interrupts allow you to pause graph execution at specific points and wait for external input before continuing. This enables human-in-the-loop patterns where you need external input to proceed. When an interrupt is triggered, LangGraph saves the graph state using its [persistence](/oss/python/langgraph/persistence) layer and waits indefinitely until you resume execution.
 
 Interrupts work by calling the `interrupt()` function at any point in your graph nodes. The function accepts any JSON-serializable value which is surfaced to the caller. When you're ready to continue, you resume execution by re-invoking the graph using `Command`, which then becomes the return value of the `interrupt()` call from inside the node.
@@ -20,9 +18,9 @@ The `thread_id` you choose is effectively your persistent cursor. Reusing it res
 
 ## Pause using `interrupt`
 
-The [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) function pauses graph execution and returns a value to the caller. When you call [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) within a node, LangGraph saves the current graph state and waits for you to resume execution with input.
+The [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) function pauses graph execution and returns a value to the caller. When you call [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) within a node, LangGraph saves the current graph state and waits for you to resume execution with input.
 
-To use [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt), you need:
+To use [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt), you need:
 1. A **checkpointer** to persist the graph state (use a durable checkpointer in production)
 2. A **thread ID** in your config so the runtime knows which state to resume from
 3. To call `interrupt()` where you want to pause (payload must be JSON-serializable)
@@ -41,9 +39,9 @@ def approval_node(state: State):
 
 
 
-When you call [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt), here's what happens:
+When you call [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt), here's what happens:
 
-1. **Graph execution gets suspended** at the exact point where [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) is called
+1. **Graph execution gets suspended** at the exact point where [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) is called
 2. **State is saved** using the checkpointer so execution can be resumed later, In production, this should be a persistent checkpointer (e.g. backed by a database)
 3. **Value is returned** to the caller under `__interrupt__`; it can be any JSON-serializable value (string, object, array, etc.)
 4. **Graph waits indefinitely** until you resume execution with a response
@@ -71,24 +69,141 @@ print(result["__interrupt__"])
 graph.invoke(Command(resume=True), config=config)
 ```
 
-
-
-
 **Key points about resuming:**
 
 - You must use the **same thread ID** when resuming that was used when the interrupt occurred
-- The value passed to `Command(resume=...)` becomes the return value of the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) call
-- The node restarts from the beginning of the node where the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) was called when resumed, so any code before the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) runs again
+- The value passed to `Command(resume=...)` becomes the return value of the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) call
+- The node restarts from the beginning of the node where the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) was called when resumed, so any code before the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) runs again
 - You can pass any JSON-serializable value as the resume value
+
+
+
 
 ## Common patterns
 
 The key thing that interrupts unlock is the ability to pause execution and wait for external input. This is useful for a variety of use cases, including:
 
-- <Icon icon="check-circle" /> [Approval workflows](#approve-or-reject): Pause before executing critical actions (API calls, database changes, financial transactions)
+- <Icon icon="circle-check" /> [Approval workflows](#approve-or-reject): Pause before executing critical actions (API calls, database changes, financial transactions)
+- <Icon icon="link" /> [Handling multiple interrupts](#handling-multiple-interrupts): Pair interrupt IDs with resume values when resuming multiple interrupts in a single invocation
 - <Icon icon="pencil" /> [Review and edit](#review-and-edit-state): Let humans review and modify LLM outputs or tool calls before continuing
-- <Icon icon="wrench" /> [Interrupting tool calls](#interrupts-in-tools): Pause before executing tool calls to review and edit the tool call before execution
+- <Icon icon="tool" /> [Interrupting tool calls](#interrupts-in-tools): Pause before executing tool calls to review and edit the tool call before execution
 - <Icon icon="shield-check" /> [Validating human input](#validating-human-input): Pause before proceeding to the next step to validate human input
+
+### Stream with human-in-the-loop (HITL) interrupts
+
+When building interactive agents with human-in-the-loop workflows, you can stream both message chunks and node updates simultaneously to provide real-time feedback while handling interrupts.
+
+Use multiple stream modes (`"messages"` and `"updates"`) with `subgraphs=True` (if subgraphs are present) to:
+- Stream AI responses in real-time as they're generated
+- Detect when the graph encounters an interrupt
+- Handle user input and resume execution seamlessly
+
+```python
+async for metadata, mode, chunk in graph.astream(
+    initial_input,
+    stream_mode=["messages", "updates"],
+    subgraphs=True,
+    config=config
+):
+    if mode == "messages":
+        # Handle streaming message content
+        msg, _ = chunk
+        if isinstance(msg, AIMessageChunk) and msg.content:
+            # Display content in real-time
+            display_streaming_content(msg.content)
+
+    elif mode == "updates":
+        # Check for interrupts
+        if "__interrupt__" in chunk:
+            # Stop streaming display
+            interrupt_info = chunk["__interrupt__"][0].value
+
+            # Handle user input
+            user_response = get_user_input(interrupt_info)
+
+            # Resume graph with updated input
+            initial_input = Command(resume=user_response)
+            break
+
+        else:
+            # Track node transitions
+            current_node = list(chunk.keys())[0]
+```
+
+- **`stream_mode=["messages", "updates"]`**: Enables dual streaming of both message chunks and graph state updates
+- **`subgraphs=True`**: Required for interrupt detection in nested graphs
+- **`"__interrupt__"` detection**: Signals when human input is needed
+- **`Command(resume=...)`**: Resumes graph execution with user-provided data
+
+### Handling multiple interrupts
+
+When parallel branches interrupt simultaneously (for example, fan-out to multiple nodes that each call `interrupt()`), you may need to resume multiple interrupts in a single invocation.
+When resuming multiple interrupts with a single invocation, map each interrupt ID to its resume value.
+This ensures each response is paired with the correct interrupt at runtime.
+
+```python
+from typing import Annotated, TypedDict
+import operator
+
+from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.graph import START, END, StateGraph
+from langgraph.types import Command, interrupt
+
+
+class State(TypedDict):
+    vals: Annotated[list[str], operator.add]
+
+
+def node_a(state):
+    answer = interrupt("question_a")
+    return {"vals": [f"a:{answer}"]}
+
+
+def node_b(state):
+    answer = interrupt("question_b")
+    return {"vals": [f"b:{answer}"]}
+
+
+graph = (
+    StateGraph(State)
+    .add_node("a", node_a)
+    .add_node("b", node_b)
+    .add_edge(START, "a")
+    .add_edge(START, "b")
+    .add_edge("a", END)
+    .add_edge("b", END)
+    .compile(checkpointer=InMemorySaver())
+)
+
+config = {"configurable": {"thread_id": "1"}}
+
+# Step 1: invoke — both parallel nodes hit interrupt() and pause
+interrupted_result = graph.invoke({"vals": []}, config)
+print(interrupted_result)
+"""
+{
+    'vals': [],
+    '__interrupt__': [
+        Interrupt(value='question_a', id='bd4f3183600f2c41dddafbf8f0f7be7b'),
+        Interrupt(value='question_b', id='29963e3d3585f0cef025dd0f14323f55')
+    ]
+}
+"""
+
+# Step 2: resume all pending interrupts at once
+resume_map = {
+    i.id: f"answer for {i.value}"
+    for i in interrupted_result["__interrupt__"]
+}
+result = graph.invoke(Command(resume=resume_map), config)
+
+print("Final state:", result)
+#> Final state: {'vals': ['a:answer for question_a', 'b:answer for question_b']}
+```
+
+
+
+
 
 ### Approve or reject
 
@@ -275,7 +390,7 @@ graph.invoke(
 
 You can also place interrupts directly inside tool functions. This makes the tool itself pause for approval whenever it's called, and allows for human review and editing of the tool call before it is executed.
 
-First, define a tool that uses [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt):
+First, define a tool that uses [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt):
 
 ```python
 from langchain.tools import tool
@@ -392,7 +507,7 @@ This approach is useful when you want the approval logic to live with the tool i
 
 ### Validating human input
 
-Sometimes you need to validate input from humans and ask again if it's invalid. You can do this using multiple [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) calls in a loop.
+Sometimes you need to validate input from humans and ask again if it's invalid. You can do this using multiple [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) calls in a loop.
 
 ```python
 from langgraph.types import interrupt
@@ -473,15 +588,15 @@ Each time you resume the graph with invalid input, it will ask again with a clea
 
 ## Rules of interrupts
 
-When you call [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) within a node, LangGraph suspends execution by raising an exception that signals the runtime to pause. This exception propagates up through the call stack and is caught by the runtime, which notifies the graph to save the current state and wait for external input.
+When you call [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) within a node, LangGraph suspends execution by raising an exception that signals the runtime to pause. This exception propagates up through the call stack and is caught by the runtime, which notifies the graph to save the current state and wait for external input.
 
-When execution resumes (after you provide the requested input), the runtime restarts the entire node from the beginning—it does not resume from the exact line where [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) was called. This means any code that ran before the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) will execute again. Because of this, there's a few important rules to follow when working with interrupts to ensure they behave as expected.
+When execution resumes (after you provide the requested input), the runtime restarts the entire node from the beginning—it does not resume from the exact line where [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) was called. This means any code that ran before the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) will execute again. Because of this, there's a few important rules to follow when working with interrupts to ensure they behave as expected.
 
 ### Do not wrap `interrupt` calls in try/except
 
-The way that [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) pauses execution at the point of the call is by throwing a special exception. If you wrap the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) call in a try/except block, you will catch this exception and the interrupt will not be passed back to the graph.
+The way that [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) pauses execution at the point of the call is by throwing a special exception. If you wrap the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) call in a try/except block, you will catch this exception and the interrupt will not be passed back to the graph.
 
-* ✅ Separate [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) calls from error-prone code
+* ✅ Separate [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) calls from error-prone code
 * ✅ Use specific exception types in try/except blocks
 
 <CodeGroup>
@@ -509,7 +624,7 @@ def node_a(state: State):
 ```
 </CodeGroup>
 
-* 🔴 Do not wrap [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) calls in bare try/except blocks
+* 🔴 Do not wrap [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) calls in bare try/except blocks
 
 ```python
 def node_a(state: State):
@@ -531,7 +646,7 @@ It's common to use multiple interrupts in a single node, however this can lead t
 
 When a node contains multiple interrupt calls, LangGraph keeps a list of resume values specific to the task executing the node. Whenever execution resumes, it starts at the beginning of the node. For each interrupt encountered, LangGraph checks if a matching value exists in the task's resume list. Matching is **strictly index-based**, so the order of interrupt calls within the node is important.
 
-* ✅ Keep [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) calls consistent across node executions
+* ✅ Keep [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) calls consistent across node executions
 
 ```python
 def node_a(state: State):
@@ -549,8 +664,8 @@ def node_a(state: State):
 
 
 
-* 🔴 Do not conditionally skip [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) calls within a node
-* 🔴 Do not loop [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) calls using logic that isn't deterministic across executions
+* 🔴 Do not conditionally skip [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) calls within a node
+* 🔴 Do not loop [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) calls using logic that isn't deterministic across executions
 
 <CodeGroup>
 ```python Skipping interrupts
@@ -586,7 +701,7 @@ def node_a(state: State):
 
 Depending on which checkpointer is used, complex values may not be serializable (e.g. you can't serialize a function). To make your graphs adaptable to any deployment, it's best practice to only use values that can be reasonably serialized.
 
-* ✅ Pass simple, JSON-serializable types to [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt)
+* ✅ Pass simple, JSON-serializable types to [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt)
 * ✅ Pass dictionaries/objects with simple values
 
 <CodeGroup>
@@ -615,7 +730,7 @@ def node_a(state: State):
 
 
 
-* 🔴 Do not pass functions, class instances, or other complex objects to [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt)
+* 🔴 Do not pass functions, class instances, or other complex objects to [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt)
 
 <CodeGroup>
 ```python Functions
@@ -654,12 +769,12 @@ def node_a(state: State):
 
 ### Side effects called before `interrupt` must be idempotent
 
-Because interrupts work by re-running the nodes they were called from, side effects called before [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) should (ideally) be idempotent. For context, idempotency means that the same operation can be applied multiple times without changing the result beyond the initial execution.
+Because interrupts work by re-running the nodes they were called from, side effects called before [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) should (ideally) be idempotent. For context, idempotency means that the same operation can be applied multiple times without changing the result beyond the initial execution.
 
-As an example, you might have an API call to update a record inside of a node. If [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) is called after that call is made, it will be re-run multiple times when the node is resumed, potentially overwriting the initial update or creating duplicate records.
+As an example, you might have an API call to update a record inside of a node. If [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) is called after that call is made, it will be re-run multiple times when the node is resumed, potentially overwriting the initial update or creating duplicate records.
 
-* ✅ Use idempotent operations before [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt)
-* ✅ Place side effects after [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) calls
+* ✅ Use idempotent operations before [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt)
+* ✅ Place side effects after [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) calls
 * ✅ Separate side effects into separate nodes when possible
 
 <CodeGroup>
@@ -713,7 +828,7 @@ def notification_node(state: State):
 
 
 
-* 🔴 Do not perform non-idempotent operations before [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt)
+* 🔴 Do not perform non-idempotent operations before [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt)
 * 🔴 Do not create new records without checking if they exist
 
 <CodeGroup>
@@ -748,7 +863,7 @@ def node_a(state: State):
 
 ## Using with subgraphs called as functions
 
-When invoking a subgraph within a node, the parent graph will resume execution from the **beginning of the node** where the subgraph was invoked and the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) was triggered. Similarly, the **subgraph** will also resume from the beginning of the node where [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) was called.
+When invoking a subgraph within a node, the parent graph will resume execution from the **beginning of the node** where the subgraph was invoked and the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) was triggered. Similarly, the **subgraph** will also resume from the beginning of the node where [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) was called.
 
 ```python
 def node_in_parent_graph(state: State):
@@ -773,7 +888,7 @@ To debug and test a graph, you can use static interrupts as breakpoints to step 
 
 
 <Note>
-    Static interrupts are **not** recommended for human-in-the-loop workflows. Use the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) function instead.
+    Static interrupts are **not** recommended for human-in-the-loop workflows. Use the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) function instead.
 </Note>
 
 <Tabs>
@@ -838,17 +953,17 @@ To debug and test a graph, you can use static interrupts as breakpoints to step 
     </Tab>
 </Tabs>
 
-### Using LangGraph Studio
+### Using LangSmith Studio
 
-You can use [LangGraph Studio](/langsmith/studio) to set static interrupts in your graph in the UI before running the graph. You can also use the UI to inspect the graph state at any point in the execution.
+You can use [LangSmith Studio](/langsmith/studio) to set static interrupts in your graph in the UI before running the graph. You can also use the UI to inspect the graph state at any point in the execution.
 
 ![image](/oss/images/static-interrupt.png)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/interrupts.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/interrupts.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

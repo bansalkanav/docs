@@ -189,7 +189,7 @@ Indexing commonly works as follows:
 
 ### Loading documents
 
-We need to first load the blog post contents. We can use [DocumentLoaders](/oss/javascript/langchain/retrieval#document_loaders) for this, which are objects that load in data from a source and return a list of [Document](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) objects.
+We need to first load the blog post contents. We can use [DocumentLoaders](/oss/javascript/langchain/retrieval#document_loaders) for this, which are objects that load in data from a source and return a list of [Document](https://reference.langchain.com/javascript/langchain-core/documents/Document) objects.
 
 
 ```typescript
@@ -230,7 +230,7 @@ Building agents with LLM (large language model) as its core controller is...
 
 Our loaded document is over 42k characters which is too long to fit into the context window of many models. Even for those models that could fit the full post in their context window, models can struggle to find information in very long inputs.
 
-To handle this we'll split the [`Document`](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) into chunks for embedding and vector storage. This should help us retrieve only the most relevant parts of the blog post at run time.
+To handle this we'll split the [`Document`](https://reference.langchain.com/javascript/langchain-core/documents/Document) into chunks for embedding and vector storage. This should help us retrieve only the most relevant parts of the blog post at run time.
 
 As in the [semantic search tutorial](/oss/javascript/langchain/knowledge-base), we use a `RecursiveCharacterTextSplitter`, which will recursively split the document using common separators like new lines until each chunk is the appropriate size. This is the recommended text splitter for generic text use cases.
 
@@ -267,7 +267,7 @@ await vectorStore.addDocuments(allSplits);
 `Embeddings`: Wrapper around a text embedding model, used for converting text to embeddings.
 
 - [Integrations](/oss/javascript/integrations/text_embedding/): 30+ integrations to choose from.
-- [Interface](https://reference.langchain.com/javascript/classes/_langchain_core.embeddings.Embeddings.html): API reference for the base interface.
+- [Interface](https://reference.langchain.com/javascript/langchain-core/embeddings/Embeddings): API reference for the base interface.
 
 `VectorStore`: Wrapper around a vector database, used for storing and querying embeddings.
 
@@ -276,7 +276,7 @@ await vectorStore.addDocuments(allSplits);
 
 This completes the **Indexing** portion of the pipeline. At this point we have a query-able vector store containing the chunked contents of our blog post. Given a user question, we should ideally be able to return the snippets of the blog post that answer the question.
 
-## 2. Retrieval and Generation
+## 2. Retrieval and generation
 
 RAG applications commonly work as follows:
 
@@ -489,15 +489,16 @@ As in the [agentic RAG](#rag-agents) formulation, we sometimes want to include r
 
 ```typescript
 import { createMiddleware, Document, createAgent } from "langchain";
-import { MessagesZodSchema } from "@langchain/langgraph";
+import { StateSchema, MessagesValue } from "@langchain/langgraph";
+import { z } from "zod";
 
-const StateSchema = z.object({
-  messages: MessagesZodSchema,
+const CustomState = new StateSchema({
+  messages: MessagesValue,
   context: z.array(z.custom<Document>()),
-})
+});
 
 const retrieveDocumentsMiddleware = createMiddleware({
-  stateSchema: StateSchema,
+  stateSchema: CustomState,
   beforeModel: async (state) => {
     const lastMessage = state.messages[state.messages.length - 1].content;
     const retrievedDocs = await vectorStore.similaritySearch(lastMessage, 2);
@@ -536,7 +537,7 @@ const agent = createAgent({
 ## Next steps
 
 
-Now that we've implemented a simple RAG application via [`createAgent`](https://reference.langchain.com/javascript/functions/langchain.index.createAgent.html), we can easily incorporate new features and go deeper:
+Now that we've implemented a simple RAG application via [`createAgent`](https://reference.langchain.com/javascript/langchain/index/createAgent), we can easily incorporate new features and go deeper:
 
 
 
@@ -544,13 +545,13 @@ Now that we've implemented a simple RAG application via [`createAgent`](https://
 - Add [conversational memory](/oss/javascript/langchain/short-term-memory) to support multi-turn interactions
 - Add [long-term memory](/oss/javascript/langchain/long-term-memory) to support memory across conversational threads
 - Add [structured responses](/oss/javascript/langchain/structured-output)
-- Deploy your application with [LangSmith Deployments](/langsmith/deployments)
+- Deploy your application with [LangSmith Deployment](/langsmith/deployments)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/rag.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/rag.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

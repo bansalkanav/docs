@@ -1,5 +1,6 @@
 ---
-title: Parallel Search
+title: "Parallel search integration"
+description: "Integrate with the Parallel search tool using LangChain Python."
 ---
 
 >[Parallel](https://platform.parallel.ai/) is a real-time web search and content extraction platform designed specifically for LLMs and AI applications.
@@ -12,7 +13,7 @@ The `ParallelWebSearchTool` provides access to Parallel's Search API, which stre
 
 | Class | Package | Serializable | JS support |  Package latest |
 | :--- | :--- | :---: | :---: | :---: |
-| [`ParallelWebSearchTool`](https://reference.langchain.com/python/integrations/langchain_parallel/ParallelWebSearchTool) | [`langchain-parallel`](https://reference.langchain.com/python/integrations/langchain_parallel) | ❌ | ❌ | <a href="https://pypi.org/project/langchain-parallel/" target="_blank"><img src="https://img.shields.io/pypi/v/langchain-parallel?style=flat-square&label=%20&color=orange" alt="PyPI - Latest version" noZoom height="100" class="rounded" /></a> |
+| [`ParallelWebSearchTool`](https://reference.langchain.com/python/langchain-parallel/search_tool/ParallelWebSearchTool) | [`langchain-parallel`](https://reference.langchain.com/python/langchain-parallel/) | ❌ | ❌ | <a href="https://pypi.org/project/langchain-parallel/" target="_blank"><img src="https://img.shields.io/pypi/v/langchain-parallel?style=flat-square&label=%20&color=orange" alt="PyPI - Latest version" noZoom height="100" class="rounded" /></a> |
 
 ### Tool features
 
@@ -246,7 +247,7 @@ import ChatModelTabs from '/snippets/chat-model-tabs.mdx';
 # !pip install -qU langchain langchain-openai
 from langchain.chat_models import init_chat_model
 
-llm = init_chat_model(model="gpt-4o", model_provider="openai")
+llm = init_chat_model(model="gpt-4.1", model_provider="openai")
 ```
 
 ```python
@@ -320,13 +321,13 @@ The tool returns a structured dictionary with the following format:
 
 ## API reference
 
-For detailed documentation of all features and configuration options, head to the [`ParallelWebSearchTool`](https://reference.langchain.com/python/integrations/langchain_parallel/ParallelWebSearchTool) API reference or the [Parallel search reference](https://docs.parallel.ai/api-reference/search-beta/search).
+For detailed documentation of all features and configuration options, head to the [`ParallelWebSearchTool`](https://reference.langchain.com/python/langchain-parallel/search_tool/ParallelWebSearchTool) API reference or the [Parallel search reference](https://docs.parallel.ai/api-reference/search-beta/search).
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/parallel_search.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/parallel_search.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

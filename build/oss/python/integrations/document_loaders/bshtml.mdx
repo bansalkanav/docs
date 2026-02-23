@@ -1,5 +1,6 @@
 ---
-title: BSHTMLLoader
+title: "BSHTMLLoader integration"
+description: "Integrate with the BSHTMLLoader document loader using LangChain Python."
 ---
 
 This guide provides a quick overview for getting started with BeautifulSoup4 [document loader](https://python.langchain.com/docs/concepts/document_loaders). For detailed documentation of all __ModuleName__Loader features and configurations head to the [API reference](https://python.langchain.com/api_reference/community/document_loaders/langchain_community.document_loaders.html_bs.BSHTMLLoader.html).
@@ -62,7 +63,7 @@ docs = loader.load()
 docs[0]
 ```
 
-```output
+```text
 Document(metadata={'source': './example_data/fake-content.html', 'title': 'Test Title'}, page_content='\nTest Title\n\n\nMy First Heading\nMy first paragraph.\n\n\n')
 ```
 
@@ -70,11 +71,11 @@ Document(metadata={'source': './example_data/fake-content.html', 'title': 'Test 
 print(docs[0].metadata)
 ```
 
-```output
+```python
 {'source': './example_data/fake-content.html', 'title': 'Test Title'}
 ```
 
-## Lazy Load
+## Lazy load
 
 ```python
 page = []
@@ -88,7 +89,7 @@ for doc in loader.lazy_load():
 page[0]
 ```
 
-```output
+```text
 Document(metadata={'source': './example_data/fake-content.html', 'title': 'Test Title'}, page_content='\nTest Title\n\n\nMy First Heading\nMy first paragraph.\n\n\n')
 ```
 
@@ -105,7 +106,7 @@ docs = loader.load()
 print(docs[0])
 ```
 
-```output
+```python
 page_content='
 , Test Title,
 ,
@@ -125,9 +126,9 @@ For detailed documentation of all BSHTMLLoader features and configurations head 
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/bshtml.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/bshtml.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

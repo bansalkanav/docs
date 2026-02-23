@@ -1,5 +1,6 @@
 ---
-title: ChatXAI
+title: "ChatXAI integration"
+description: "Integrate with the ChatXAI chat model using LangChain JavaScript."
 ---
 
 [xAI](https://x.ai/) is an artificial intelligence company that develops Large Language Models (LLMs). Their flagship model, Grok, is trained on real-time X (formerly Twitter) data and aims to provide witty, personality-rich responses while maintaining high capability on technical tasks.
@@ -10,17 +11,17 @@ This guide will help you getting started with `ChatXAI` [chat models](/oss/javas
 
 ### Integration details
 
-| Class | Package | Local | Serializable | PY support | Downloads | Version |
-| :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
-| [ChatXAI](https://api.js.langchain.com/classes/_langchain_xai.ChatXAI.html) | [`@langchain/xai`](https://www.npmjs.com/package/@langchain/xai) | ❌ | ✅ | ❌ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/xai?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/xai?style=flat-square&label=%20&) |
+| Class | Package | Serializable | PY support | Downloads | Version |
+| :--- | :--- | :---: |  :---: | :---: | :---: |
+| [ChatXAI](https://api.js.langchain.com/classes/_langchain_xai.ChatXAI.html) | [`@langchain/xai`](https://www.npmjs.com/package/@langchain/xai) | ✅ | ❌ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/xai?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/xai?style=flat-square&label=%20&) |
 
 ### Model features
 
 See the links in the table headers below for guides on how to use specific features.
 
-| [Tool calling](/oss/javascript/langchain/tools) | [Structured output](/oss/javascript/langchain/structured-output) | JSON mode | [Image input](/oss/javascript/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/javascript/langchain/streaming/) | [Token usage](/oss/javascript/langchain/models#token-usage) | [Logprobs](/oss/javascript/langchain/models#log-probabilities) |
-| :---: | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
-| ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| [Tool calling](/oss/javascript/langchain/tools) | [Structured output](/oss/javascript/langchain/structured-output) | [Image input](/oss/javascript/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/javascript/langchain/streaming/) | [Token usage](/oss/javascript/langchain/models#token-usage) | [Logprobs](/oss/javascript/langchain/models#log-probabilities) |
+| :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
+| ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 
 ## Setup
 
@@ -86,7 +87,7 @@ const aiMsg = await llm.invoke([
 console.log(aiMsg)
 ```
 
-```output
+```text
 AIMessage {
   "id": "71d7e3d8-30dd-472c-8038-b6b283dcee63",
   "content": "J'adore programmer.",
@@ -121,7 +122,7 @@ AIMessage {
 console.log(aiMsg.content)
 ```
 
-```output
+```text
 J'adore programmer.
 ```
 
@@ -133,9 +134,9 @@ For detailed documentation of all ChatXAI features and configurations head to th
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/chat/xai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/chat/xai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

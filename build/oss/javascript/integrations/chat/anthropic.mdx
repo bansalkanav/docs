@@ -1,5 +1,7 @@
 ---
-title: ChatAnthropic
+title: "ChatAnthropic integration"
+sidebarTitle: "Chat"
+description: "Integrate with the ChatAnthropic chat model using LangChain JavaScript."
 ---
 
 [Anthropic](https://www.anthropic.com/) is an AI safety and research company. They are the creator of Claude.
@@ -10,17 +12,17 @@ This will help you getting started with Anthropic [chat models](/oss/javascript/
 
 ### Integration details
 
-| Class | Package | Local | Serializable | [PY support](https://python.langchain.com/docs/integrations/chat/anthropic/) | Downloads | Version |
-| :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
-| [ChatAnthropic](https://api.js.langchain.com/classes/langchain_anthropic.ChatAnthropic.html) | [`@langchain/anthropic`](https://www.npmjs.com/package/@langchain/anthropic) | ❌ | ✅ | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/anthropic?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/anthropic?style=flat-square&label=%20&) |
+| Class | Package | Serializable | [PY support](https://python.langchain.com/docs/integrations/chat/anthropic/) | Downloads | Version |
+| :--- | :--- | :---: |  :---: | :---: | :---: |
+| [ChatAnthropic](https://api.js.langchain.com/classes/langchain_anthropic.ChatAnthropic.html) | [`@langchain/anthropic`](https://www.npmjs.com/package/@langchain/anthropic) | ✅ | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/anthropic?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/anthropic?style=flat-square&label=%20&) |
 
 ### Model features
 
 See the links in the table headers below for guides on how to use specific features.
 
-| [Tool calling](/oss/javascript/langchain/tools) | [Structured output](/oss/javascript/langchain/structured-output) | JSON mode | [Image input](/oss/javascript/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/javascript/langchain/streaming/) | [Token usage](/oss/javascript/langchain/models#token-usage) | [Logprobs](/oss/javascript/langchain/models#log-probabilities) |
-| :---: | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
-| ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| [Tool calling](/oss/javascript/langchain/tools) | [Structured output](/oss/javascript/langchain/structured-output) | [Image input](/oss/javascript/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/javascript/langchain/streaming/) | [Token usage](/oss/javascript/langchain/models#token-usage) | [Logprobs](/oss/javascript/langchain/models#log-probabilities) |
+| :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
+| ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
 
 ## Setup
 
@@ -86,7 +88,7 @@ const aiMsg = await llm.invoke([
 aiMsg
 ```
 
-```output
+```text
 AIMessage {
   "id": "msg_013WBXXiggy6gMbAUY6NpsuU",
   "content": "Voici la traduction en français :\n\nJ'adore la programmation.",
@@ -128,7 +130,7 @@ AIMessage {
 console.log(aiMsg.content)
 ```
 
-```output
+```text
 Voici la traduction en français :
 
 J'adore la programmation.
@@ -136,7 +138,7 @@ J'adore la programmation.
 
 ## Content blocks
 
-One key difference to note between Anthropic models and most others is that the contents of a single Anthropic [`AIMessage`](https://reference.langchain.com/javascript/classes/_langchain_core.messages.AIMessage.html) can either be a single string or a **list of content blocks**. For example when an Anthropic model [calls a tool](/oss/javascript/langchain/tools), the tool invocation is part of the message content (as well as being exposed in the standardized `AIMessage.tool_calls` field):
+One key difference to note between Anthropic models and most others is that the contents of a single Anthropic [`AIMessage`](https://reference.langchain.com/javascript/langchain-core/messages/AIMessage) can either be a single string or a **list of content blocks**. For example when an Anthropic model [calls a tool](/oss/javascript/langchain/tools), the tool invocation is part of the message content (as well as being exposed in the standardized `AIMessage.tool_calls` field):
 
 ```typescript
 import { ChatAnthropic } from "@langchain/anthropic";
@@ -178,7 +180,7 @@ await toolCallChain.invoke({
 });
 ```
 
-```output
+```text
 AIMessage {
   "id": "msg_01DZGs9DyuashaYxJ4WWpWUP",
   "content": [
@@ -262,7 +264,7 @@ const llmWithCustomHeaders = new ChatAnthropic({
 await llmWithCustomHeaders.invoke("Why is the sky blue?");
 ```
 
-```output
+```text
 AIMessage {
   "id": "msg_019z4nWpShzsrbSHTWXWQh6z",
   "content": "The sky appears blue due to a phenomenon called Rayleigh scattering. Here's a brief explanation:\n\n1) Sunlight is made up of different wavelengths of visible light, including all the colors of the rainbow.\n\n2) As sunlight passes through the atmosphere, the gases (mostly nitrogen and oxygen) cause the shorter wavelengths of light, such as violet and blue, to be scattered more easily than the longer wavelengths like red and orange.\n\n3) This scattering of the shorter blue wavelengths occurs in all directions by the gas molecules in the atmosphere.\n\n4) Our eyes are more sensitive to the scattered blue light than the scattered violet light, so we perceive the sky as having a blue color.\n\n5) The scattering is more pronounced for light traveling over longer distances through the atmosphere. This is why the sky appears even darker blue when looking towards the horizon.\n\nSo in essence, the selective scattering of the shorter blue wavelengths of sunlight by the gases in the atmosphere is what causes the sky to appear blue to our eyes during the daytime.",
@@ -629,7 +631,7 @@ const res = await modelWithCaching.invoke(messages);
 console.log("USAGE:", res.response_metadata.usage);
 ```
 
-```output
+```text
 USAGE: {
   input_tokens: 19,
   cache_creation_input_tokens: 2921,
@@ -648,7 +650,7 @@ const res2 = await modelWithCaching.invoke(messages);
 console.log("USAGE:", res2.response_metadata.usage);
 ```
 
-```output
+```text
 USAGE: {
   input_tokens: 19,
   cache_creation_input_tokens: 0,
@@ -756,7 +758,7 @@ const responseWithCitations = await citationsModel.invoke(messagesWithCitations)
 console.log(JSON.stringify(responseWithCitations.content, null, 2));
 ```
 
-```output
+```json
 [
   {
     "type": "text",
@@ -969,7 +971,7 @@ const resWithSplits = await citationsModelWithSplits.invoke([messageWithSplitDoc
 console.log(JSON.stringify(resWithSplits.content, null, 2));
 ```
 
-```output
+```json
 [
   {
     "type": "text",
@@ -1026,9 +1028,9 @@ For detailed documentation of all ChatAnthropic features and configurations head
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/chat/anthropic.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/chat/anthropic.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

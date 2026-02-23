@@ -55,7 +55,7 @@ Select the tab for UI or SDK workflows:
 
 ## 3. Test a prompt
 
-1. Under the **Prompts** heading select the gear <Icon icon="gear" iconType="solid" /> icon next to the model name, which will launch the **Prompt Settings** window on the **Model Configuration** tab.
+1. Under the **Prompts** heading select the gear <Icon icon="settings" iconType="solid" /> icon next to the model name, which will launch the **Prompt Settings** window on the **Model Configuration** tab.
 1. Set the [model configuration](/langsmith/managing-model-configurations) you want to use. The **Provider** and **Model** you select will determine the parameters that are configurable on this configuration page. Once set, click **Save as**.
 
     <div style={{ textAlign: 'center' }}>
@@ -72,7 +72,7 @@ Select the tab for UI or SDK workflows:
     />
     </div>
 
-1. Specify the input variables you would like to test in the **Inputs** box and then click <Icon icon="circle-play" iconType="solid" /> **Start**.
+1. Specify the input variables you would like to test in the **Inputs** box and then click <Icon icon="player-play" iconType="solid" /> **Start**.
 
 
     <div style={{ textAlign: 'center' }}>
@@ -159,7 +159,7 @@ To create a prompt, you'll define a list of messages that you want in your promp
 
 Use the language-specific constructor and push method:
 
-- Python: [`ChatPromptTemplate`](https://reference.langchain.com/python/langchain_core/prompts/#langchain_core.prompts.chat.ChatPromptTemplate) → [`client.push_prompt(...)`](https://docs.smith.langchain.com/reference/python/client/langsmith.client.Client#langsmith.client.Client.push_prompt)
+- Python: [`ChatPromptTemplate`](https://reference.langchain.com/python/langchain-core/prompts/chat/ChatPromptTemplate) → [`client.push_prompt(...)`](https://docs.smith.langchain.com/reference/python/client/langsmith.client.Client#langsmith.client.Client.push_prompt)
 - TypeScript: [`ChatPromptTemplate.fromMessages(...)`](https://v03.api.js.langchain.com/classes/_langchain_core.prompts.ChatPromptTemplate.html#fromMessages) → [`client.pushPrompt(...)`](https://langsmith-docs-7jgx2bq8f-langchain.vercel.app/reference/js/classes/client.Client#pushprompt)
 
 1. Add the following code to a `create_prompt` file:
@@ -241,7 +241,7 @@ Then, you'll iterate on the prompt by creating a new version. Members of your wo
     formatted_prompt = prompt.invoke({"question": "What is the color of the sky?"})
 
     response = oai_client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=convert_to_openai_messages(formatted_prompt.messages),
     )
     ```
@@ -259,7 +259,7 @@ Then, you'll iterate on the prompt by creating a new version. Members of your wo
     const formattedPrompt = await prompt.invoke({ question: "What is the color of the sky?" });
 
     const response = await oaiClient.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4.1",
         messages: convertPromptToOpenAI(formattedPrompt).messages,
     });
     ```
@@ -350,6 +350,10 @@ To improve your prompts:
 - Learn how to set up the Playground to [Test multi-turn conversations](/langsmith/multiple-messages) in this tutorial.
 - Learn how to test your prompt's performance over a dataset instead of individual examples, refer to [Run an evaluation from the Prompt Playground](/langsmith/run-evaluation-from-prompt-playground).
 
+<Callout type="info" icon="feather">
+Use **[Polly](/langsmith/polly)** in the Playground to help optimize your prompts, generate tools, and create output schemas.
+</Callout>
+
 ## Video guide
 <iframe
   className="w-full aspect-video rounded-xl"
@@ -362,9 +366,9 @@ To improve your prompts:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/prompt-engineering-quickstart.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/prompt-engineering-quickstart.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -168,7 +168,7 @@ To review, edit, and approve tool calls in an agent or workflow, use LangGraph's
 ```
 
   1. `interrupt(...)` pauses execution at `human_node`, surfacing the given payload to a human.
-  2. Any JSON serializable value can be passed to the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) function. Here, a dict containing the text to revise.
+  2. Any JSON serializable value can be passed to the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) function. Here, a dict containing the text to revise.
   3. Once resumed, the return value of `interrupt(...)` is the human-provided input, which is used to update the state.
 
   Once you have a running Agent Server, you can interact with it using
@@ -476,9 +476,9 @@ The following example shows how to add static interrupts:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/add-human-in-the-loop.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/add-human-in-the-loop.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

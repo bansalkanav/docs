@@ -1,5 +1,6 @@
 ---
-title: FalkorDBVectorStore
+title: "FalkorDBVectorStore integration"
+description: "Integrate with the FalkorDBVectorStore using LangChain Python."
 ---
 
 <a href="https://docs.falkordb.com/" target="_blank">FalkorDB</a> is an open-source graph database with integrated support for vector similarity search
@@ -89,7 +90,7 @@ documents = [document_1, document_2, document_3]
 vector_store.add_documents(documents=documents, ids=["1", "2", "3"])
 ```
 
-```output
+```python
 ['1', '2', '3']
 ```
 
@@ -125,7 +126,7 @@ for doc in results:
     print(f"* {doc.page_content} [{doc.metadata}]")
 ```
 
-```output
+```text
 * qux [{'text': 'qux', 'id': '1', 'source': 'https://another-example.com'}]
 ```
 
@@ -137,7 +138,7 @@ for doc, score in results:
     print(f"* [SIM={score:3f}] {doc.page_content} [{doc.metadata}]")
 ```
 
-```output
+```text
 * [SIM=0.000001] bar [{'text': 'bar', 'id': '2', 'source': 'https://example.com'}]
 ```
 
@@ -150,7 +151,7 @@ retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 1})
 retriever.invoke("thud")
 ```
 
-```output
+```text
 [Document(metadata={'text': 'qux', 'id': '1', 'source': 'https://another-example.com'}, page_content='qux')]
 ```
 
@@ -162,9 +163,9 @@ For detailed documentation of all `FalkorDBVector` features and configurations h
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/falkordbvector.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/falkordbvector.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

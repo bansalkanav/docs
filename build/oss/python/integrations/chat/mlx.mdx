@@ -1,5 +1,6 @@
 ---
-title: MLX
+title: "Mlx integration"
+description: "Integrate with the Mlx chat model using LangChain Python."
 ---
 
 This notebook shows how to get started using `MLX` LLM's as chat models.
@@ -61,7 +62,7 @@ print(res.content)
 
 Here we'll test out `gemma-2b-it` as a zero-shot `ReAct` Agent. The example below is taken from [here](https://python.langchain.com/docs/modules/agents/agent_types/react#using-chat-models).
 
-> Note: To run this section, you'll need to have a [SerpAPI Token](https://serpapi.com/) saved as an environment variable: `SERPAPI_API_KEY`
+> Note: To run this section, you'll need to have a [SerpApi Token](https://serpapi.com/) saved as an environment variable: `SERPAPI_API_KEY`
 
 ```python
 from langchain_classic import hub
@@ -153,9 +154,9 @@ agent_executor.invoke(
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/mlx.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/mlx.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

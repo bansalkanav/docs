@@ -8,10 +8,10 @@ This is often due to an infinite loop caused by code like the example below:
 
 
 ```typescript
-import { StateGraph } from "@langchain/langgraph";
-import * as z from "zod";
+import { StateGraph, StateSchema } from "@langchain/langgraph";
+import { z } from "zod/v4";
 
-const State = z.object({
+const State = new StateSchema({
   someKey: z.string(),
 });
 
@@ -42,9 +42,9 @@ await graph.invoke({...}, { recursionLimit: 100 });
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/errors/GRAPH_RECURSION_LIMIT.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/errors/GRAPH_RECURSION_LIMIT.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

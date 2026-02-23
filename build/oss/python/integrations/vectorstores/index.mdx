@@ -1,10 +1,12 @@
 ---
-title: "Vector stores"
+title: "Vector store integrations"
+sidebarTitle: "Vector stores"
+description: "Integrate with vector stores using LangChain Python."
 ---
 
 ## Overview
 
-A vector store stores [embedded](/oss/python/integrations/text_embedding) data and performs similarity search.
+A vector stores [embedded](/oss/python/integrations/text_embedding) data and performs similarity search.
 
 ```mermaid
 flowchart LR
@@ -45,7 +47,7 @@ vector_store = InMemoryVectorStore(embedding=SomeEmbeddingModel())
 
 ### Adding documents
 
-Add [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) objects (holding `page_content` and optional metadata) like so:
+Add [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) objects (holding `page_content` and optional metadata) like so:
 
 ```python
 vector_store.add_documents(documents=[doc1, doc2], ids=["id1", "id2"])
@@ -384,6 +386,37 @@ from langchain_core.vectorstores import InMemoryVectorStore
 vector_store = InMemoryVectorStore(embeddings)
 ```
 </Accordion>
+
+<Accordion title="Amazon OpenSearch">
+
+```bash pip
+pip install -qU boto3
+```
+
+```python
+from opensearchpy import RequestsHttpConnection
+
+service = "es"  # must set the service as 'es'
+region = "us-east-2"
+credentials = boto3.Session(
+    aws_access_key_id="xxxxxx", aws_secret_access_key="xxxxx"
+).get_credentials()
+awsauth = AWS4Auth("xxxxx", "xxxxxx", region, service, session_token=credentials.token)
+
+vector_store = OpenSearchVectorSearch.from_documents(
+    docs,
+    embeddings,
+    opensearch_url="host url",
+    http_auth=awsauth,
+    timeout=300,
+    use_ssl=True,
+    verify_certs=True,
+    connection_class=RequestsHttpConnection,
+    index_name="test-index",
+)
+```
+
+</Accordion>
 <Accordion title="Astra DB">
 
 <CodeGroup>
@@ -481,6 +514,35 @@ vector_store = Chroma(
     collection_name="example_collection",
     embedding_function=embeddings,
     persist_directory="./chroma_langchain_db",  # Where to save data locally, remove if not necessary
+)
+```
+</Accordion>
+<Accordion title="CockroachDB">
+
+<CodeGroup>
+```bash pip
+pip install -qU langchain-cockroachdb
+```
+
+```bash uv
+uv add langchain-cockroachdb
+```
+</CodeGroup>
+```python
+from langchain_cockroachdb import AsyncCockroachDBVectorStore, CockroachDBEngine
+
+CONNECTION_STRING = "cockroachdb://user:pass@host:26257/db?sslmode=verify-full"
+
+engine = CockroachDBEngine.from_connection_string(CONNECTION_STRING)
+await engine.ainit_vectorstore_table(
+    table_name="vectors",
+    vector_dimension=1536,
+)
+
+vector_store = AsyncCockroachDBVectorStore(
+    engine=engine,
+    embeddings=embeddings,
+    collection_name="vectors",
 )
 ```
 </Accordion>
@@ -641,6 +703,38 @@ vector_store = QdrantVectorStore(
 )
 ```
 </Accordion>
+<Accordion title="Oracle AI Database">
+
+<CodeGroup>
+```bash pip
+pip install -qU langchain-oracledb
+```
+
+```bash uv
+uv add langchain-oracledb
+```
+
+</CodeGroup>
+```python
+import oracledb
+from langchain_oracledb.vectorstores import OracleVS
+from langchain_oracledb.vectorstores.oraclevs import create_index
+from langchain_community.vectorstores.utils import DistanceStrategy
+
+username = "<username>"
+password = "<password>"
+dsn = "<hostname>:<port>/<service_name>"
+
+connection = oracledb.connect(user=username, password=password, dsn=dsn)
+
+vector_store = OracleVS(
+    client=connection,
+    embedding_function=embedding_model,
+    table_name="VECTOR_SEARCH_DEMO",
+    distance_strategy=DistanceStrategy.EUCLIDEAN_DISTANCE
+)
+```
+</Accordion>
 </AccordionGroup>
 
 | Vectorstore | Delete by ID | Filtering | Search by Vector | Search with score | Async | Passes Standard Tests | Multi Tenancy | IDs in add Documents |
@@ -650,11 +744,13 @@ vector_store = QdrantVectorStore(
 | [`AzureCosmosDBMongoVCoreVectorStore`](/oss/python/integrations/vectorstores/azure_cosmos_db_mongo_vcore) | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |
 | [`Chroma`](/oss/python/integrations/vectorstores/chroma) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`Clickhouse`](/oss/python/integrations/vectorstores/clickhouse) | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| [`AsyncCockroachDBVectorStore`](/oss/python/integrations/vectorstores/cockroachdb) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | [`CouchbaseSearchVectorStore`](/oss/python/integrations/vectorstores/couchbase) | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
 | [`DatabricksVectorSearch`](/oss/python/integrations/vectorstores/databricks_vector_search) | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ |
 | [`ElasticsearchStore`](/oss/python/integrations/vectorstores/elasticsearch) | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ |
 | [`FAISS`](/oss/python/integrations/vectorstores/faiss) | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ |
 | [`InMemoryVectorStore`](https://python.langchain.com/api_reference/core/vectorstores/langchain_core.vectorstores.in_memory.InMemoryVectorStore.html) | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ |
+| [`LambdaDB`](/oss/python/integrations/vectorstores/lambdadb) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | [`Milvus`](/oss/python/integrations/vectorstores/milvus) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`Moorcheh`](/oss/python/integrations/vectorstores/moorcheh) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`MongoDBAtlasVectorSearch`](/oss/python/integrations/vectorstores/mongodb_atlas) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -666,12 +762,13 @@ vector_store = QdrantVectorStore(
 | [`Weaviate`](/oss/python/integrations/vectorstores/weaviate) | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
 | [`SQLServer`](/oss/python/integrations/vectorstores/sqlserver) | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
 | [`ZeusDB`](/oss/python/integrations/vectorstores/zeusdb) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| [`Oracle AI Vector Search`](/oss/python/integrations/vectorstores/oracle) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| [`Oracle AI Database`](/oss/python/integrations/vectorstores/oracle) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 
 ## All vector stores
 
 <Columns cols={3}>
 <Card title="Activeloop Deep Lake" icon="link" href="/oss/python/integrations/vectorstores/activeloop_deeplake" arrow="true" cta="View guide"/>
+<Card title="Alibaba Cloud MySQL" icon="link" href="/oss/python/integrations/vectorstores/alibabacloud_mysql" arrow="true" cta="View guide"/>
 <Card title="Alibaba Cloud OpenSearch" icon="link" href="/oss/python/integrations/vectorstores/alibabacloud_opensearch" arrow="true" cta="View guide"/>
 <Card title="AnalyticDB" icon="link" href="/oss/python/integrations/vectorstores/analyticdb" arrow="true" cta="View guide"/>
 <Card title="Annoy" icon="link" href="/oss/python/integrations/vectorstores/annoy" arrow="true" cta="View guide"/>
@@ -692,6 +789,7 @@ vector_store = QdrantVectorStore(
 <Card title="Chroma" icon="link" href="/oss/python/integrations/vectorstores/chroma" arrow="true" cta="View guide"/>
 <Card title="Clarifai" icon="link" href="/oss/python/integrations/vectorstores/clarifai" arrow="true" cta="View guide"/>
 <Card title="ClickHouse" icon="link" href="/oss/python/integrations/vectorstores/clickhouse" arrow="true" cta="View guide"/>
+<Card title="CockroachDB" icon="link" href="/oss/python/integrations/vectorstores/cockroachdb" arrow="true" cta="View guide"/>
 <Card title="Couchbase" icon="link" href="/oss/python/integrations/vectorstores/couchbase" arrow="true" cta="View guide"/>
 <Card title="DashVector" icon="link" href="/oss/python/integrations/vectorstores/dashvector" arrow="true" cta="View guide"/>
 <Card title="Databricks" icon="link" href="/oss/python/integrations/vectorstores/databricks_vector_search" arrow="true" cta="View guide"/>
@@ -715,12 +813,14 @@ vector_store = QdrantVectorStore(
 <Card title="Firestore" icon="link" href="/oss/python/integrations/vectorstores/google_firestore" arrow="true" cta="View guide"/>
 <Card title="Google Memorystore for Redis" icon="link" href="/oss/python/integrations/vectorstores/google_memorystore_redis" arrow="true" cta="View guide"/>
 <Card title="Google Spanner" icon="link" href="/oss/python/integrations/vectorstores/google_spanner" arrow="true" cta="View guide"/>
+<Card title="Google Bigtable" icon="link" href="/oss/python/integrations/vectorstores/google_bigtable" arrow="true" cta="View guide"/>
 <Card title="Google Vertex AI Feature Store" icon="link" href="/oss/python/integrations/vectorstores/google_vertex_ai_feature_store" arrow="true" cta="View guide"/>
 <Card title="Google Vertex AI Vector Search" icon="link" href="/oss/python/integrations/vectorstores/google_vertex_ai_vector_search" arrow="true" cta="View guide"/>
 <Card title="Hippo" icon="link" href="/oss/python/integrations/vectorstores/hippo" arrow="true" cta="View guide"/>
 <Card title="Hologres" icon="link" href="/oss/python/integrations/vectorstores/hologres" arrow="true" cta="View guide"/>
 <Card title="Jaguar Vector Database" icon="link" href="/oss/python/integrations/vectorstores/jaguar" arrow="true" cta="View guide"/>
 <Card title="Kinetica" icon="link" href="/oss/python/integrations/vectorstores/kinetica" arrow="true" cta="View guide"/>
+<Card title="LambdaDB" icon="link" href="/oss/python/integrations/vectorstores/lambdadb" arrow="true" cta="View guide"/>
 <Card title="LanceDB" icon="link" href="/oss/python/integrations/vectorstores/lancedb" arrow="true" cta="View guide"/>
 <Card title="Lantern" icon="link" href="/oss/python/integrations/vectorstores/lantern" arrow="true" cta="View guide"/>
 <Card title="Lindorm" icon="link" href="/oss/python/integrations/vectorstores/lindorm" arrow="true" cta="View guide"/>
@@ -740,7 +840,7 @@ vector_store = QdrantVectorStore(
 <Card title="Oceanbase" icon="link" href="/oss/python/integrations/vectorstores/oceanbase" arrow="true" cta="View guide"/>
 <Card title="openGauss" icon="link" href="/oss/python/integrations/vectorstores/opengauss" arrow="true" cta="View guide"/>
 <Card title="OpenSearch" icon="link" href="/oss/python/integrations/vectorstores/opensearch" arrow="true" cta="View guide"/>
-<Card title="Oracle AI Vector Search" icon="link" href="/oss/python/integrations/vectorstores/oracle" arrow="true" cta="View guide"/>
+<Card title="Oracle AI Database" icon="link" href="/oss/python/integrations/vectorstores/oracle" arrow="true" cta="View guide"/>
 <Card title="Pathway" icon="link" href="/oss/python/integrations/vectorstores/pathway" arrow="true" cta="View guide"/>
 <Card title="Postgres Embedding" icon="link" href="/oss/python/integrations/vectorstores/pgembedding" arrow="true" cta="View guide"/>
 <Card title="PGVecto.rs" icon="link" href="/oss/python/integrations/vectorstores/pgvecto_rs" arrow="true" cta="View guide"/>
@@ -776,11 +876,13 @@ vector_store = QdrantVectorStore(
 <Card title="USearch" icon="link" href="/oss/python/integrations/vectorstores/usearch" arrow="true" cta="View guide"/>
 <Card title="Vald" icon="link" href="/oss/python/integrations/vectorstores/vald" arrow="true" cta="View guide"/>
 <Card title="VDMS" icon="link" href="/oss/python/integrations/vectorstores/vdms" arrow="true" cta="View guide"/>
+<Card title="veDB for MySQL" icon="link" href="/oss/python/integrations/vectorstores/vedb_for_mysql" arrow="true" cta="View guide"/>
 <Card title="Vearch" icon="link" href="/oss/python/integrations/vectorstores/vearch" arrow="true" cta="View guide"/>
 <Card title="Vectara" icon="link" href="/oss/python/integrations/vectorstores/vectara" arrow="true" cta="View guide"/>
 <Card title="Vespa" icon="link" href="/oss/python/integrations/vectorstores/vespa" arrow="true" cta="View guide"/>
 <Card title="viking DB" icon="link" href="/oss/python/integrations/vectorstores/vikingdb" arrow="true" cta="View guide"/>
 <Card title="vlite" icon="link" href="/oss/python/integrations/vectorstores/vlite" arrow="true" cta="View guide"/>
+<Card title="Volcengine RDS for MySQL" icon="link" href="/oss/python/integrations/vectorstores/volcengine_mysql" arrow="true" cta="View guide"/>
 <Card title="Weaviate" icon="link" href="/oss/python/integrations/vectorstores/weaviate" arrow="true" cta="View guide"/>
 <Card title="Xata" icon="link" href="/oss/python/integrations/vectorstores/xata" arrow="true" cta="View guide"/>
 <Card title="YDB" icon="link" href="/oss/python/integrations/vectorstores/ydb" arrow="true" cta="View guide"/>
@@ -789,14 +891,14 @@ vector_store = QdrantVectorStore(
 <Card title="Zep Cloud" icon="link" href="/oss/python/integrations/vectorstores/zep_cloud" arrow="true" cta="View guide"/>
 <Card title="ZeusDB" icon="link" href="/oss/python/integrations/vectorstores/zeusdb" arrow="true" cta="View guide"/>
 <Card title="Zilliz" icon="link" href="/oss/python/integrations/vectorstores/zilliz" arrow="true" cta="View guide"/>
-<Card title="Oracle AI Vector Search" icon="link" href="/oss/python/integrations/vectorstores/oracle" arrow="true" cta="View guide"/>
+<Card title="Zvec" icon="link" href="/oss/python/integrations/vectorstores/zvec" arrow="true" cta="View guide"/>
 </Columns>
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/index.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/index.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

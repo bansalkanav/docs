@@ -1,5 +1,6 @@
 ---
-title: IBM watsonx.ai
+title: "IBM watsonx.ai integration"
+description: "Integrate with the IBM watsonx.ai LLM using LangChain JavaScript."
 ---
 
 This will help you get started with IBM text completion models (LLMs) using LangChain. For detailed documentation on `IBM watsonx.ai` features and configuration options, please refer to the [IBM watsonx.ai](https://api.js.langchain.com/modules/_langchain_community.llms_ibm.html).
@@ -149,7 +150,7 @@ Note:
 - Depending on the region of your provisioned service instance, use correct serviceUrl.
 - You need to specify the model you want to use for inferencing through model_id.
 
-### Using Model Gateway
+### Using model Gateway
 ```typescript
 import { WatsonxLLM } from "@langchain/community/llms/ibm";
 
@@ -188,7 +189,7 @@ const results = await instance.generate([
 console.log(results);
 ```
 
-```output
+```javascript
 
 print('Hello world.')<|endoftext|>
 {
@@ -215,7 +216,7 @@ await chain.invoke(
 )
 ```
 
-```output
+```text
 Ich liebe Programmieren.
 
 To express that you are passionate about programming in German,
@@ -234,7 +235,7 @@ const result2 = await instance.invoke("Print hello world.", {
 console.log(result2);
 ```
 
-```output
+```text
 print('Hello world.')<|endoftext|>
 ```
 
@@ -247,7 +248,7 @@ const tokens = await instance.getNumTokens("Print hello world.");
 console.log(tokens);
 ```
 
-```output
+```text
 4
 ```
 
@@ -259,9 +260,9 @@ For detailed documentation of all `IBM watsonx.ai` features and configurations h
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/llms/ibm.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/llms/ibm.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

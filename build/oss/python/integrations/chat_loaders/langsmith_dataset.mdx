@@ -1,5 +1,6 @@
 ---
-title: LangSmith Chat Datasets
+title: "LangSmith chat datasets integration"
+description: "Integrate with the LangSmith chat datasets chat loader using LangChain Python."
 ---
 
 This notebook demonstrates an easy way to load a LangSmith chat dataset and fine-tune a model on that data.
@@ -64,7 +65,7 @@ _ = client.create_examples(
 )
 ```
 
-## 2. Prepare Data
+## 2. Prepare data
 
 Now we can create an instance of LangSmithRunChatLoader and load the chat sessions using its lazy_load() method.
 
@@ -84,7 +85,7 @@ from langchain_community.adapters.openai import convert_messages_for_finetuning
 training_data = convert_messages_for_finetuning(chat_sessions)
 ```
 
-## 3. Fine-tune the Model
+## 3. Fine-tune the model
 
 Now, initiate the fine-tuning process using the OpenAI library.
 
@@ -118,7 +119,7 @@ while status != "succeeded":
 # Now your model is fine-tuned!
 ```
 
-```output
+```text
 Status=[running]... 429.55s. 46.34s
 ```
 
@@ -144,7 +145,7 @@ model = ChatOpenAI(
 model.invoke("There were three ravens sat on a tree.")
 ```
 
-```output
+```text
 AIMessage(content='[{"s": "There were three ravens", "object": "tree", "relation": "sat on"}, {"s": "three ravens", "object": "a tree", "relation": "sat on"}]')
 ```
 
@@ -152,9 +153,9 @@ Now you have successfully fine-tuned a model using data from LangSmith LLM runs!
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat_loaders/langsmith_dataset.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat_loaders/langsmith_dataset.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

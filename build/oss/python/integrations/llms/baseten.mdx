@@ -1,5 +1,6 @@
 ---
-title: Baseten
+title: "Baseten integration"
+description: "Integrate with the Baseten LLM using LangChain Python."
 ---
 
 [Baseten](https://baseten.co) is a [Provider](/oss/python/integrations/providers/baseten) in the LangChain ecosystem that implements the LLMs component.
@@ -53,7 +54,7 @@ We can chain together multiple calls to one or multiple models, which is the who
 For example, we can replace GPT with Mistral in this demo of terminal emulation.
 
 ```python
-from langchain.chains import LLMChain
+from langchain_classic.chains import LLMChain
 from langchain.memory import ConversationBufferWindowMemory
 from langchain_core.prompts import PromptTemplate
 
@@ -107,9 +108,9 @@ As we can see from the final example, which outputs a number that may or may not
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/baseten.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/baseten.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

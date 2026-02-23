@@ -1,5 +1,6 @@
 ---
-title: Google Speech-to-Text Audio Transcripts
+title: "Google speech-to-text audio transcripts integration"
+description: "Integrate with the Google speech-to-text audio transcripts document loader using LangChain Python."
 ---
 
 The `SpeechToTextLoader` allows to transcribe audio files with the [Google Cloud Speech-to-Text API](https://cloud.google.com/speech-to-text) and loads the transcribed text into documents.
@@ -63,7 +64,7 @@ docs[0].metadata
 }
 ```
 
-## Recognition Config
+## Recognition config
 
 You can specify the `config` argument to use different speech recognition models and enable specific features.
 
@@ -112,9 +113,9 @@ loader = SpeechToTextLoader(
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/google_speech_to_text.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/google_speech_to_text.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

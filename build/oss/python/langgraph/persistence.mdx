@@ -80,11 +80,9 @@ graph.invoke({"foo": "", "bar":[]}, config)
 
 
 
-
-
 After we run the graph, we expect to see exactly 4 checkpoints:
 
-* Empty checkpoint with [`START`](https://reference.langchain.com/python/langgraph/constants/#langgraph.constants.START) as the next node to be executed
+* Empty checkpoint with [`START`](https://reference.langchain.com/python/langgraph/constants/START) as the next node to be executed
 * Checkpoint with the user input `{'foo': '', 'bar': []}` and `node_a` as the next node to be executed
 * Checkpoint with the outputs of `node_a` `{'foo': 'a', 'bar': ['a']}` and `node_b` as the next node to be executed
 * Checkpoint with the outputs of `node_b` `{'foo': 'b', 'bar': ['a', 'b']}` and no next nodes to be executed
@@ -276,7 +274,7 @@ The final thing you can optionally specify when calling [`update_state`](https:/
 
 ![Update](/oss/images/checkpoints_full_story.jpg)
 
-## Memory Store
+## Memory store
 
 ![Model of shared state](/oss/images/shared_state.png)
 
@@ -284,20 +282,24 @@ A [state schema](/oss/python/langgraph/graph-api#schema) specifies a set of keys
 
 But, what if we want to retain some information _across threads_? Consider the case of a chatbot where we want to retain specific information about the user across _all_ chat conversations (e.g., threads) with that user!
 
-With checkpointers alone, we cannot share information across threads. This motivates the need for the [`Store`](https://reference.langchain.com/python/langgraph/store/) interface. As an illustration, we can define an `InMemoryStore` to store information about a user across threads. We simply compile our graph with a checkpointer, as before, and with our new `in_memory_store` variable.
+With checkpointers alone, we cannot share information across threads. This motivates the need for the [`Store`](https://reference.langchain.com/python/langgraph/store/) interface. As an illustration, we can define an `InMemoryStore` to store information about a user across threads. We simply compile our graph with a checkpointer, as before, and pass the store.
 
 <Info>
 **LangGraph API handles stores automatically**
 When using the LangGraph API, you don't need to implement or configure stores manually. The API handles all storage infrastructure for you behind the scenes.
 </Info>
 
-### Basic Usage
+<Note>
+[InMemoryStore](https://reference.langchain.com/python/langchain-core/stores/InMemoryStore) is suitable for development and testing. For production, use a persistent store like `PostgresStore` or `RedisStore`. All implementations extend [BaseStore](https://reference.langchain.com/python/langchain-core/stores/BaseStore), which is the type annotation to use in node function signatures.
+</Note>
+
+### Basic usage
 
 First, let's showcase this in isolation without using LangGraph.
 
 ```python
 from langgraph.store.memory import InMemoryStore
-in_memory_store = InMemoryStore()
+store = InMemoryStore()
 ```
 
 
@@ -318,7 +320,7 @@ We use the `store.put` method to save memories to our namespace in the store. Wh
 ```python
 memory_id = str(uuid.uuid4())
 memory = {"food_preference" : "I like pizza"}
-in_memory_store.put(namespace_for_memory, memory_id, memory)
+store.put(namespace_for_memory, memory_id, memory)
 ```
 
 
@@ -327,7 +329,7 @@ in_memory_store.put(namespace_for_memory, memory_id, memory)
 We can read out memories in our namespace using the `store.search` method, which will return all memories for a given user as a list. The most recent memory is the last in the list.
 
 ```python
-memories = in_memory_store.search(namespace_for_memory)
+memories = store.search(namespace_for_memory)
 memories[-1].dict()
 {'value': {'food_preference': 'I like pizza'},
  'key': '07e0caf4-1631-47b7-b15f-65515d4c1843',
@@ -342,14 +344,20 @@ The attributes it has are:
 
 * `value`: The value (itself a dictionary) of this memory
 * `key`: A unique key for this memory in this namespace
-* `namespace`: A list of strings, the namespace of this memory type
+* `namespace`: A tuple of strings, the namespace of this memory type
+
+    <Note>
+    While the type is `tuple[str, ...]`, it may be serialized as a list when converted to JSON (for example, `['1', 'memories']`).
+    </Note>
+
 * `created_at`: Timestamp for when this memory was created
 * `updated_at`: Timestamp for when this memory was updated
 
 
 
 
-### Semantic Search
+
+### Semantic search
 
 Beyond simple retrieval, the store also supports semantic search, allowing you to find memories based on meaning rather than exact matches. To enable this, configure the store with an embedding model:
 
@@ -411,10 +419,15 @@ store.put(
 
 ### Using in LangGraph
 
-With this all in place, we use the `in_memory_store` in LangGraph. The `in_memory_store` works hand-in-hand with the checkpointer: the checkpointer saves state to threads, as discussed above, and the `in_memory_store` allows us to store arbitrary information for access _across_ threads. We compile the graph with both the checkpointer and the `in_memory_store` as follows.
+With this all in place, we use the store in LangGraph. The store works hand-in-hand with the checkpointer: the checkpointer saves state to threads, as discussed above, and the store allows us to store arbitrary information for access _across_ threads. We compile the graph with both the checkpointer and the store as follows.
 
 ```python
+from dataclasses import dataclass
 from langgraph.checkpoint.memory import InMemorySaver
+
+@dataclass
+class Context:
+    user_id: str
 
 # We need this because we want to enable threads (conversations)
 checkpointer = InMemorySaver()
@@ -422,7 +435,9 @@ checkpointer = InMemorySaver()
 # ... Define the graph ...
 
 # Compile the graph with the checkpointer and store
-graph = graph.compile(checkpointer=checkpointer, store=in_memory_store)
+builder = StateGraph(MessagesState, context_schema=Context)
+# ... add nodes and edges ...
+graph = builder.compile(checkpointer=checkpointer, store=store)
 ```
 
 
@@ -432,12 +447,14 @@ We invoke the graph with a `thread_id`, as before, and also with a `user_id`, wh
 
 ```python
 # Invoke the graph
-user_id = "1"
-config = {"configurable": {"thread_id": "1", "user_id": user_id}}
+config = {"configurable": {"thread_id": "1"}}
 
 # First let's just say hi to the AI
 for update in graph.stream(
-    {"messages": [{"role": "user", "content": "hi"}]}, config, stream_mode="updates"
+    {"messages": [{"role": "user", "content": "hi"}]},
+    config,
+    stream_mode="updates",
+    context=Context(user_id="1"),
 ):
     print(update)
 ```
@@ -445,13 +462,20 @@ for update in graph.stream(
 
 
 
-We can access the `in_memory_store` and the `user_id` in _any node_ by passing `store: BaseStore` and `config: RunnableConfig` as node arguments. Here's how we might use semantic search in a node to find relevant memories:
+You can access the store and the `user_id` in _any node_ by using the `Runtime` object. The `Runtime` is automatically injected by LangGraph when you add it as a parameter to your node function. Here's how you might use it to save memories:
 
 ```python
-def update_memory(state: MessagesState, config: RunnableConfig, *, store: BaseStore):
+from langgraph.runtime import Runtime
+from dataclasses import dataclass
 
-    # Get the user id from the config
-    user_id = config["configurable"]["user_id"]
+@dataclass
+class Context:
+    user_id: str
+
+async def update_memory(state: MessagesState, runtime: Runtime[Context]):
+
+    # Get the user id from the runtime context
+    user_id = runtime.context.user_id
 
     # Namespace the memory
     namespace = (user_id, "memories")
@@ -462,9 +486,11 @@ def update_memory(state: MessagesState, config: RunnableConfig, *, store: BaseSt
     memory_id = str(uuid.uuid4())
 
     # We create a new memory
-    store.put(namespace, memory_id, {"memory": memory})
+    await runtime.store.aput(namespace, memory_id, {"memory": memory})
 
 ```
+
+
 
 
 
@@ -486,15 +512,22 @@ memories[-1].dict()
 We can access the memories and use them in our model call.
 
 ```python
-def call_model(state: MessagesState, config: RunnableConfig, *, store: BaseStore):
-    # Get the user id from the config
-    user_id = config["configurable"]["user_id"]
+from dataclasses import dataclass
+from langgraph.runtime import Runtime
+
+@dataclass
+class Context:
+    user_id: str
+
+async def call_model(state: MessagesState, runtime: Runtime[Context]):
+    # Get the user id from the runtime context
+    user_id = runtime.context.user_id
 
     # Namespace the memory
     namespace = (user_id, "memories")
 
     # Search based on the most recent message
-    memories = store.search(
+    memories = await runtime.store.asearch(
         namespace,
         query=state["messages"][-1].content,
         limit=3
@@ -510,12 +543,15 @@ def call_model(state: MessagesState, config: RunnableConfig, *, store: BaseStore
 If we create a new thread, we can still access the same memories so long as the `user_id` is the same.
 
 ```python
-# Invoke the graph
-config = {"configurable": {"thread_id": "2", "user_id": "1"}}
+# Invoke the graph on a new thread
+config = {"configurable": {"thread_id": "2"}}
 
 # Let's say hi again
 for update in graph.stream(
-    {"messages": [{"role": "user", "content": "hi, tell me about my memories"}]}, config, stream_mode="updates"
+    {"messages": [{"role": "user", "content": "hi, tell me about my memories"}]},
+    config,
+    stream_mode="updates",
+    context=Context(user_id="1"),
 ):
     print(update)
 ```
@@ -547,6 +583,7 @@ Under the hood, checkpointing is powered by checkpointer objects that conform to
 * `langgraph-checkpoint`: The base interface for checkpointer savers ([`BaseCheckpointSaver`](https://reference.langchain.com/python/langgraph/checkpoints/#langgraph.checkpoint.base.BaseCheckpointSaver)) and serialization/deserialization interface ([`SerializerProtocol`](https://reference.langchain.com/python/langgraph/checkpoints/#langgraph.checkpoint.serde.base.SerializerProtocol)). Includes in-memory checkpointer implementation ([`InMemorySaver`](https://reference.langchain.com/python/langgraph/checkpoints/#langgraph.checkpoint.memory.InMemorySaver)) for experimentation. LangGraph comes with `langgraph-checkpoint` included.
 * `langgraph-checkpoint-sqlite`: An implementation of LangGraph checkpointer that uses SQLite database ([`SqliteSaver`](https://reference.langchain.com/python/langgraph/checkpoints/#langgraph.checkpoint.sqlite.SqliteSaver) / [`AsyncSqliteSaver`](https://reference.langchain.com/python/langgraph/checkpoints/#langgraph.checkpoint.sqlite.aio.AsyncSqliteSaver)). Ideal for experimentation and local workflows. Needs to be installed separately.
 * `langgraph-checkpoint-postgres`: An advanced checkpointer that uses Postgres database ([`PostgresSaver`](https://reference.langchain.com/python/langgraph/checkpoints/#langgraph.checkpoint.postgres.PostgresSaver) / [`AsyncPostgresSaver`](https://reference.langchain.com/python/langgraph/checkpoints/#langgraph.checkpoint.postgres.aio.AsyncPostgresSaver)), used in LangSmith. Ideal for using in production. Needs to be installed separately.
+* `langgraph-checkpoint-cosmosdb`: An implementation of LangGraph checkpointer that uses Azure Cosmos DB (@[`CosmosDBSaver`] / @[`AsyncCosmosDBSaver`]). Ideal for using in production with Azure. Supports both sync and async operations. Needs to be installed separately.
 
 
 
@@ -618,8 +655,6 @@ checkpointer.setup()
 When running on LangSmith, encryption is automatically enabled whenever `LANGGRAPH_AES_KEY` is present, so you only need to provide the environment variable. Other encryption schemes can be used by implementing [`CipherProtocol`](https://reference.langchain.com/python/langgraph/checkpoints/#langgraph.checkpoint.serde.base.CipherProtocol) and supplying it to [`EncryptedSerializer`](https://reference.langchain.com/python/langgraph/checkpoints/#langgraph.checkpoint.serde.encrypted.EncryptedSerializer).
 
 
-
-
 ## Capabilities
 
 ### Human-in-the-loop
@@ -630,7 +665,7 @@ First, checkpointers facilitate [human-in-the-loop workflows](/oss/python/langgr
 
 Second, checkpointers allow for ["memory"](/oss/python/concepts/memory) between interactions. In the case of repeated human interactions (like conversations) any follow up messages can be sent to that thread, which will retain its memory of previous ones. See [Add memory](/oss/python/langgraph/add-memory) for information on how to add and manage conversation memory using checkpointers.
 
-### Time Travel
+### Time travel
 
 Third, checkpointers allow for ["time travel"](/oss/python/langgraph/use-time-travel), allowing users to replay prior graph executions to review and / or debug specific graph steps. In addition, checkpointers make it possible to fork the graph state at arbitrary checkpoints to explore alternative trajectories.
 
@@ -644,9 +679,9 @@ Additionally, when a graph node fails mid-execution at a given superstep, LangGr
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/persistence.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/persistence.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

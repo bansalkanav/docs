@@ -1,5 +1,6 @@
 ---
-title: Wikidata
+title: "Wikidata integration"
+description: "Integrate with the Wikidata tool using LangChain Python."
 ---
 
 >[Wikidata](https://wikidata.org/) is a free and open knowledge base that can be read and edited by both humans and machines. Wikidata is one of the world's largest open knowledge bases.
@@ -18,7 +19,7 @@ wikidata = WikidataQueryRun(api_wrapper=WikidataAPIWrapper())
 print(wikidata.run("Alan Turing"))
 ```
 
-```output
+```text
 Result Q7251:
 Label: Alan Turing
 Description: English computer scientist (1912–1954)
@@ -57,9 +58,9 @@ sex or gender: male
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/wikidata.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/wikidata.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

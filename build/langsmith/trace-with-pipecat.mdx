@@ -1,5 +1,5 @@
 ---
-title: Trace with Pipecat
+title: Trace Pipecat applications
 sidebarTitle: Pipecat
 ---
 
@@ -106,7 +106,7 @@ async def main():
 
     # Initialize AI services
     stt = WhisperSTTService()
-    llm = OpenAILLMService(model="gpt-4o-mini")
+    llm = OpenAILLMService(model="gpt-4.1-mini")
     tts = OpenAITTSService(voice="alloy")
 
     # Set up conversation context with system prompt
@@ -160,7 +160,9 @@ Run your voice agent:
 python agent.py
 ```
 
-Speak to the agent through your microphone. All conversation traces will automatically appear in LangSmith. View the complete [agent.py code](https://github.com/langchain-ai/voice-agents-tracing/blob/main/pipecat/agent.py).
+Speak to the agent through your microphone. All traces will automatically appear in LangSmith. Here is an example of a trace in LangSmith: [LangSmith trace with Pipecat](https://smith.langchain.com/public/07721f41-cd27-413e-bc79-90bd23b6807d/r).
+
+View the complete [agent.py code](https://github.com/langchain-ai/voice-agents-tracing/blob/main/pipecat/agent.py).
 
 
 ## Advanced usage
@@ -298,7 +300,7 @@ finally:
 
 If traces aren't showing up in LangSmith:
 
-1. **Verify environment variables**: Ensure `OTEL_EXPORTER_OTLP_ENDPOINT` and `OTEL_EXPORTER_OTLP_HEADERS` are set correctly in your `.env` file
+1. **Verify environment variables**: Ensure `OTEL_EXPORTER_OTLP_ENDPOINT` and `OTEL_EXPORTER_OTLP_HEADERS` are set correctly in your `.env` file.
 2. **Check API key**: Confirm your LangSmith API key has write permissions.
 3. **Verify import**: Make sure you're importing `span_processor` from `langsmith_processor.py`.
 4. **Check .env loading**: Ensure `load_dotenv()` is called before importing Pipecat components.
@@ -332,7 +334,7 @@ If you're getting import errors:
 
 If responses are slow:
 
-1. **Use faster models**: Switch to `gpt-4o-mini` for the LLM (already in the tutorial).
+1. **Use faster models**: Switch to `gpt-4.1-mini` for the LLM (already in the tutorial).
 2. **Check network**: Ensure stable internet connection for API calls.
 3. **Local STT**: Consider using local Whisper instead of API-based services.
 
@@ -342,9 +344,9 @@ For issues with the advanced audio recording features, see the [complete demo do
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-pipecat.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-pipecat.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

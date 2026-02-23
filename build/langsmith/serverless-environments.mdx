@@ -33,7 +33,7 @@ const res = await tracedFn();
 await langsmithClient.awaitPendingTraceBatches();
 ```
 
-## Rate limits at high concurrency[](#rate-limits-at-high-concurrency "Direct link to Rate limits at high concurrency")
+## Rate limits at high concurrency[ ](#rate-limits-at-high-concurrency "Direct link to rate limits at high concurrency")
 
 By default, the LangSmith client will batch operations as your traced run executions, sending a new batch every few milliseconds.
 
@@ -66,9 +66,9 @@ Note that this will prevent runs from appearing in the LangSmith UI until you ca
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/serverless-environments.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/serverless-environments.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

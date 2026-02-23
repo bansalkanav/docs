@@ -7,13 +7,13 @@ sidebarTitle: Time travel
 
 When working with non-deterministic systems that make model-based decisions (e.g., agents powered by LLMs), it can be useful to examine their decision-making process in detail:
 
-1. <Icon icon="lightbulb" size={16} /> **Understand reasoning**: Analyze the steps that led to a successful result.
+1. <Icon icon="bulb" size={16} /> **Understand reasoning**: Analyze the steps that led to a successful result.
 2. <Icon icon="bug" size={16} /> **Debug mistakes**: Identify where and why errors occurred.
-3. <Icon icon="magnifying-glass" size={16} /> **Explore alternatives**: Test different paths to uncover better solutions.
+3. <Icon icon="search" size={16} /> **Explore alternatives**: Test different paths to uncover better solutions.
 
-LangGraph provides [time travel](/oss/python/langgraph/use-time-travel) functionality to support these use cases. Specifically, you can resume execution from a prior checkpoint — either replaying the same state or modifying it to explore alternatives. In all cases, resuming past execution produces a new fork in the history.
+LangGraph provides time-travel functionality to support these use cases. Specifically, you can resume execution from a prior checkpoint — either replaying the same state or modifying it to explore alternatives. In all cases, resuming past execution produces a new fork in the history.
 
-To use [time-travel](/oss/python/langgraph/use-time-travel) in LangGraph:
+To use time-travel in LangGraph:
 
 1. [Run the graph](#1-run-the-graph) with initial inputs using [`invoke`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.CompiledStateGraph.invoke) or [`stream`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.CompiledStateGraph.stream) methods.
 2. [Identify a checkpoint in an existing thread](#2-identify-a-checkpoint): Use the [`get_state_history`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.CompiledStateGraph.get_state_history) method to retrieve the execution history for a specific `thread_id` and locate the desired `checkpoint_id`.
@@ -24,32 +24,26 @@ To use [time-travel](/oss/python/langgraph/use-time-travel) in LangGraph:
 
 
 
-<Tip>
-For a conceptual overview of time-travel, see [Time travel](/oss/python/langgraph/use-time-travel).
-</Tip>
-
 ## In a workflow
 
 This example builds a simple LangGraph workflow that generates a joke topic and writes a joke using an LLM. It demonstrates how to run the graph, retrieve past execution checkpoints, optionally modify the state, and resume execution from a chosen checkpoint to explore alternate outcomes.
 
 ### Setup
 
-First we need to install the packages required
+To build this workflow in this example you need to set up the Anthropic LLM and install the required dependencies:
 
-```python
-%%capture --no-stderr
-pip install --quiet -U langgraph langchain_anthropic
+1. Install dependencies:
+```bash
+pip install langchain_core langchain-anthropic langgraph
 ```
 
-
-
-
-Next, we need to set API keys for Anthropic (the LLM we will use)
+2. Initialize the LLM:
 
 ```python
-import getpass
 import os
+import getpass
 
+from langchain_anthropic import ChatAnthropic
 
 def _set_env(var: str):
     if not os.environ.get(var):
@@ -57,14 +51,19 @@ def _set_env(var: str):
 
 
 _set_env("ANTHROPIC_API_KEY")
+
+llm = ChatAnthropic(model="claude-sonnet-4-5-20250929")
 ```
 
 
 
 
 <Tip>
-Sign up for [LangSmith](https://smith.langchain.com) to quickly spot issues and improve the performance of your LangGraph projects. LangSmith lets you use trace data to debug, test, and monitor your LLM apps built with LangGraph.
+    Sign up for [LangSmith](https://smith.langchain.com) to quickly spot issues and improve the performance of your LangGraph projects. LangSmith lets you use trace data to debug, test, and monitor your LLM apps built with LangGraph. You can also [fetch traces from LangSmith](/langsmith/export-traces#fetch-a-single-run-by-id) to replay and debug production issues locally.
 </Tip>
+
+3. Implement the workflow
+The implementation of the workflow is a simple graph with two nodes, one for generating a joke topic, another for writing the joke itself and a state to storing the intermediate values.
 
 ```python
 import uuid
@@ -120,6 +119,7 @@ graph
 
 
 ### 1. Run the graph
+To start the workflow, [`invoke`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.CompiledStateGraph.invoke) is called without any inputs. Note the `thread_id` to track this execution and retrieve its checkpoints later.
 
 ```python
 config = {
@@ -150,6 +150,7 @@ My blue argyle is now living in Bermuda with a red polka dot, posting vacation p
 ```
 
 ### 2. Identify a checkpoint
+To continue from a previous point in the graphs run, use [`get_state_history`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.CompiledStateGraph.get_state_history) to retrieve all the states and select the one where you want to resume execution.
 
 ```python
 # The states are returned in reverse chronological order.
@@ -198,7 +199,7 @@ print(selected_state.values)
 
 
 <a id="optional"></a>
-### 3. Update the state
+### 3. Update the state (optional)
 
 [`update_state`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.CompiledStateGraph.update_state) will create a new checkpoint. The new checkpoint will be associated with the same thread, but a new checkpoint ID.
 
@@ -217,6 +218,7 @@ print(new_config)
 
 
 ### 4. Resume execution from the checkpoint
+For resumings execution from the selected checkpoint, call [`invoke`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.CompiledStateGraph.invoke) with the config that points to the new checkpoint.
 
 ```python
 graph.invoke(None, new_config)
@@ -231,9 +233,9 @@ graph.invoke(None, new_config)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-time-travel.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-time-travel.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

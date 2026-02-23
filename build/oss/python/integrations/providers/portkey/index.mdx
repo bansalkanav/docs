@@ -1,5 +1,7 @@
 ---
-title: Portkey
+title: "Portkey integrations"
+sidebarTitle: "Portkey"
+description: "Integrate with Portkey using LangChain Python."
 ---
 
 [Portkey](https://portkey.ai) is the Control Panel for AI apps. With it's popular AI Gateway and Observability Suite, hundreds of teams ship **reliable**, **cost-efficient**, and **fast** apps.
@@ -14,9 +16,9 @@ Portkey brings production readiness to LangChain. With Portkey, you can
 - [x] Implement automatic **retries & fallbacks** for failed requests,
 - [x] Add **custom tags** to requests for better tracking and analysis and [more](https://portkey.ai/docs).
 
-## Quickstart - Portkey & LangChain
+## Quickstart - portkey & LangChain
 
-Since Portkey is fully compatible with the OpenAI signature, you can connect to the Portkey AI Gateway through the [`ChatOpenAI`](https://reference.langchain.com/python/integrations/langchain_openai/ChatOpenAI) interface.
+Since Portkey is fully compatible with the OpenAI signature, you can connect to the Portkey AI Gateway through the [`ChatOpenAI`](https://reference.langchain.com/python/langchain-openai/chat_models/base/ChatOpenAI) interface.
 
 - Set the `base_url` as `PORTKEY_GATEWAY_URL`
 - Add `default_headers` to consume the headers needed by Portkey using the `createHeaders` helper method.
@@ -29,7 +31,7 @@ Next, install the Portkey SDK
 pip install -U portkey_ai
 ```
 
-We can now connect to the Portkey AI Gateway by updating the [`ChatOpenAI`](https://reference.langchain.com/python/integrations/langchain_openai/ChatOpenAI) model in LangChain
+We can now connect to the Portkey AI Gateway by updating the [`ChatOpenAI`](https://reference.langchain.com/python/langchain-openai/chat_models/base/ChatOpenAI) model in LangChain
 
 ```python
 from langchain_openai import ChatOpenAI
@@ -77,9 +79,9 @@ llm.invoke("What is the meaning of life, universe and everything?")
 
 The Portkey AI gateway will authenticate the API request to Anthropic and get the response back in the OpenAI format for you to consume.
 
-The AI gateway extends LangChain's [`ChatOpenAI`](https://reference.langchain.com/python/integrations/langchain_openai/ChatOpenAI) class making it a single interface to call any provider and any model.
+The AI gateway extends LangChain's [`ChatOpenAI`](https://reference.langchain.com/python/langchain-openai/chat_models/base/ChatOpenAI) class making it a single interface to call any provider and any model.
 
-## Advanced Routing - Load Balancing, Fallbacks, Retries
+## Advanced routing - load balancing, fallbacks, retries
 
 The Portkey AI Gateway brings capabilities like load-balancing, fallbacks, experimentation and canary testing to LangChain through a configuration-first approach.
 
@@ -119,11 +121,11 @@ When the LLM is invoked, Portkey will distribute the requests to `gpt-4` and `cl
 
 You can find more config examples [here](https://docs.portkey.ai/docs/api-reference/config-object#examples).
 
-## **Tracing Chains & Agents**
+## **Tracing chains & agents**
 
 Portkey's LangChain integration gives you full visibility into the running of an agent. Let's take an example of a [popular agentic workflow](https://python.langchain.com/docs/use_cases/tool_use/quickstart/#agents).
 
-We only need to modify the [`ChatOpenAI`](https://reference.langchain.com/python/integrations/langchain_openai/ChatOpenAI) class to use the AI Gateway as above.
+We only need to modify the [`ChatOpenAI`](https://reference.langchain.com/python/langchain-openai/chat_models/base/ChatOpenAI) class to use the AI Gateway as above.
 
 ```python
 from langchain_classic import hub
@@ -182,9 +184,9 @@ For detailed information on each feature and how to use it, [please refer to the
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/portkey/index.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/portkey/index.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,6 @@
 ---
-title: Pebblo Safe DocumentLoader
+title: "Pebblo safe DocumentLoader integration"
+description: "Integrate with the Pebblo safe DocumentLoader document loader using LangChain Python."
 ---
 
 > [Pebblo](https://daxa-ai.github.io/pebblo/) enables developers to safely load data and promote their Gen AI app to deployment without worrying about the organization’s compliance and security requirements. The project identifies semantic topics and entities found in the loaded data and summarizes them on the UI or a PDF report.
@@ -15,7 +16,7 @@ Pebblo Safeloader enables safe data ingestion for LangChain `DocumentLoader`. Th
 
 Note: To configure pebblo server on some url other that pebblo's default (localhost:8000) url, put the correct URL in `PEBBLO_CLASSIFIER_URL` env variable. This is configurable using the `classifier_url` keyword argument as well. Ref: [server-configurations](https://daxa-ai.github.io/pebblo/config)
 
-#### How to Pebblo enable Document Loading?
+#### How to pebblo enable document loading?
 
 Assume a LangChain RAG application snippet using `CSVLoader` to read a CSV document for inference.
 
@@ -44,7 +45,7 @@ documents = loader.load()
 print(documents)
 ```
 
-### Send semantic topics and identities to Pebblo cloud server
+### Send semantic topics and identities to pebblo cloud server
 
 To send semantic data to pebblo-cloud, pass api-key to PebbloSafeLoader as an argument or alternatively, put the api-key in `PEBBLO_API_KEY` environment variable.
 
@@ -108,9 +109,9 @@ print(documents[0].metadata)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/pebblo.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/pebblo.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

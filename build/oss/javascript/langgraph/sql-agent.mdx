@@ -123,7 +123,7 @@ We'll create custom tools to interact with the database:
 
 ```typescript
 import { tool } from "langchain";
-import { z } from "zod";
+import * as z from "zod";
 
 // Tool to list all tables
 const listTablesTool = tool(
@@ -202,14 +202,20 @@ Putting these steps in dedicated nodes lets us (1) force tool-calls when needed,
 ```typescript
 import { AIMessage, ToolMessage, SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { MessagesAnnotation, StateGraph, START, END } from "@langchain/langgraph";
+import { StateSchema, MessagesValue, GraphNode, StateGraph, START, END } from "@langchain/langgraph";
+import { z } from "zod/v4";
 
 // Create tool nodes for schema and query execution
 const getSchemaNode = new ToolNode([getSchemaTool]);
 const runQueryNode = new ToolNode([queryTool]);
 
+// Define state schema
+const MessagesState = new StateSchema({
+  messages: MessagesValue,
+});
+
 // Example: create a predetermined tool call
-async function listTables(state: typeof MessagesAnnotation.State) {
+const listTables: GraphNode<typeof MessagesState> = async (state) => {
   const toolCall = {
     name: "sql_db_list_tables",
     args: {},
@@ -225,17 +231,17 @@ async function listTables(state: typeof MessagesAnnotation.State) {
   const response = new AIMessage(`Available tables: ${toolMessage}`);
 
   return { messages: [toolCallMessage, new ToolMessage({ content: toolMessage, tool_call_id: "abc123" }), response] };
-}
+};
 
 // Example: force a model to create a tool call
-async function callGetSchema(state: typeof MessagesAnnotation.State) {
+const callGetSchema: GraphNode<typeof MessagesState> = async (state) => {
   const llmWithTools = model.bindTools([getSchemaTool], {
     tool_choice: "any",
   });
   const response = await llmWithTools.invoke(state.messages);
 
   return { messages: [response] };
-}
+};
 
 const topK = 5;
 
@@ -253,7 +259,7 @@ only ask for the relevant columns given the question.
 DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database.
 `;
 
-async function generateQuery(state: typeof MessagesAnnotation.State) {
+const generateQuery: GraphNode<typeof MessagesState> = async (state) => {
   const systemMessage = new SystemMessage(generateQuerySystemPrompt);
   // We do not force a tool call here, to allow the model to
   // respond naturally when it obtains the solution.
@@ -261,7 +267,7 @@ async function generateQuery(state: typeof MessagesAnnotation.State) {
   const response = await llmWithTools.invoke([systemMessage, ...state.messages]);
 
   return { messages: [response] };
-}
+};
 
 const checkQuerySystemPrompt = `
 You are a SQL expert with a strong attention to detail.
@@ -281,7 +287,7 @@ just reproduce the original query.
 You will call the appropriate tool to execute the query after running this check.
 `;
 
-async function checkQuery(state: typeof MessagesAnnotation.State) {
+const checkQuery: GraphNode<typeof MessagesState> = async (state) => {
   const systemMessage = new SystemMessage(checkQuerySystemPrompt);
 
   // Generate an artificial user message to check
@@ -299,7 +305,7 @@ async function checkQuery(state: typeof MessagesAnnotation.State) {
   response.id = lastMessage.id;
 
   return { messages: [response] };
-}
+};
 ```
 
 
@@ -309,7 +315,9 @@ We can now assemble these steps into a workflow using the [Graph API](/oss/javas
 
 
 ```typescript
-function shouldContinue(state: typeof MessagesAnnotation.State): "check_query" | typeof END {
+import { StateGraph, ConditionalEdgeRouter } from "@langchain/langgraph";
+
+const shouldContinue: ConditionalEdgeRouter<typeof MessagesState, "check_query"> = (state) => {
   const messages = state.messages;
   const lastMessage = messages[messages.length - 1];
   if (!lastMessage.tool_calls || lastMessage.tool_calls.length === 0) {
@@ -317,9 +325,9 @@ function shouldContinue(state: typeof MessagesAnnotation.State): "check_query" |
   } else {
     return "check_query";
   }
-}
+};
 
-const builder = new StateGraph(MessagesAnnotation)
+const builder = new StateGraph(MessagesState)
   .addNode("list_tables", listTables)
   .addNode("call_get_schema", callGetSchema)
   .addNode("get_schema", getSchemaNode)
@@ -465,6 +473,7 @@ Let's wrap the `sql_db_query` tool in a node that receives human input. We can i
 import { RunnableConfig } from "@langchain/core/runnables";
 import { tool } from "langchain";
 import { interrupt } from "@langchain/langgraph";
+import * as z from "zod";
 
 const queryToolWithInterrupt = tool(
   async (input, config: RunnableConfig) => {
@@ -510,9 +519,9 @@ Let's now re-assemble our graph. We will replace the programmatic check with hum
 
 
 ```typescript
-import { MemorySaver } from "@langchain/langgraph";
+import { MemorySaver, ConditionalEdgeRouter } from "@langchain/langgraph";
 
-function shouldContinueWithHuman(state: typeof MessagesAnnotation.State): "run_query" | typeof END {
+const shouldContinueWithHuman: ConditionalEdgeRouter<typeof MessagesState, "run_query"> = (state) => {
   const messages = state.messages;
   const lastMessage = messages[messages.length - 1];
   if (!lastMessage.tool_calls || lastMessage.tool_calls.length === 0) {
@@ -520,11 +529,11 @@ function shouldContinueWithHuman(state: typeof MessagesAnnotation.State): "run_q
   } else {
     return "run_query";
   }
-}
+};
 
 const runQueryNodeWithInterrupt = new ToolNode([queryToolWithInterrupt]);
 
-const builderWithHuman = new StateGraph(MessagesAnnotation)
+const builderWithHuman = new StateGraph(MessagesState)
   .addNode("list_tables", listTables)
   .addNode("call_get_schema", callGetSchema)
   .addNode("get_schema", getSchemaNode)
@@ -627,9 +636,9 @@ Check out the [Evaluate a graph](/langsmith/evaluate-graph) guide for evaluating
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/sql-agent.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/sql-agent.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,10 +1,11 @@
 ---
-title: Fiddler
+title: "Fiddler integration"
+description: "Integrate with the Fiddler callback using LangChain Python."
 ---
 
 >[Fiddler](https://www.fiddler.ai/) is the pioneer in enterprise Generative and Predictive system ops, offering a unified platform that enables Data Science, MLOps, Risk, Compliance, Analytics, and other LOB teams to monitor, explain, analyze, and improve ML deployments at enterprise scale.
 
-## 1. Installation and Setup
+## 1. Installation and setup
 
 ```python
 #!pip install langchain langchain-community langchain-openai fiddler-client
@@ -44,7 +45,7 @@ fiddler_handler = FiddlerCallbackHandler(
 )
 ```
 
-## Example 1 : Basic Chain
+## Example 1 : Basic chain
 
 ```python
 from langchain_core.output_parsers import StrOutputParser
@@ -114,9 +115,9 @@ chain.invoke({"input": "What's the square of a triangle?"})
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/callbacks/fiddler.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/callbacks/fiddler.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

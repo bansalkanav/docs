@@ -1,5 +1,6 @@
 ---
-title: UnstructuredXMLLoader
+title: "UnstructuredXMLLoader integration"
+description: "Integrate with the UnstructuredXMLLoader document loader using LangChain Python."
 ---
 
 This guide provides a quick overview for getting started with UnstructuredXMLLoader [document loader](https://python.langchain.com/docs/concepts/document_loaders). The `UnstructuredXMLLoader` is used to load `XML` files. The loader works with `.xml` files. The page content will be the text extracted from the XML tags.
@@ -60,7 +61,7 @@ docs = loader.load()
 docs[0]
 ```
 
-```output
+```text
 Document(metadata={'source': './example_data/factbook.xml'}, page_content='United States\n\nWashington, DC\n\nJoe Biden\n\nBaseball\n\nCanada\n\nOttawa\n\nJustin Trudeau\n\nHockey\n\nFrance\n\nParis\n\nEmmanuel Macron\n\nSoccer\n\nTrinidad & Tobado\n\nPort of Spain\n\nKeith Rowley\n\nTrack & Field')
 ```
 
@@ -68,11 +69,11 @@ Document(metadata={'source': './example_data/factbook.xml'}, page_content='Unite
 print(docs[0].metadata)
 ```
 
-```output
+```python
 {'source': './example_data/factbook.xml'}
 ```
 
-## Lazy Load
+## Lazy load
 
 ```python
 page = []
@@ -93,9 +94,9 @@ For detailed documentation of all __ModuleName__Loader features and configuratio
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/xml.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/xml.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

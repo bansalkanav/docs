@@ -1,5 +1,6 @@
 ---
-title: Azure OpenAI
+title: "Azure OpenAI integration"
+description: "Integrate with the Azure OpenAI LLM using LangChain Python."
 ---
 
 <Warning>
@@ -32,7 +33,7 @@ import os
 os.environ["OPENAI_API_VERSION"] = "2023-12-01-preview"
 ```
 
-## Azure Active Directory Authentication
+## Azure active directory authentication
 
 There are two ways you can authenticate to Azure OpenAI:
 
@@ -77,7 +78,7 @@ credential = ChainedTokenCredential(
 
 With Azure OpenAI, you set up your own deployments of the common GPT-3 and Codex models.  When calling the API, you need to specify the deployment you want to use.
 
-_**Note**: These docs are for the Azure text completion models. Models like GPT-4 are chat models. They have a slightly different interface, and can be accessed via the [`AzureChatOpenAI`](https://reference.langchain.com/python/integrations/langchain_openai/AzureChatOpenAI) class. For docs on Azure chat see [Azure Chat OpenAI documentation](/oss/python/integrations/chat/azure_chat_openai)._
+_**Note**: These docs are for the Azure text completion models. Models like GPT-4 are chat models. They have a slightly different interface, and can be accessed via the [`AzureChatOpenAI`](https://reference.langchain.com/python/langchain-openai/chat_models/azure/AzureChatOpenAI) class. For docs on Azure chat see [Azure Chat OpenAI documentation](/oss/python/integrations/chat/azure_chat_openai)._
 
 Let's say your deployment name is `gpt-35-turbo-instruct-prod`.  In the `openai` Python API, you can specify this deployment with the `engine` parameter.  For example:
 
@@ -124,7 +125,7 @@ llm = AzureOpenAI(
 llm.invoke("Tell me a joke")
 ```
 
-```output
+```text
 " Why couldn't the bicycle stand up by itself?\n\nBecause it was two-tired!"
 ```
 
@@ -134,7 +135,7 @@ We can also print the LLM and see its custom print.
 print(llm)
 ```
 
-```output
+```text
 AzureOpenAI
 Params: {'deployment_name': 'gpt-35-turbo-instruct-0914', 'model_name': 'gpt-3.5-turbo-instruct', 'temperature': 0.7, 'top_p': 1, 'frequency_penalty': 0, 'presence_penalty': 0, 'n': 1, 'logit_bias': {}, 'max_tokens': 256}
 ```
@@ -145,9 +146,9 @@ Params: {'deployment_name': 'gpt-35-turbo-instruct-0914', 'model_name': 'gpt-3.5
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/azure_openai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/azure_openai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

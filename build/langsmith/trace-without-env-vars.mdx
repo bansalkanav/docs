@@ -47,7 +47,7 @@ def chat_pipeline(question: str):
       { "role": "user", "content": f"Question: {question}\nContext: {context}"}
   ]
   chat_completion = client.chat.completions.create(
-      model="gpt-4o-mini", messages=messages
+      model="gpt-4.1-mini", messages=messages
   )
   return chat_completion.choices[0].message.content
 
@@ -79,7 +79,7 @@ const pipeline = traceable(
         const context = await tool(question);
 
         const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
+            model: "gpt-4.1-mini",
             messages: [
                 { role: "system" as const, content: "You are a helpful assistant. Please respond to the user's request only based on the given context." },
                 { role: "user" as const, content: `Question: ${question}\nContext: ${context}`}
@@ -98,11 +98,15 @@ await pipeline("Can you summarize this morning's meetings?");
 
 If you prefer a video tutorial, check out the [Alternative Ways to Trace video](https://academy.langchain.com/pages/intro-to-langsmith-preview) from the Introduction to LangSmith Course.
 
+## Related
+
+If you need to dynamically enable or disable tracing based on runtime conditions (such as client requirements, data sensitivity, or compliance policies), refer to [Conditional tracing](/langsmith/conditional-tracing) for examples.
+
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-without-env-vars.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-without-env-vars.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

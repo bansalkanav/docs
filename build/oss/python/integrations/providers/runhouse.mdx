@@ -1,11 +1,12 @@
 ---
-title: Runhouse
+title: "Runhouse integrations"
+description: "Integrate with Runhouse using LangChain Python."
 ---
 
 This page covers how to use the [Runhouse](https://github.com/run-house/runhouse) ecosystem within LangChain.
 It is broken into three parts: installation and setup, LLMs, and Embeddings.
 
-## Installation and Setup
+## Installation and setup
 - Install the Python SDK with `pip install runhouse`
 - If you'd like to use on-demand cluster, check your cloud credentials with `sky check`
 
@@ -19,7 +20,7 @@ from langchain_community.llms import SelfHostedPipeline, SelfHostedHuggingFaceLL
 
 For a more detailed walkthrough of the Self-hosted LLMs, see [this notebook](/oss/python/integrations/llms/runhouse)
 
-## Self-hosted Embeddings
+## Self-hosted embeddings
 There are several ways to use self-hosted embeddings with LangChain via Runhouse.
 
 For a basic self-hosted embedding from a Hugging Face Transformers model, you can use
@@ -32,9 +33,9 @@ For a more detailed walkthrough of the Self-hosted Embeddings, see [this noteboo
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/runhouse.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/runhouse.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

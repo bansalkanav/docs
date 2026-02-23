@@ -1,5 +1,5 @@
 ---
-title: Trace with LiveKit
+title: Trace LiveKit applications
 sidebarTitle: LiveKit
 ---
 
@@ -128,7 +128,7 @@ async def my_agent(ctx: agents.JobContext):
     # Create agent session with STT, LLM, TTS, and VAD
     session = AgentSession(
         stt="deepgram/nova-2:en",
-        llm="openai/gpt-4o-mini",
+        llm="openai/gpt-4.1-mini",
         tts=openai.TTS(model="tts-1", voice="alloy"),
         vad=silero.VAD.load(),
         turn_detection=MultilingualModel(),
@@ -154,7 +154,9 @@ Run your voice agent in console mode for local testing:
 python agent.py console
 ```
 
-Your agent will start and connect to LiveKit. Speak through your microphone, and all conversation traces will automatically appear in LangSmith. View the complete [agent.py code](https://github.com/langchain-ai/voice-agents-tracing/blob/main/livekit/agent.py).
+Your agent will start and connect to LiveKit. Speak through your microphone, and all traces will automatically appear in LangSmith. Here is an example of a trace in LangSmith: [LangSmith trace with LiveKit](https://smith.langchain.com/public/0f583c03-6d2a-4a2c-a043-9588e387cb55/r)
+
+View the complete [agent.py code](https://github.com/langchain-ai/voice-agents-tracing/blob/main/livekit/agent.py).
 
 
 ## Advanced usage
@@ -229,9 +231,9 @@ If your agent connects but doesn't respond:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-livekit.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-livekit.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

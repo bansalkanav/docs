@@ -1,5 +1,6 @@
 ---
-title: Microsoft OneDrive
+title: "Microsoft OneDrive integration"
+description: "Integrate with the Microsoft OneDrive document loader using LangChain Python."
 ---
 
 >[Microsoft OneDrive](https://en.wikipedia.org/wiki/OneDrive) (formerly `SkyDrive`) is a file hosting service operated by Microsoft.
@@ -50,7 +51,7 @@ loader = OneDriveLoader(drive_id="YOUR DRIVE ID", auth_with_token=True)
 
 ### 🗂️ Documents loader
 
-#### 📑 Loading documents from a OneDrive Directory
+#### 📑 Loading documents from a OneDrive directory
 
 `OneDriveLoader` can load documents from a specific folder within your OneDrive. For instance, you want to load all documents that are stored at `Documents/clients` folder within your OneDrive.
 
@@ -61,7 +62,7 @@ loader = OneDriveLoader(drive_id="YOUR DRIVE ID", folder_path="Documents/clients
 documents = loader.load()
 ```
 
-#### 📑 Loading documents from a list of Documents IDs
+#### 📑 Loading documents from a list of documents IDs
 
 Another possibility is to provide a list of `object_id` for each document you want to load. For that, you will need to query the [Microsoft Graph API](https://developer.microsoft.com/en-us/graph/graph-explorer) to find all the documents ID that you are interested in. This [link](https://learn.microsoft.com/en-us/graph/api/resources/onedrive?view=graph-rest-1.0#commonly-accessed-resources) provides a list of endpoints that will be helpful to retrieve the documents ID.
 
@@ -137,9 +138,9 @@ handlers = {
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/microsoft_onedrive.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/microsoft_onedrive.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

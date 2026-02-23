@@ -8,7 +8,7 @@ sidebarTitle: LangGraph v1
 It's designed to work hand-in-hand with [LangChain v1](/oss/python/releases/langchain-v1) (whose `create_agent` is built on LangGraph) so you can start high-level and drop down to granular control when needed.
 
 <CardGroup cols={1}>
-    <Card title="Stable core APIs" icon="diagram-project">
+    <Card title="Stable core APIs" icon="sitemap">
         Graph primitives (state, nodes, edges) and the execution/runtime model are unchanged, making upgrades straightforward.
     </Card>
     <Card title="Reliability, by default" icon="database">
@@ -32,10 +32,10 @@ uv add langgraph
 
 ## Deprecation of `create_react_agent`
 
-The LangGraph [`create_react_agent`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.chat_agent_executor.create_react_agent) prebuilt has been deprecated in favor of LangChain's [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent). It provides a simpler interface, and offers greater customization potential through the introduction of middleware.
+The LangGraph [`create_react_agent`](https://reference.langchain.com/python/langchain-classic/agents/react/agent/create_react_agent) prebuilt has been deprecated in favor of LangChain's [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent). It provides a simpler interface, and offers greater customization potential through the introduction of middleware.
 
-* For information on the new [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent) API, see the [LangChain v1 release notes](/oss/python/releases/langchain-v1#create-agent).
-* For information on migrating from [`create_react_agent`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.chat_agent_executor.create_react_agent) to [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent), see the [LangChain v1 migration guide](/oss/python/migrate/langchain-v1#create-agent).
+* For information on the new [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) API, see the [LangChain v1 release notes](/oss/python/releases/langchain-v1#create-agent).
+* For information on migrating from [`create_react_agent`](https://reference.langchain.com/python/langchain-classic/agents/react/agent/create_react_agent) to [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent), see the [LangChain v1 migration guide](/oss/python/migrate/langchain-v1#create-agent).
 
 ## Reporting issues
 
@@ -50,16 +50,16 @@ Please report any issues discovered with 1.0 on [GitHub](https://github.com/lang
     <Card title="Overview" icon="book" href="/oss/python/langgraph/overview" arrow>
         What LangGraph is and when to use it
     </Card>
-    <Card title="Graph API" icon="diagram-project" href="/oss/python/langgraph/graph-api" arrow>
+    <Card title="Graph API" icon="sitemap" href="/oss/python/langgraph/graph-api" arrow>
         Build graphs with state, nodes, and edges
     </Card>
     <Card title="LangChain Agents" icon="robot" href="/oss/python/langchain/agents" arrow>
         High-level agents built on LangGraph
     </Card>
-    <Card title="Migration guide" icon="arrow-right-arrow-left" href="/oss/python/migrate/langgraph-v1" arrow>
+    <Card title="Migration guide" icon="arrows-exchange" href="/oss/python/migrate/langgraph-v1" arrow>
         How to migrate to LangGraph v1
     </Card>
-    <Card title="GitHub" icon="github" href="https://github.com/langchain-ai/langgraph">
+    <Card title="GitHub" icon="brand-github" href="https://github.com/langchain-ai/langgraph">
         Report issues or contribute
     </Card>
 </CardGroup>
@@ -71,9 +71,9 @@ Please report any issues discovered with 1.0 on [GitHub](https://github.com/lang
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/releases/langgraph-v1.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/releases/langgraph-v1.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

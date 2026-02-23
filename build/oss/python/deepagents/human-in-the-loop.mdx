@@ -3,6 +3,8 @@ title: Human-in-the-loop
 description: Learn how to configure human approval for sensitive tool operations
 ---
 
+import HitlBasicConfig from '/snippets/hitl-basic-config.mdx';
+
 Some tool operations may be sensitive and require human approval before execution. Deep agents support human-in-the-loop workflows through LangGraph's interrupt capabilities. You can configure which tools require approval using the `interrupt_on` parameter.
 
 ```mermaid
@@ -27,43 +29,7 @@ The `interrupt_on` parameter accepts a dictionary mapping tool names to interrup
 - **`False`**: Disable interrupts for this tool
 - **`{"allowed_decisions": [...]}`**: Custom configuration with specific allowed decisions
 
-```python
-from langchain.tools import tool
-from deepagents import create_deep_agent
-from langgraph.checkpoint.memory import MemorySaver
-
-@tool
-def delete_file(path: str) -> str:
-    """Delete a file from the filesystem."""
-    return f"Deleted {path}"
-
-@tool
-def read_file(path: str) -> str:
-    """Read a file from the filesystem."""
-    return f"Contents of {path}"
-
-@tool
-def send_email(to: str, subject: str, body: str) -> str:
-    """Send an email."""
-    return f"Sent email to {to}"
-
-# Checkpointer is REQUIRED for human-in-the-loop
-checkpointer = MemorySaver()
-
-agent = create_deep_agent(
-    model="claude-sonnet-4-5-20250929",
-    tools=[delete_file, read_file, send_email],
-    interrupt_on={
-        "delete_file": True,  # Default: approve, edit, reject
-        "read_file": False,   # No interrupts needed
-        "send_email": {"allowed_decisions": ["approve", "reject"]},  # No editing
-    },
-    checkpointer=checkpointer  # Required!
-)
-```
-
-
-
+<HitlBasicConfig />
 
 ## Decision types
 
@@ -210,6 +176,10 @@ if result.get("__interrupt__"):
 
 ## Subagent interrupts
 
+When using subagents, you can use interrupts [on tool calls](#interrupts-on-tool-calls) and [within tool calls](#interrupts-within-tool-calls).
+
+### Interrupts on tool calls
+
 Each subagent can have its own `interrupt_on` configuration that overrides the main agent's settings:
 
 ```python
@@ -238,6 +208,129 @@ agent = create_deep_agent(
 
 
 When a subagent triggers an interrupt, the handling is the same – check for `__interrupt__` and resume with `Command`.
+
+### Interrupts within tool calls
+
+Subagent tools can call `interrupt()` directly to pause execution and await approval:
+
+```python
+from langchain.agents import create_agent
+from langchain_anthropic import ChatAnthropic
+from langchain.messages import HumanMessage
+from langchain.tools import tool
+from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.types import Command, interrupt
+
+from deepagents.graph import create_deep_agent
+from deepagents.middleware.subagents import CompiledSubAgent
+
+
+@tool(description="Request human approval before proceeding with an action.")
+def request_approval(action_description: str) -> str:
+    """Request human approval using the interrupt() primitive."""
+    # interrupt() pauses execution and returns the value passed to Command(resume=...)
+    approval = interrupt({
+        "type": "approval_request",
+        "action": action_description,
+        "message": f"Please approve or reject: {action_description}",
+    })
+
+    if approval.get("approved"):
+        return f"Action '{action_description}' was APPROVED. Proceeding..."
+    else:
+        return f"Action '{action_description}' was REJECTED. Reason: {approval.get('reason', 'No reason provided')}"
+
+
+def main():
+    checkpointer = InMemorySaver()
+    model = ChatAnthropic(
+        model_name="claude-sonnet-4-5-20250929",
+        max_tokens=4096,
+    )
+
+    compiled_subagent = create_agent(
+        model=model,
+        tools=[request_approval],
+        name="approval-agent",
+    )
+
+    parent_agent = create_deep_agent(
+        checkpointer=checkpointer,
+        subagents=[
+            CompiledSubAgent(
+                name="approval-agent",
+                description="An agent that can request approvals",
+                runnable=compiled_subagent,
+            )
+        ],
+    )
+
+    thread_id = "test_interrupt_directly"
+    config = {"configurable": {"thread_id": thread_id}}
+
+    print("Invoking agent - sub-agent will use request_approval tool...")
+
+    result = parent_agent.invoke(
+        {
+            "messages": [
+                HumanMessage(
+                    content="Use the task tool to launch the approval-agent sub-agent. "
+                    "Tell it to use the request_approval tool to request approval for 'deploying to production'."
+                )
+            ]
+        },
+        config=config,
+    )
+
+    # Check for interrupt
+    if result.get("__interrupt__"):
+        interrupt_value = result["__interrupt__"][0].value
+        print(f"\nInterrupt received!")
+        print(f"  Type: {interrupt_value.get('type')}")
+        print(f"  Action: {interrupt_value.get('action')}")
+        print(f"  Message: {interrupt_value.get('message')}")
+
+        print("\nResuming with Command(resume={'approved': True})...")
+        result2 = parent_agent.invoke(
+            Command(resume={"approved": True}),
+            config=config,
+        )
+
+        if "__interrupt__" not in result2:
+            print("\nExecution completed!")
+            # Find the tool response
+            tool_msgs = [m for m in result2.get("messages", []) if m.type == "tool"]
+            if tool_msgs:
+                print(f"  Tool result: {tool_msgs[-1].content}")
+        else:
+            print("\nAnother interrupt occurred")
+    else:
+        print("\n  No interrupt - the model may not have called request_approval")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+When run, this produces the following output:
+
+```python
+Invoking agent - sub-agent will use request_approval tool...
+
+Interrupt received!
+  Type: approval_request
+  Action: deploying to production
+  Message: Please approve or reject: deploying to production
+
+Resuming with Command(resume={'approved': True})...
+
+Execution completed!
+  Tool result: Great! The approval request has been processed. The action **"deploying to production"** was **APPROVED**. You can now proceed with the production deployment.
+```
+
+
+
+
 
 ## Best practices
 
@@ -314,9 +407,9 @@ interrupt_on = {
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/human-in-the-loop.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/human-in-the-loop.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -62,9 +62,9 @@ export LANGSMITH_API_KEY="..."
 
 
 
-## 1. Documents and Document Loaders
+## 1. Documents and document loaders
 
-LangChain implements a [Document](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) abstraction, which is intended to represent a unit of text and associated metadata. It has three attributes:
+LangChain implements a [Document](https://reference.langchain.com/javascript/langchain-core/documents/Document) abstraction, which is intended to represent a unit of text and associated metadata. It has three attributes:
 
 
 - `pageContent`: a string representing the content;
@@ -72,7 +72,7 @@ LangChain implements a [Document](https://reference.langchain.com/javascript/cla
 - `id`: (optional) a string identifier for the document.
 
 
-The `metadata` attribute can capture information about the source of the document, its relationship to other documents, and other information. Note that an individual [`Document`](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) object often represents a chunk of a larger document.
+The `metadata` attribute can capture information about the source of the document, its relationship to other documents, and other information. Note that an individual [`Document`](https://reference.langchain.com/javascript/langchain-core/documents/Document) object often represents a chunk of a larger document.
 
 We can generate sample documents when desired:
 
@@ -98,7 +98,7 @@ However, the LangChain ecosystem implements [document loaders](/oss/javascript/l
 
 ### Loading documents
 
-Let's load a PDF into a sequence of [`Document`](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) objects. [Here is a sample PDF](https://github.com/langchain-ai/langchain/blob/v0.3/docs/docs/example_data/nke-10k-2023.pdf) -- a 10-k filing for Nike from 2023. We can consult the LangChain documentation for [available PDF document loaders](/oss/javascript/integrations/document_loaders/#pdfs).
+Let's load a PDF into a sequence of [`Document`](https://reference.langchain.com/javascript/langchain-core/documents/Document) objects. [Here is a sample PDF](https://github.com/langchain-ai/langchain/blob/v0.3/docs/docs/example_data/nke-10k-2023.pdf) -- a 10-k filing for Nike from 2023. We can consult the LangChain documentation for [available PDF document loaders](/oss/javascript/integrations/document_loaders/#pdfs).
 
 
 ```typescript
@@ -109,11 +109,11 @@ const loader = new PDFLoader("../../data/nke-10k-2023.pdf");
 const docs = await loader.load();
 console.log(docs.length);
 ```
-```output
+```text
 107
 ```
 
-`PDFLoader` loads one [`Document`](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) object per PDF page. For each, we can easily access:
+`PDFLoader` loads one [`Document`](https://reference.langchain.com/javascript/langchain-core/documents/Document) object per PDF page. For each, we can easily access:
 
 - The string content of the page;
 - Metadata containing the file name and page number.
@@ -123,7 +123,7 @@ console.log(docs.length);
 ```typescript
 console.log(docs[0].pageContent.slice(0, 200));
 ```
-```output
+```text
 Table of Contents
 UNITED STATES
 SECURITIES AND EXCHANGE COMMISSION
@@ -136,7 +136,7 @@ FO
 ```typescript
 console.log(docs[0].metadata);
 ```
-```output
+```javascript
 {
   source: '../../data/nke-10k-2023.pdf',
   pdf: {
@@ -164,7 +164,7 @@ console.log(docs[0].metadata);
 
 ### Splitting
 
-For both information retrieval and downstream question-answering purposes, a page may be too coarse a representation. Our goal in the end will be to retrieve [`Document`](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) objects that answer an input query, and further splitting our PDF will help ensure that the meanings of relevant portions of the document are not "washed out" by surrounding text.
+For both information retrieval and downstream question-answering purposes, a page may be too coarse a representation. Our goal in the end will be to retrieve [`Document`](https://reference.langchain.com/javascript/langchain-core/documents/Document) objects that answer an input query, and further splitting our PDF will help ensure that the meanings of relevant portions of the document are not "washed out" by surrounding text.
 
 We can use [text splitters](/oss/javascript/langchain/retrieval#text_splitters) for this purpose. Here we will use a simple text splitter that partitions based on characters. We will split our documents into chunks of 1000 characters
 with 200 characters of overlap between chunks. The overlap helps
@@ -190,7 +190,7 @@ console.log(allSplits.length);
 ```
 
 
-```output
+```text
 514
 ```
 
@@ -214,7 +214,7 @@ console.log(vector1.slice(0, 10));
 ```
 
 
-```output
+```text
 Generated vectors of length 1536
 
 [-0.008586574345827103, -0.03341241180896759, -0.008936782367527485, -0.0036674530711025, 0.010564599186182022, 0.009598285891115665, -0.028587326407432556, -0.015824200585484505, 0.0030416189692914486, -0.012899317778646946]
@@ -223,7 +223,7 @@ Armed with a model for generating text embeddings, we can next store them in a s
 
 ## 3. Vector stores
 
-LangChain [VectorStore](https://reference.langchain.com/javascript/classes/_langchain_core.vectorstores.VectorStore.html) objects contain methods for adding text and [`Document`](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) objects to the store, and querying them using various similarity metrics. They are often initialized with [embedding](/oss/javascript/langchain/retrieval#embedding_models) models, which determine how text data is translated to numeric vectors.
+LangChain [VectorStore](https://reference.langchain.com/javascript/langchain-core/vectorstores/VectorStore) objects contain methods for adding text and [`Document`](https://reference.langchain.com/javascript/langchain-core/documents/Document) objects to the store, and querying them using various similarity metrics. They are often initialized with [embedding](/oss/javascript/langchain/retrieval#embedding_models) models, which determine how text data is translated to numeric vectors.
 
 LangChain includes a suite of [integrations](/oss/javascript/integrations/vectorstores) with different vector store technologies. Some vector stores are hosted by a provider (e.g., various cloud providers) and require specific credentials to use; some (such as [Postgres](/oss/javascript/integrations/vectorstores/pgvector)) run in separate infrastructure that can be run locally or via a third-party; others can run in-memory for lightweight workloads. Let's select a vector store:
 
@@ -243,7 +243,7 @@ Note that most vector store implementations will allow you to connect to an exis
 
 
 
-Once we've instantiated a [`VectorStore`](https://reference.langchain.com/javascript/classes/_langchain_core.vectorstores.VectorStore.html) that contains documents, we can query it. [VectorStore](https://reference.langchain.com/javascript/classes/_langchain_core.vectorstores.VectorStore.html) includes methods for querying:
+Once we've instantiated a [`VectorStore`](https://reference.langchain.com/javascript/langchain-core/vectorstores/VectorStore) that contains documents, we can query it. [VectorStore](https://reference.langchain.com/javascript/langchain-core/vectorstores/VectorStore) includes methods for querying:
 - Synchronously and asynchronously;
 - By string query and by vector;
 - With and without returning similarity scores;
@@ -251,7 +251,7 @@ Once we've instantiated a [`VectorStore`](https://reference.langchain.com/javasc
 
 
 
-The methods will generally include a list of [Document](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) objects in their outputs.
+The methods will generally include a list of [Document](https://reference.langchain.com/javascript/langchain-core/documents/Document) objects in their outputs.
 
 **Usage**
 
@@ -267,7 +267,7 @@ const results1 = await vectorStore.similaritySearch(
 
 console.log(results1[0]);
 ```
-```output
+```javascript
 Document {
     pageContent: 'direct to consumer operations sell products...',
     metadata: {'page': 4, 'source': '../example_data/nke-10k-2023.pdf', 'start_index': 3125}
@@ -287,7 +287,7 @@ const results2 = await vectorStore.similaritySearchWithScore(
 
 console.log(results2[0]);
 ```
-```output
+```javascript
 Score: 0.23699893057346344
 
 Document {
@@ -312,7 +312,7 @@ const results3 = await vectorStore.similaritySearchVectorWithScore(
 
 console.log(results3[0]);
 ```
-```output
+```javascript
 Document {
     pageContent: 'FISCAL 2023 COMPARED TO FISCAL 2022...',
     metadata: {
@@ -326,16 +326,16 @@ Document {
 
 Learn more:
 
-- [API Reference](https://reference.langchain.com/javascript/classes/_langchain_core.vectorstores.VectorStore.html)
+- [API Reference](https://reference.langchain.com/javascript/langchain-core/vectorstores/VectorStore)
 - [Integration-specific docs](/oss/javascript/integrations/vectorstores)
 
 ## 4. Retrievers
 
-LangChain [`VectorStore`](https://reference.langchain.com/javascript/classes/_langchain_core.vectorstores.VectorStore.html) objects do not subclass [Runnable](https://reference.langchain.com/javascript/classes/_langchain_core.runnables.Runnable.html). LangChain [Retrievers](https://reference.langchain.com/javascript/interfaces/_langchain_core.retrievers.BaseRetriever.html) are Runnables, so they implement a standard set of methods (e.g., synchronous and asynchronous `invoke` and `batch` operations). Although we can construct retrievers from vector stores, retrievers can interface with non-vector store sources of data, as well (such as external APIs).
+LangChain [`VectorStore`](https://reference.langchain.com/javascript/langchain-core/vectorstores/VectorStore) objects do not subclass [Runnable](https://reference.langchain.com/javascript/langchain-core/runnables/Runnable). LangChain [Retrievers](https://reference.langchain.com/javascript/interfaces/_langchain_core.retrievers.BaseRetriever.html) are Runnables, so they implement a standard set of methods (e.g., synchronous and asynchronous `invoke` and `batch` operations). Although we can construct retrievers from vector stores, retrievers can interface with non-vector store sources of data, as well (such as external APIs).
 
 
 
-Vectorstores implement an `as_retriever` method that will generate a Retriever, specifically a [VectorStoreRetriever](https://python.langchain.com/api_reference/core/vectorstores/langchain_core.vectorstores.base.VectorStoreRetriever.html). These retrievers include specific `search_type` and `search_kwargs` attributes that identify what methods of the underlying vector store to call, and how to parameterize them. For instance, we can replicate the above with the following:
+Vectorstores implement an `as_retriever` method that will generate a Retriever, specifically a [`VectorStoreRetriever`](https://python.langchain.com/api_reference/core/vectorstores/langchain_core.vectorstores.base.VectorStoreRetriever.html). These retrievers include specific `search_type` and `search_kwargs` attributes that identify what methods of the underlying vector store to call, and how to parameterize them. For instance, we can replicate the above with the following:
 
 
 ```typescript
@@ -351,7 +351,7 @@ await retriever.batch([
   "What was Nike's revenue in 2023?",
 ]);
 ```
-```output
+```javascript
 [
     [Document {
         metadata: {'page': 4, 'source': '../example_data/nke-10k-2023.pdf', 'start_index': 3125},
@@ -393,9 +393,9 @@ For more on RAG, see:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/knowledge-base.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/knowledge-base.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,6 @@
 ---
-title: RunPod
+title: "Runpod integration"
+description: "Integrate with the Runpod LLM using LangChain Python."
 ---
 
 Get started with RunPod LLMs.
@@ -82,7 +83,7 @@ except Exception as e:
     )
 ```
 
-### Async Usage
+### Async usage
 
 ```python
 # AInvoke (Async)
@@ -137,7 +138,7 @@ except Exception as e:
     print(f"Error running async chain: {e}")
 ```
 
-## Endpoint Considerations
+## Endpoint considerations
 
 - **Input:** The endpoint handler should expect the prompt string within `{"input": {"prompt": "...", ...}}`.
 - **Output:** The handler should return the generated text within the `"output"` key of the final status response (e.g., `{"output": "Generated text..."}` or `{"output": {"text": "..."}}`).
@@ -153,9 +154,9 @@ Link to source code: [https://github.com/runpod/langchain-runpod/blob/main/langc
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/runpod.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/runpod.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

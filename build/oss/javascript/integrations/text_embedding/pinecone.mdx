@@ -1,5 +1,6 @@
 ---
-title: PineconeEmbeddings
+title: "PineconeEmbeddings integration"
+description: "Integrate with the PineconeEmbeddings embedding model using LangChain JavaScript."
 ---
 
 This will help you get started with PineconeEmbeddings [embedding models](/oss/javascript/integrations/text_embedding) using LangChain. For detailed documentation on `PineconeEmbeddings` features and configuration options, please refer to the [API reference](https://api.js.langchain.com/classes/_langchain_pinecone.PineconeEmbeddings.html).
@@ -59,7 +60,7 @@ const embeddings = new PineconeEmbeddings({
 });
 ```
 
-## Indexing and Retrieval
+## Indexing and retrieval
 
 Embedding models are often used in retrieval-augmented generation (RAG) flows, both as part of indexing data as well as later retrieving it. For more detailed instructions, please see our RAG tutorials under the [**Learn** tab](/oss/javascript/learn/).
 
@@ -85,11 +86,11 @@ const retrievedDocuments = await retriever.invoke("What is LangChain?");
 retrievedDocuments[0].pageContent;
 ```
 
-```output
+```text
 LangChain is the framework for building context-aware reasoning applications
 ```
 
-## Direct Usage
+## Direct usage
 
 Under the hood, the vectorstore and retriever implementations are calling `embeddings.embedDocument(...)` and `embeddings.embedQuery(...)` to create embeddings for the text(s) used in `fromDocuments` and the retriever's `invoke` operations, respectively.
 
@@ -105,7 +106,7 @@ const singleVector = await embeddings.embedQuery(text);
 console.log(singleVector.slice(0, 100));
 ```
 
-```output
+```text
 [
          0.0191650390625,  0.004924774169921875,     -0.015838623046875,
           -0.04248046875,     0.040191650390625,      -0.02679443359375,
@@ -157,7 +158,7 @@ console.log(vectors[0].slice(0, 100));
 console.log(vectors[1].slice(0, 100));
 ```
 
-```output
+```text
 [
       0.0190887451171875,  0.00482940673828125,   -0.0158233642578125,
        -0.04254150390625,    0.040130615234375,   -0.0268096923828125,
@@ -240,9 +241,9 @@ For detailed documentation of all PineconeEmbeddings features and configurations
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/text_embedding/pinecone.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/text_embedding/pinecone.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -212,12 +212,11 @@ const someWorkflow = entrypoint(
 
   ```typescript
   import { v4 as uuidv4 } from "uuid";
-  import { entrypoint, MemorySaver } from "@langchain/langgraph";
-  import { StateGraph } from "@langchain/langgraph";
+  import { entrypoint, MemorySaver, StateGraph, StateSchema } from "@langchain/langgraph";
   import * as z from "zod";
 
   // Define the shared state type
-  const State = z.object({
+  const State = new StateSchema({
     foo: z.number(),
   });
 
@@ -420,7 +419,7 @@ await main.invoke({ any_input: "foobar" }, config);
 ```
 
 
-## Caching Tasks
+## Caching tasks
 
 
 
@@ -549,7 +548,7 @@ await main.invoke(null, config);
 
 ## Human-in-the-loop
 
-The functional API supports [human-in-the-loop](/oss/javascript/langgraph/interrupts) workflows using the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) function and the `Command` primitive.
+The functional API supports [human-in-the-loop](/oss/javascript/langgraph/interrupts) workflows using the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) function and the `Command` primitive.
 
 ### Basic human-in-the-loop workflow
 
@@ -604,7 +603,7 @@ const graph = entrypoint(
 ```
 
 
-[interrupt()](/oss/javascript/langgraph/interrupts#pause-using-interrupt) is called inside a task, enabling a human to review and edit the output of the previous task. The results of prior tasks-- in this case `step_1`-- are persisted, so that they are not run again following the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html).
+[interrupt()](/oss/javascript/langgraph/interrupts#pause-using-interrupt) is called inside a task, enabling a human to review and edit the output of the previous task. The results of prior tasks-- in this case `step_1`-- are persisted, so that they are not run again following the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt).
 
 Let's send in a query string:
 
@@ -620,7 +619,7 @@ for await (const event of await graph.stream("foo", config)) {
 ```
 
 
-Note that we've paused with an [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) after `step_1`. The interrupt provides instructions to resume the run. To resume, we issue a [`Command`](/oss/javascript/langgraph/interrupts#resuming-interrupts) containing the data expected by the `human_feedback` task.
+Note that we've paused with an [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) after `step_1`. The interrupt provides instructions to resume the run. To resume, we issue a [`Command`](/oss/javascript/langgraph/interrupts#resuming-interrupts) containing the data expected by the `human_feedback` task.
 
 
 
@@ -642,7 +641,7 @@ After resuming, the run proceeds through the remaining step and terminates as ex
 
 To review tool calls before execution, we add a `review_tool_call` function that calls [`interrupt`](/oss/javascript/langgraph/interrupts#pause-using-interrupt). When this function is called, execution will be paused until we issue a command to resume it.
 
-Given a tool call, our function will [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) for human review. At that point we can either:
+Given a tool call, our function will [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) for human review. At that point we can either:
 
 * Accept the tool call
 * Revise the tool call and continue
@@ -682,7 +681,7 @@ function reviewToolCall(toolCall: ToolCall): ToolCall | ToolMessage {
 ```
 
 
-We can now update our [entrypoint](/oss/javascript/langgraph/functional-api#entrypoint) to review the generated tool calls. If a tool call is accepted or revised, we execute in the same way as before. Otherwise, we just append the [`ToolMessage`](https://reference.langchain.com/javascript/classes/_langchain_core.messages.ToolMessage.html) supplied by the human. The results of prior tasks — in this case the initial model call — are persisted, so that they are not run again following the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html).
+We can now update our [entrypoint](/oss/javascript/langgraph/functional-api#entrypoint) to review the generated tool calls. If a tool call is accepted or revised, we execute in the same way as before. Otherwise, we just append the [`ToolMessage`](https://reference.langchain.com/javascript/langchain-core/messages/ToolMessage) supplied by the human. The results of prior tasks — in this case the initial model call — are persisted, so that they are not run again following the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt).
 
 
 
@@ -959,13 +958,13 @@ for await (const chunk of await workflow.stream([inputMessage2], {
 
 ## Integrate with other libraries
 
-* [Add LangGraph's features to other frameworks using the functional API](/langsmith/autogen-integration): Add LangGraph features like persistence, memory and streaming to other agent frameworks that do not provide them out of the box.
+* [Add LangGraph's features to other frameworks using the functional API](/langsmith/deploy-other-frameworks): Add LangGraph features like persistence, memory and streaming to other agent frameworks that do not provide them out of the box.
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-functional-api.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-functional-api.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

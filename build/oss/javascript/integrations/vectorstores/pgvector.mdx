@@ -1,5 +1,6 @@
 ---
-title: PGVectorStore
+title: "PGVectorStore integration"
+description: "Integrate with the PGVectorStore using LangChain JavaScript."
 ---
 
 <Tip>
@@ -190,7 +191,7 @@ for (const doc of similaritySearchResults) {
 }
 ```
 
-```output
+```text
 * The powerhouse of the cell is the mitochondria [{"source":"https://example.com"}]
 * Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
@@ -237,7 +238,7 @@ for (const [doc, score] of similaritySearchWithScoreResults) {
 }
 ```
 
-```output
+```text
 * [SIM=0.835] The powerhouse of the cell is the mitochondria [{"source":"https://example.com"}]
 * [SIM=0.852] Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
@@ -255,7 +256,7 @@ const retriever = vectorStore.asRetriever({
 await retriever.invoke("biology");
 ```
 
-```output
+```javascript
 [
   Document {
     pageContent: 'The powerhouse of the cell is the mitochondria',
@@ -355,7 +356,7 @@ console.log(results2);
 await reusablePool.end();
 ```
 
-## Create HNSW Index
+## Create HNSW index
 
 By default, the extension performs a sequential scan search, with 100% recall. You might consider creating an HNSW index for approximate nearest neighbor (ANN) search to speed up `similaritySearchVectorWithScore` execution time. To create the HNSW index on your vector column, use the `createHnswIndex()` method.
 
@@ -444,9 +445,9 @@ For detailed documentation of all `PGVectorStore` features and configurations he
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/pgvector.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/pgvector.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

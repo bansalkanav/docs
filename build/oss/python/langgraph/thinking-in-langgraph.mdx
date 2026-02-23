@@ -230,6 +230,7 @@ class EmailAgentState(TypedDict):
 
 
 
+
 Notice that the state contains only raw data – no prompt templates, no formatted strings, no instructions. The classification output is stored as a single dictionary, straight from the LLM.
 
 ## Step 4: Build your nodes
@@ -324,7 +325,7 @@ Different errors need different handling strategies:
 
     </Tab>
 
-    <Tab title="Unexpected" icon="triangle-exclamation">
+    <Tab title="Unexpected" icon="alert-triangle">
         Let them bubble up for debugging. Don't catch what you can't handle:
 
     ```python
@@ -453,10 +454,9 @@ We'll implement each node as a simple function. Remember: nodes take state, do w
 
 
 
-
     </Accordion>
 
-    <Accordion title="Response nodes" icon="pen-to-square">
+    <Accordion title="Response nodes" icon="edit">
 
     ```python
     def draft_response(state: EmailAgentState) -> Command[Literal["human_review", "send_reply"]]:
@@ -553,7 +553,7 @@ Now we connect our nodes into a working graph. Since our nodes handle their own 
 
 To enable [human-in-the-loop](/oss/python/langgraph/interrupts) with `interrupt()`, we need to compile with a [checkpointer](/oss/python/langgraph/persistence) to save state between runs:
 
-<Accordion title="Graph compilation code" icon="diagram-project" defaultOpen={true}>
+<Accordion title="Graph compilation code" icon="sitemap" defaultOpen={true}>
 
 ```python
 from langgraph.checkpoint.memory import MemorySaver
@@ -593,7 +593,7 @@ app = workflow.compile(checkpointer=memory)
 
 </Accordion>
 
-The graph structure is minimal because routing happens inside nodes through [`Command`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.Command) objects. Each node declares where it can go using type hints like `Command[Literal["node1", "node2"]]`, making the flow explicit and traceable.
+The graph structure is minimal because routing happens inside nodes through [`Command`](https://reference.langchain.com/python/langgraph/types/Command) objects. Each node declares where it can go using type hints like `Command[Literal["node1", "node2"]]`, making the flow explicit and traceable.
 
 
 
@@ -661,7 +661,7 @@ Building this email agent has shown us the LangGraph way of thinking:
         They take state, do work, and return updates. When they need to make routing decisions, they specify both the state updates and the next destination.
     </Card>
 
-    <Card title="Errors are part of the flow" icon="triangle-exclamation" href="#handle-errors-appropriately">
+    <Card title="Errors are part of the flow" icon="alert-triangle" href="#handle-errors-appropriately">
         Transient failures get retries, LLM-recoverable errors loop back with context, user-fixable problems pause for input, and unexpected errors bubble up for debugging.
     </Card>
 
@@ -669,14 +669,14 @@ Building this email agent has shown us the LangGraph way of thinking:
         The `interrupt()` function pauses execution indefinitely, saves all state, and resumes exactly where it left off when you provide input. When combined with other operations in a node, it must come first.
     </Card>
 
-    <Card title="Graph structure emerges naturally" icon="diagram-project" href="#step-5-wire-it-together">
+    <Card title="Graph structure emerges naturally" icon="sitemap" href="#step-5-wire-it-together">
         You define the essential connections, and your nodes handle their own routing logic. This keeps control flow explicit and traceable - you can always understand what your agent will do next by looking at the current node.
     </Card>
 </CardGroup>
 
 ### Advanced considerations
 
-<Accordion title="Node granularity trade-offs" icon="sliders">
+<Accordion title="Node granularity trade-offs" icon="adjustments">
 <Info>
 This section explores the trade-offs in node granularity design. Most applications can skip this and use the patterns shown above.
 </Info>
@@ -715,11 +715,11 @@ This was an introduction to thinking about building agents with LangGraph. You c
         Learn how to add tool approval before execution, batch approval, and other patterns
     </Card>
 
-    <Card title="Subgraphs" icon="diagram-nested" href="/oss/python/langgraph/use-subgraphs">
+    <Card title="Subgraphs" icon="hierarchy" href="/oss/python/langgraph/use-subgraphs">
         Create subgraphs for complex multi-step operations
     </Card>
 
-    <Card title="Streaming" icon="tower-broadcast" href="/oss/python/langgraph/streaming">
+    <Card title="Streaming" icon="broadcast" href="/oss/python/langgraph/streaming">
         Add streaming to show real-time progress to users
     </Card>
 
@@ -727,7 +727,7 @@ This was an introduction to thinking about building agents with LangGraph. You c
         Add observability with LangSmith for debugging and monitoring
     </Card>
 
-    <Card title="Tool Integration" icon="wrench" href="/oss/python/langchain/tools">
+    <Card title="Tool Integration" icon="tool" href="/oss/python/langchain/tools">
         Integrate more tools for web search, database queries, and API calls
     </Card>
 
@@ -738,9 +738,9 @@ This was an introduction to thinking about building agents with LangGraph. You c
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/thinking-in-langgraph.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/thinking-in-langgraph.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

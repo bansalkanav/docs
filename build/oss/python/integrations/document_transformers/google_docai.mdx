@@ -1,5 +1,6 @@
 ---
-title: Google Cloud Document AI
+title: "Google cloud document AI integration"
+description: "Integrate with the Google cloud document AI document transformer using LangChain Python."
 ---
 
 Document AI is a document understanding platform from Google Cloud to transform unstructured data from documents into structured data, making it easier to understand, analyze, and consume.
@@ -59,7 +60,7 @@ docs = list(parser.lazy_parse(blob))
 print(len(docs))
 ```
 
-```output
+```text
 11
 ```
 
@@ -70,7 +71,7 @@ operations = parser.docai_parse([blob])
 print([op.operation.name for op in operations])
 ```
 
-```output
+```python
 ['projects/543079149601/locations/us/operations/16447136779727347991']
 ```
 
@@ -80,7 +81,7 @@ You can check whether operations are finished:
 parser.is_running(operations)
 ```
 
-```output
+```text
 True
 ```
 
@@ -90,7 +91,7 @@ And when they're finished, you can parse the results:
 parser.is_running(operations)
 ```
 
-```output
+```text
 False
 ```
 
@@ -99,7 +100,7 @@ results = parser.get_results(operations)
 print(results[0])
 ```
 
-```output
+```text
 DocAIParsingResults(source_path='gs://vertex-pgt/examples/goog-exhibit-99-1-q1-2023-19.pdf', parsed_path='gs://vertex-pgt/test/run1/16447136779727347991/0')
 ```
 
@@ -113,15 +114,15 @@ docs = list(parser.parse_from_results(results))
 print(len(docs))
 ```
 
-```output
+```text
 11
 ```
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_transformers/google_docai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_transformers/google_docai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

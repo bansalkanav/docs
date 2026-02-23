@@ -1,5 +1,6 @@
 ---
-title: Solar
+title: "Solar integration"
+description: "Integrate with the Solar embedding model using LangChain Python."
 ---
 
 [Solar](https://console.upstage.ai/services/embedding) offers an embeddings service.
@@ -29,7 +30,7 @@ query_result = embeddings.embed_query(query_text)
 query_result
 ```
 
-```output
+```text
 [-0.009612835943698883,
  0.005192634183913469,
  -0.0007243562722578645,
@@ -1042,7 +1043,7 @@ document_result = embeddings.embed_documents([document_text])
 document_result
 ```
 
-```output
+```text
 [[-0.019484492018818855,
   0.0004918322083540261,
   -0.007027746178209782,
@@ -2057,15 +2058,15 @@ similarity = np.dot(query_numpy, document_numpy) / (
 print(f"Cosine similarity between document and query: {similarity}")
 ```
 
-```output
+```text
 Cosine similarity between document and query: 0.8685132879722154
 ```
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/solar.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/solar.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

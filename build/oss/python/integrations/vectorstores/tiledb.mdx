@@ -1,5 +1,6 @@
 ---
-title: TileDB
+title: "TileDB integration"
+description: "Integrate with the TileDB vector store using LangChain Python."
 ---
 
 > [TileDB](https://github.com/TileDB-Inc/TileDB) is a powerful engine for indexing and querying dense and sparse multi-dimensional arrays.
@@ -17,7 +18,7 @@ This notebook shows how to use the `TileDB` vector database.
 pip install -qU  tiledb-vector-search langchain-community
 ```
 
-## Basic Example
+## Basic example
 
 ```python
 from langchain_community.document_loaders import TextLoader
@@ -56,7 +57,7 @@ docs_and_scores = db.similarity_search_with_score(query)
 docs_and_scores[0]
 ```
 
-## Maximal Marginal Relevance Search (MMR)
+## Maximal marginal relevance search (MMR)
 
 In addition to using similarity search in the retriever object, you can also use `mmr` as retriever.
 
@@ -73,9 +74,9 @@ db.max_marginal_relevance_search(query, k=2, fetch_k=10)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/tiledb.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/tiledb.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

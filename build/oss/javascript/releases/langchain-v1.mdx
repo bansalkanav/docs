@@ -180,13 +180,13 @@ Because `createAgent` is built on LangGraph, you automatically get built in supp
     <Card title="Persistence" icon="database">
         Conversations automatically persist across sessions with built-in checkpointing
     </Card>
-    <Card title="Streaming" icon="water">
+    <Card title="Streaming" icon="droplet">
         Stream tokens, tool calls, and reasoning traces in real-time
     </Card>
-    <Card title="Human-in-the-loop" icon="hand">
+    <Card title="Human-in-the-loop" icon="hand-stop">
         Pause agent execution for human approval before sensitive actions
     </Card>
-    <Card title="Time travel" icon="clock-rotate-left">
+    <Card title="Time travel" icon="history">
         Rewind conversations to any point and explore alternate paths and prompts
     </Card>
 </CardGroup>
@@ -211,7 +211,7 @@ const weatherSchema = z.object({
 });
 
 const agent = createAgent({
-  model: "gpt-4o-mini",
+  model: "gpt-4.1-mini",
   tools: [getWeather],
   responseFormat: weatherSchema,
 });
@@ -310,7 +310,7 @@ Please report any issues discovered with 1.0 on [GitHub](https://github.com/lang
     <Card title="LangChain 1.0" icon="rocket" href="https://blog.langchain.com/langchain-langchain-1-0-alpha-releases/">
         Read the announcement
     </Card>
-    <Card title="Middleware guide" icon="puzzle-piece" href="https://blog.langchain.com/agent-middleware/">
+    <Card title="Middleware guide" icon="puzzle" href="https://blog.langchain.com/agent-middleware/">
         Deep dive into middleware
     </Card>
     <Card title="Agents Documentation" icon="book" href="/oss/javascript/langchain/agents" arrow>
@@ -319,10 +319,10 @@ Please report any issues discovered with 1.0 on [GitHub](https://github.com/lang
     <Card title="Message Content" icon="message" href="/oss/javascript/langchain/messages#message-content" arrow>
         New content blocks API
     </Card>
-    <Card title="Migration guide" icon="arrow-right-arrow-left" href="/oss/javascript/migrate/langchain-v1" arrow>
+    <Card title="Migration guide" icon="arrows-exchange" href="/oss/javascript/migrate/langchain-v1" arrow>
         How to migrate to LangChain v1
     </Card>
-    <Card title="GitHub" icon="github" href="https://github.com/langchain-ai/langchainjs">
+    <Card title="GitHub" icon="brand-github" href="https://github.com/langchain-ai/langchainjs">
         Report issues or contribute
     </Card>
 </CardGroup>
@@ -334,9 +334,9 @@ Please report any issues discovered with 1.0 on [GitHub](https://github.com/lang
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/releases/langchain-v1.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/releases/langchain-v1.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

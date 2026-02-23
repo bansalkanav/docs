@@ -1,5 +1,6 @@
 ---
-title: Azure OpenAI
+title: "Azure OpenAI integration"
+description: "Integrate with the Azure OpenAI LLM using LangChain JavaScript."
 ---
 
 <Warning>
@@ -102,11 +103,11 @@ const completion = await llm.invoke(inputText)
 completion
 ```
 
-```output
+```text
 provides AI solutions to businesses. They offer a range of services including natural language processing, computer vision, and machine learning. Their solutions are designed to help businesses automate processes, gain insights from data, and improve decision-making. AzureOpenAI also offers consulting services to help businesses identify and implement the best AI solutions for their specific needs. They work with a variety of industries, including healthcare, finance, and retail. With their expertise in AI and their partnership with Microsoft Azure, AzureOpenAI is a trusted provider of AI solutions for businesses looking to stay ahead in the rapidly evolving world of technology.
 ```
 
-## Using Azure Managed Identity
+## Using Azure Managed identity
 
 If you're using Azure Managed Identity, you can configure the credentials like this:
 
@@ -161,13 +162,13 @@ If you are using the deprecated Azure OpenAI SDK with the `@langchain/azure-open
    npm uninstall @langchain/azure-openai
    ```
 
-2. Update your imports to use the new `AzureOpenAI` and [`AzureChatOpenAI`](https://reference.langchain.com/javascript/classes/_langchain_openai.AzureChatOpenAI.html) classes from the `@langchain/openai` package:
+2. Update your imports to use the new `AzureOpenAI` and [`AzureChatOpenAI`](https://reference.langchain.com/javascript/langchain-openai/AzureChatOpenAI) classes from the `@langchain/openai` package:
 
    ```typescript
    import { AzureOpenAI } from "@langchain/openai";
    ```
 
-3. Update your code to use the new `AzureOpenAI` and [`AzureChatOpenAI`](https://reference.langchain.com/javascript/classes/_langchain_openai.AzureChatOpenAI.html) classes and pass the required parameters:
+3. Update your code to use the new `AzureOpenAI` and [`AzureChatOpenAI`](https://reference.langchain.com/javascript/langchain-openai/AzureChatOpenAI) classes and pass the required parameters:
 
    ```typescript
    const model = new AzureOpenAI({
@@ -192,9 +193,9 @@ For detailed documentation of all AzureOpenAI features and configurations head t
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/llms/azure.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/llms/azure.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -79,24 +79,24 @@ Middleware allows you to hook into any step in the agent lifecycle and:
 
 Throughout this guide, you'll see frequent use of the middleware API as a means to the context engineering end.
 
-## Model Context
+## Model context
 
 Control what goes into each model call - instructions, available tools, which model to use, and output format. These decisions directly impact reliability and cost.
 
 <CardGroup cols={2}>
-    <Card title="System Prompt" icon="message-lines" href="#system-prompt">
+    <Card title="System Prompt" icon="message-2" href="#system-prompt">
         Base instructions from the developer to the LLM.
     </Card>
-    <Card title="Messages" icon="comments" href="#messages">
+    <Card title="Messages" icon="messages" href="#messages">
         The full list of messages (conversation history) sent to the LLM.
     </Card>
-    <Card title="Tools" icon="wrench" href="#tools">
+    <Card title="Tools" icon="tool" href="#tools">
         Utilities the agent has access to to take actions.
     </Card>
-    <Card title="Model" icon="brain-circuit" href="#model">
+    <Card title="Model" icon="cpu" href="#model">
         The actual model (including configuration) to be called.
     </Card>
-    <Card title="Response Format" icon="brackets-curly" href="#response-format">
+    <Card title="Response Format" icon="braces" href="#response-format">
         Schema specification for the model's final response.
     </Card>
 </CardGroup>
@@ -117,7 +117,7 @@ The system prompt sets the LLM's behavior and capabilities. Different users, con
     import { createAgent } from "langchain";
 
     const agent = createAgent({
-      model: "gpt-4o",
+      model: "gpt-4.1",
       tools: [...],
       middleware: [
         dynamicSystemPromptMiddleware((state) => {
@@ -154,7 +154,7 @@ The system prompt sets the LLM's behavior and capabilities. Different users, con
     type Context = z.infer<typeof contextSchema>;
 
     const agent = createAgent({
-      model: "gpt-4o",
+      model: "gpt-4.1",
       tools: [...],
       contextSchema,
       middleware: [
@@ -197,7 +197,7 @@ The system prompt sets the LLM's behavior and capabilities. Different users, con
     type Context = z.infer<typeof contextSchema>;
 
     const agent = createAgent({
-      model: "gpt-4o",
+      model: "gpt-4.1",
       tools: [...],
       contextSchema,
       middleware: [
@@ -272,7 +272,7 @@ Reference these files when answering questions.`;
     });
 
     const agent = createAgent({
-      model: "gpt-4o",
+      model: "gpt-4.1",
       tools: [...],
       middleware: [injectFileContext],
     });
@@ -541,7 +541,7 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
   </Tab>
 </Tabs>
 
-See [Dynamically selecting tools](/oss/javascript/langchain/middleware#dynamically-selecting-tools) for more examples.
+See [Dynamic tools](/oss/javascript/langchain/agents#dynamic-tools) for both filtering pre-registered tools and registering tools at runtime (e.g., from MCP servers).
 
 ### Model
 
@@ -559,8 +559,8 @@ might change during an agent run.
 
     // Initialize models once outside the middleware
     const largeModel = initChatModel("claude-sonnet-4-5-20250929");
-    const standardModel = initChatModel("gpt-4o");
-    const efficientModel = initChatModel("gpt-4o-mini");
+    const standardModel = initChatModel("gpt-4.1");
+    const efficientModel = initChatModel("gpt-4.1-mini");
 
     const stateBasedModel = createMiddleware({
       name: "StateBasedModel",
@@ -599,8 +599,8 @@ might change during an agent run.
 
     // Initialize available models once
     const MODEL_MAP = {
-      "gpt-4o": initChatModel("gpt-4o"),
-      "gpt-4o-mini": initChatModel("gpt-4o-mini"),
+      "gpt-4.1": initChatModel("gpt-4.1"),
+      "gpt-4.1-mini": initChatModel("gpt-4.1-mini"),
       "claude-sonnet": initChatModel("claude-sonnet-4-5-20250929"),
     };
 
@@ -646,8 +646,8 @@ might change during an agent run.
 
     // Initialize models once outside the middleware
     const premiumModel = initChatModel("claude-sonnet-4-5-20250929");
-    const standardModel = initChatModel("gpt-4o");
-    const budgetModel = initChatModel("gpt-4o-mini");
+    const standardModel = initChatModel("gpt-4.1");
+    const budgetModel = initChatModel("gpt-4.1-mini");
 
     const contextBasedModel = createMiddleware({
       name: "ContextBasedModel",
@@ -677,7 +677,7 @@ might change during an agent run.
 
 See [Dynamic model](/oss/javascript/langchain/agents#dynamic-model) for more examples.
 
-### Response Format
+### Response format
 
 Structured output transforms unstructured text into validated, structured data. When extracting specific fields or returning data for downstream systems, free-form text isn't sufficient.
 
@@ -848,7 +848,7 @@ Dynamic response format selection adapts schemas based on user preferences, conv
   </Tab>
 </Tabs>
 
-## Tool Context
+## Tool context
 
 Tools are special in that they both read and write context.
 
@@ -968,7 +968,7 @@ Most real-world tools need more than just the LLM's parameters. They need user I
     );
 
     const agent = createAgent({
-      model: "gpt-4o",
+      model: "gpt-4.1",
       tools: [fetchUserData],
       contextSchema,
     });
@@ -1060,7 +1060,7 @@ and update the memory of the agent to make important context available to future
 
 See [Tools](/oss/javascript/langchain/tools) for comprehensive examples of accessing state, store, and runtime context in tools.
 
-## Life-cycle Context
+## Life-cycle context
 
 Control what happens **between** the core agent steps - intercepting data flow to implement cross-cutting concerns like summarization, guardrails, and logging.
 
@@ -1089,11 +1089,11 @@ LangChain offers built-in middleware for this:
 import { createAgent, summarizationMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [...],
   middleware: [
     summarizationMiddleware({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       trigger: { tokens: 4000 },
       keep: { messages: 20 },
     }),
@@ -1132,9 +1132,9 @@ For a complete list of built-in middleware, available hooks, and how to create c
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/context-engineering.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/context-engineering.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

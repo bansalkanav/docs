@@ -1,5 +1,6 @@
 ---
-title: SupabaseVectorStore
+title: "SupabaseVectorStore integration"
+description: "Integrate with the SupabaseVectorStore using LangChain JavaScript."
 ---
 
 [Supabase](https://supabase.com/docs) is an open-source Firebase alternative. Supabase is built on top of PostgreSQL, which offers strong SQL querying capabilities and enables a simple interface with already-existing tools and frameworks.
@@ -157,7 +158,7 @@ const documents = [document1, document2, document3, document4];
 await vectorStore.addDocuments(documents, { ids: ["1", "2", "3", "4"] });
 ```
 
-```output
+```text
 [ 1, 2, 3, 4 ]
 ```
 
@@ -185,7 +186,7 @@ for (const doc of similaritySearchResults) {
 }
 ```
 
-```output
+```text
 * The powerhouse of the cell is the mitochondria [{"source":"https://example.com"}]
 * Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
@@ -200,12 +201,12 @@ for (const [doc, score] of similaritySearchWithScoreResults) {
 }
 ```
 
-```output
+```text
 * [SIM=0.165] The powerhouse of the cell is the mitochondria [{"source":"https://example.com"}]
 * [SIM=0.148] Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
 
-### Metadata Query Builder Filtering
+### Metadata query builder filtering
 
 You can also use query builder-style filtering similar to how the [Supabase JavaScript library](https://supabase.com/docs/reference/javascript/using-filters) works instead of passing an object. Note that since most of the filter properties are in the metadata column, you need to use arrow operators (-> for integer or ->> for text) as defined in [Postgrest API documentation](https://postgrest.org/en/stable/references/api/tables_views.html#json-columns) and specify the data type of the property (e.g. the column should look something like `metadata->some_int_prop_name::int`).
 
@@ -222,7 +223,7 @@ for (const doc of funcFilterSearchResults) {
 }
 ```
 
-```output
+```text
 * The powerhouse of the cell is the mitochondria [{"source":"https://example.com"}]
 * Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
@@ -240,7 +241,7 @@ const retriever = vectorStore.asRetriever({
 await retriever.invoke("biology");
 ```
 
-```output
+```javascript
 [
   Document {
     pageContent: 'The powerhouse of the cell is the mitochondria',
@@ -271,9 +272,9 @@ For detailed documentation of all `SupabaseVectorStore` features and configurati
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/supabase.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/supabase.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

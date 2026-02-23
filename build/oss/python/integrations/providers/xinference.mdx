@@ -1,5 +1,6 @@
 ---
-title: Xorbits Inference (Xinference)
+title: "Xorbits inference (Xinference) integrations"
+description: "Integrate with Xorbits inference (Xinference) using LangChain Python."
 ---
 
 This page demonstrates how to use [Xinference](https://github.com/xorbitsai/inference)
@@ -10,7 +11,7 @@ speech recognition models, and multimodal models, even on your laptop.
 With Xorbits Inference, you can effortlessly deploy and serve your or
 state-of-the-art built-in models using just a single command.
 
-## Installation and Setup
+## Installation and setup
 
 Xinference can be installed via pip from PyPI:
 
@@ -20,7 +21,7 @@ pip install "xinference[all]"
 ```
 
 ```bash uv
-uv add xinference[all]
+uv add "xinference[all]"
 ```
 </CodeGroup>
 
@@ -34,7 +35,7 @@ xinference list --all
 ```
 
 
-### Wrapper for Xinference
+### Wrapper for xinference
 
 You can start a local instance of Xinference by running:
 
@@ -124,7 +125,7 @@ uv add langchain-xinference
 ```
 </CodeGroup>
 
-## Chat Models
+## Chat models
 
 ```python
 from langchain_xinference.chat_models import ChatXinference
@@ -138,9 +139,9 @@ from langchain_xinference.llms import Xinference
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/xinference.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/xinference.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

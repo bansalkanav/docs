@@ -1,5 +1,6 @@
 ---
-title: AssemblyAI
+title: "AssemblyAI integrations"
+description: "Integrate with AssemblyAI using LangChain Python."
 ---
 
 >[AssemblyAI](https://www.assemblyai.com/) builds `Speech AI` models for tasks like
@@ -10,7 +11,7 @@ speech-to-text, speaker diarization, speech summarization, and more.
 
 
 
-## Installation and Setup
+## Installation and setup
 
 Get your [API key](https://www.assemblyai.com/dashboard/signup).
 
@@ -26,9 +27,9 @@ uv add assemblyai
 ```
 </CodeGroup>
 
-## Document Loader
+## Document loader
 
-###  AssemblyAI Audio Transcript
+### AssemblyAI audio transcript
 
 The `AssemblyAIAudioTranscriptLoader` transcribes audio files with the `AssemblyAI API`
 and loads the transcribed text into documents.
@@ -39,7 +40,7 @@ See a [usage example](/oss/python/integrations/document_loaders/assemblyai).
 from langchain_community.document_loaders import AssemblyAIAudioTranscriptLoader
 ```
 
-###  AssemblyAI Audio Loader By Id
+### AssemblyAI audio loader by Id
 
 The `AssemblyAIAudioLoaderById` uses the AssemblyAI API to get an existing
 transcription and loads the transcribed text into one or more Documents,
@@ -51,9 +52,9 @@ from langchain_community.document_loaders import AssemblyAIAudioLoaderById
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/assemblyai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/assemblyai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -2,8 +2,6 @@
 title: Release policy
 ---
 
-
-
 This page explains the LangChain and LangGraph release policies. Click on the tabs below to view the release policies for each:
 
 <Tabs>
@@ -28,6 +26,7 @@ This page explains the LangChain and LangGraph release policies. Click on the ta
 
 
     With LangChain 1.0's adoption of semantic versioning:
+
     - Breaking changes to the public API will only occur in major version releases (e.g., `2.0.0`)
     - Minor version bumps (e.g., `1.0.0` to `1.1.0`) add new features without breaking changes
     - Patch version bumps (e.g., `1.0.0` to `1.0.1`) contain bug fixes and minor improvements
@@ -79,6 +78,7 @@ This page explains the LangChain and LangGraph release policies. Click on the ta
     ### Legacy version support
 
     **LangChain 0.3**:
+
     - **Status**: MAINTENANCE mode
     - **Support period**: Until December 2026
     - **Support includes**: Security patches and critical bug fixes
@@ -154,6 +154,7 @@ This page explains the LangChain and LangGraph release policies. Click on the ta
     ## Breaking changes
 
     Breaking changes are only introduced in major versions and include:
+
     - Removal of deprecated APIs
     - Changes to required parameters
     - Changes to default behavior that affect existing applications
@@ -162,6 +163,7 @@ This page explains the LangChain and LangGraph release policies. Click on the ta
     ## Migration support
 
     For major version upgrades, we provide:
+
     - Comprehensive migration guides
     - Automated migration scripts when feasible
     - Extended support period for the previous major version
@@ -174,12 +176,14 @@ This page explains the LangChain and LangGraph release policies. Click on the ta
     ### Release status definitions
 
     Packages are marked with one of the following statuses:
+
     - **ACTIVE**: Current active development, includes bug fixes, security patches, and new features
     - **MAINTENANCE**: Receives all security patches and critical bug fixes, but no new features
 
     ### Current LTS releases
 
     **LangGraph 1.0** is designated as an LTS release:
+
     - **Status**: ACTIVE until the release of 2.0
     - **Support period**: After 2.0 is released, 1.0 will enter MAINTENANCE mode for at least 1 year
     - **Semver compliance**: Users can upgrade between minor versions (e.g., 1.0 to 1.1) without breaking changes
@@ -187,6 +191,7 @@ This page explains the LangChain and LangGraph release policies. Click on the ta
     ### Legacy version support
 
     **LangGraph 0.4**:
+
     - **Status**: MAINTENANCE mode
     - **Support period**: Until December 2026
     - **Support includes**: All security patches and critical bug fixes
@@ -196,13 +201,16 @@ This page explains the LangChain and LangGraph release policies. Click on the ta
     - [Versioning](/oss/javascript/versioning) - Version numbering and support details
     - [Releases](/oss/javascript/releases) - Version-specific release notes and migration guides
     </Tab>
+    <Tab title="Deep Agents">
+
+    </Tab>
 </Tabs>
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/release-policy.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/release-policy.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

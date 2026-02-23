@@ -1,5 +1,6 @@
 ---
-title: MediaWikiDump
+title: "Mediawikidump integrations"
+description: "Integrate with Mediawikidump using LangChain Python."
 ---
 
 >[MediaWiki XML Dumps](https://www.mediawiki.org/wiki/Manual:Importing_XML_dumps) contain the content of a wiki
@@ -7,7 +8,7 @@ title: MediaWikiDump
 > of the wiki database, the dump does not contain user accounts, images, edit logs, etc.
 
 
-## Installation and Setup
+## Installation and setup
 
 We need to install several python packages.
 
@@ -37,7 +38,7 @@ uv add mwparserfromhell
 ```
 </CodeGroup>
 
-## Document Loader
+## Document loader
 
 See a [usage example](/oss/python/integrations/document_loaders/mediawikidump).
 
@@ -48,9 +49,9 @@ from langchain_community.document_loaders import MWDumpLoader
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/mediawikidump.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/mediawikidump.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

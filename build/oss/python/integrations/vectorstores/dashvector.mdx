@@ -1,5 +1,6 @@
 ---
-title: DashVector
+title: "DashVector integration"
+description: "Integrate with the DashVector vector store using LangChain Python."
 ---
 
 > [DashVector](https://help.aliyun.com/document_detail/2510225.html) is a fully-managed vectorDB service that supports high-dimension dense and sparse vectors, real-time insertion and filtered search. It is built to scale automatically and can adapt to different application requirements.
@@ -69,7 +70,7 @@ docs = dashvector.similarity_search("foo", filter="key = 2")
 print(docs)
 ```
 
-```output
+```python
 [Document(page_content='baz', metadata={'key': 2})]
 ```
 
@@ -96,9 +97,9 @@ dashvector.delete(ids=ids, partition=partition)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/dashvector.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/dashvector.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

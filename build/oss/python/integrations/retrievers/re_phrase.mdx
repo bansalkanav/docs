@@ -1,5 +1,6 @@
 ---
-title: RePhraseQuery
+title: "Rephrasequery integration"
+description: "Integrate with the Rephrasequery retriever using LangChain Python."
 ---
 
 `RePhraseQuery` is a simple retriever that applies an LLM between the user input and the query passed by the retriever.
@@ -59,7 +60,7 @@ docs = retriever_from_llm.invoke(
 )
 ```
 
-```output
+```text
 INFO:langchain.retrievers.re_phraser:Re-phrased question: The user query can be converted into a query for a vectorstore as follows:
 
 "approaches to Task Decomposition"
@@ -71,7 +72,7 @@ docs = retriever_from_llm.invoke(
 )
 ```
 
-```output
+```text
 INFO:langchain.retrievers.re_phraser:Re-phrased question: Query for vectorstore: "Types of Memory"
 ```
 
@@ -105,15 +106,15 @@ docs = retriever_from_llm_chain.invoke(
 )
 ```
 
-```output
+```text
 INFO:langchain.retrievers.re_phraser:Re-phrased question: Ahoy matey! What be Maximum Inner Product Search, ye scurvy dog?
 ```
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/retrievers/re_phrase.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/retrievers/re_phrase.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,6 +1,6 @@
 ---
-title: ChatParallelWeb
-description: Get started using Parallel [chat models](/oss/python/langchain/models) in LangChain.
+title: "ChatParallelWeb integration"
+description: "Integrate with the ChatParallelWeb chat model using LangChain Python."
 ---
 
 Parallel provides real-time web research capabilities through an OpenAI-compatible chat interface, allowing your AI applications to access current information from the web.
@@ -8,16 +8,16 @@ Parallel provides real-time web research capabilities through an OpenAI-compatib
 <Tip>
     **API Reference**
 
-    For detailed documentation of all features and configuration options, head to the [`ChatParallelWeb`](https://reference.langchain.com/python/integrations/langchain_parallel/ChatParallelWeb) API reference.
+    For detailed documentation of all features and configuration options, head to the [`ChatParallelWeb`](https://reference.langchain.com/python/langchain-parallel/chat_models/ChatParallelWeb) API reference.
 </Tip>
 
 ## Overview
 
 ### Integration details
 
-| Class | Package | <Tooltip tip="Can run on local hardware" cta="Learn more" href="/oss/python/langchain/models#local-models">Local</Tooltip> | Serializable | JS/TS Support | Downloads | Latest Version |
-| :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
-| [`ChatParallelWeb`](https://reference.langchain.com/python/integrations/langchain_parallel/ChatParallelWeb) | [`langchain-parallel`](https://reference.langchain.com/python/integrations/langchain_parallel) | ❌ | ✅ | ❌ | <a href="https://pypi.org/project/langchain-parallel/" target="_blank"><img src="https://static.pepy.tech/badge/langchain-parallel/month" alt="Downloads per month" noZoom height="100" class="rounded" /></a> | <a href="https://pypi.org/project/langchain-parallel/" target="_blank"><img src="https://img.shields.io/pypi/v/langchain-parallel?style=flat-square&label=%20&color=orange" alt="PyPI - Latest version" noZoom height="100" class="rounded" /></a> |
+| Class | Package | Serializable | JS/TS Support | Downloads | Latest Version |
+| :--- | :--- | :---: |  :---: | :---: | :---: |
+| [`ChatParallelWeb`](https://reference.langchain.com/python/langchain-parallel/chat_models/ChatParallelWeb) | [`langchain-parallel`](https://reference.langchain.com/python/langchain-parallel/) | ✅ | ❌ | <a href="https://pypi.org/project/langchain-parallel/" target="_blank"><img src="https://static.pepy.tech/badge/langchain-parallel/month" alt="Downloads per month" noZoom height="100" class="rounded" /></a> | <a href="https://pypi.org/project/langchain-parallel/" target="_blank"><img src="https://img.shields.io/pypi/v/langchain-parallel?style=flat-square&label=%20&color=orange" alt="PyPI - Latest version" noZoom height="100" class="rounded" /></a> |
 
 ### Model features
 
@@ -71,7 +71,7 @@ llm = ChatParallelWeb(
 )
 ```
 
-See the [`ChatParallelWeb`](https://reference.langchain.com/python/integrations/langchain_parallel/ChatParallelWeb) API Reference for the full set of available model parameters.
+See the [`ChatParallelWeb`](https://reference.langchain.com/python/langchain-parallel/chat_models/ChatParallelWeb) API Reference for the full set of available model parameters.
 
 <Note>
     **OpenAI compatibility**
@@ -95,7 +95,7 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
-```output
+```text
 AIMessage(content='Here\'s a summary of the latest AI news and breakthroughs as of ...', additional_kwargs={}, response_metadata={'model': 'speed', 'finish_reason': 'stop', 'created': 1764043410}, id='run--3866fa98-6ac9-4585-8d23-99c5542b582b-0')
 ```
 
@@ -103,7 +103,7 @@ AIMessage(content='Here\'s a summary of the latest AI news and breakthroughs as 
 print(ai_msg.content)
 ```
 
-```output
+```text
 Here's a summary of the latest AI news and breakthroughs as of...
 ```
 
@@ -136,7 +136,7 @@ chain.invoke(
 )
 ```
 
-```output
+```text
 AIMessage(content="Based on the provided search results, here's a summary of the significant AI breakthroughs and trends...", additional_kwargs={}, response_metadata={'model': 'speed', 'finish_reason': 'stop', 'created': 1764043419}, id='run--9c521362-6724-4299-9e65-0565ec13d997-0')
 ```
 ---
@@ -180,7 +180,7 @@ ai_msg = llm.invoke(messages)
 print(ai_msg.usage_metadata)
 ```
 
-```output
+```text
 None
 ```
 
@@ -195,7 +195,7 @@ ai_msg = llm.invoke(messages)
 print(ai_msg.response_metadata)
 ```
 
-```output
+```python
 {'model': 'speed', 'finish_reason': 'stop', 'created': 1703123456}
 ```
 
@@ -268,13 +268,13 @@ response = llm.invoke(messages)
 
 ## API reference
 
-For detailed documentation of all features and configuration options, head to the [`ChatParallelWeb`](https://reference.langchain.com/python/integrations/langchain_parallel/ChatParallelWeb) API reference or or the [Parallel chat API quickstart](https://docs.parallel.ai/chat-api/chat-quickstart).
+For detailed documentation of all features and configuration options, head to the [`ChatParallelWeb`](https://reference.langchain.com/python/langchain-parallel/chat_models/ChatParallelWeb) API reference or or the [Parallel chat API quickstart](https://docs.parallel.ai/chat-api/chat-quickstart).
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/parallel.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/parallel.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

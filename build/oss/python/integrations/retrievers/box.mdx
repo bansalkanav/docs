@@ -1,12 +1,13 @@
 ---
-title: BoxRetriever
+title: "BoxRetriever integration"
+description: "Integrate with the BoxRetriever retriever using LangChain Python."
 ---
 
 This will help you get started with the Box [retriever](/oss/python/langchain/retrieval). For detailed documentation of all BoxRetriever features and configurations head to the [API reference](https://python.langchain.com/api_reference/box/retrievers/langchain_box.retrievers.box.BoxRetriever.html).
 
 # Overview
 
-The `BoxRetriever` class helps you get your unstructured content from Box in LangChain's [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) format. You can do this by searching for files based on a full-text search or using Box AI to retrieve a [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) containing the result of an AI query against files. This requires including a `List[str]` containing Box file ids, i.e. `["12345","67890"]`
+The `BoxRetriever` class helps you get your unstructured content from Box in LangChain's [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) format. You can do this by searching for files based on a full-text search or using Box AI to retrieve a [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) containing the result of an AI query against files. This requires including a `List[str]` containing Box file ids, i.e. `["12345","67890"]`
 
 <Info>
 Box AI requires an Enterprise Plus license
@@ -93,7 +94,7 @@ retriever = BoxRetriever(
 retriever.invoke("AstroTech Solutions")
 ```
 
-```output
+```text
 [Document(metadata={'source': 'https://dl.boxcloud.com/api/2.0/internal_files/1514555423624/versions/1663171610024/representations/extracted_text/content/', 'title': 'Invoice-A5555_txt'}, page_content='Vendor: AstroTech Solutions\nInvoice Number: A5555\n\nLine Items:\n    - Gravitational Wave Detector Kit: $800\n    - Exoplanet Terrarium: $120\nTotal: $920')]
 ```
 
@@ -117,7 +118,7 @@ query = "What was the most expensive item purchased"
 retriever.invoke(query)
 ```
 
-```output
+```text
 [Document(metadata={'source': 'Box AI', 'title': 'Box AI What was the most expensive item purchased'}, page_content='The most expensive item purchased is the **Gravitational Wave Detector Kit** from AstroTech Solutions, which costs **$800**.')]
 ```
 
@@ -135,7 +136,7 @@ retriever = BoxRetriever(
 retriever.invoke(query)
 ```
 
-```output
+```text
 [Document(metadata={'source': 'Box AI', 'title': 'Box AI What was the most expensive item purchased'}, page_content='The most expensive item purchased is the **Gravitational Wave Detector Kit** from AstroTech Solutions, which costs **$800**.'),
  Document(metadata={'source': 'Box AI What was the most expensive item purchased', 'file_name': 'Invoice-A5555.txt', 'file_id': '1514555423624', 'file_type': 'file'}, page_content='Vendor: AstroTech Solutions\nInvoice Number: A5555\n\nLine Items:\n    - Gravitational Wave Detector Kit: $800\n    - Exoplanet Terrarium: $120\nTotal: $920')]
 ```
@@ -153,7 +154,7 @@ retriever = BoxRetriever(
 retriever.invoke(query)
 ```
 
-```output
+```text
 [Document(metadata={'source': 'Box AI What was the most expensive item purchased', 'file_name': 'Invoice-A5555.txt', 'file_id': '1514555423624', 'file_type': 'file'}, page_content='Vendor: AstroTech Solutions\nInvoice Number: A5555\n\nLine Items:\n    - Gravitational Wave Detector Kit: $800\n    - Exoplanet Terrarium: $120\nTotal: $920')]
 ```
 
@@ -203,7 +204,7 @@ agent = create_openai_tools_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools)
 ```
 
-```output
+```text
 /Users/shurrey/local/langchain/.venv/lib/python3.11/site-packages/langsmith/client.py:312: LangSmithMissingAPIKeyWarning: API key must be provided when using hosted LangSmith API
   warnings.warn(
 ```
@@ -220,7 +221,7 @@ result = agent_executor.invoke(
 print(f"result {result['output']}")
 ```
 
-```output
+```text
 result The items you purchased from AstroTech Solutions from most expensive to least expensive are:
 
 1. Gravitational Wave Detector Kit: $800
@@ -233,7 +234,7 @@ Total: $920
 
 All Box connectors offer the ability to select additional fields from the Box `FileFull` object to return as custom LangChain metadata. Each object accepts an optional `List[str]` called `extra_fields` containing the json key from the return object, like `extra_fields=["shared_link"]`.
 
-The connector will add this field to the list of fields the integration needs to function and then add the results to the metadata returned in the [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) or `Blob`, like `"metadata" : { "source" : "source, "shared_link" : "shared_link" }`. If the field is unavailable for that file, it will be returned as an empty string, like `"shared_link" : ""`.
+The connector will add this field to the list of fields the integration needs to function and then add the results to the metadata returned in the [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) or `Blob`, like `"metadata" : { "source" : "source, "shared_link" : "shared_link" }`. If the field is unavailable for that file, it will be returned as an empty string, like `"shared_link" : ""`.
 
 ---
 
@@ -247,9 +248,9 @@ If you have questions, you can check out our [developer documentation](https://d
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/retrievers/box.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/retrievers/box.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

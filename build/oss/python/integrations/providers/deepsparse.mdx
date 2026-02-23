@@ -1,11 +1,12 @@
 ---
-title: DeepSparse
+title: "Deepsparse integrations"
+description: "Integrate with Deepsparse using LangChain Python."
 ---
 
 This page covers how to use the [DeepSparse](https://github.com/neuralmagic/deepsparse) inference runtime within LangChain.
 It is broken into two parts: installation and setup, and then examples of DeepSparse usage.
 
-## Installation and Setup
+## Installation and setup
 
 - Install the Python package with `pip install deepsparse`
 - Choose a [SparseZoo model](https://sparsezoo.neuralmagic.com/?useCase=text_generation) or export a support model to ONNX [using Optimum](https://github.com/neuralmagic/notebooks/blob/main/notebooks/opt-text-generation-deepsparse-quickstart/OPT_Text_Generation_DeepSparse_Quickstart.ipynb)
@@ -37,9 +38,9 @@ llm = DeepSparse(model='zoo:nlg/text_generation/codegen_mono-350m/pytorch/huggin
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/deepsparse.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/deepsparse.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

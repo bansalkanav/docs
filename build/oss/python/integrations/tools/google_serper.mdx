@@ -1,5 +1,6 @@
 ---
-title: Google Serper
+title: "Google Serper integration"
+description: "Integrate with the Google Serper tool using LangChain Python."
 ---
 
 This notebook goes over how to use the `Google Serper` component to search the web. First you need to sign up for a free account at [serper.dev](https://serper.dev) and get your api key.
@@ -25,11 +26,11 @@ search = GoogleSerperAPIWrapper()
 search.run("Obama's first name?")
 ```
 
-```output
+```text
 'Barack Hussein Obama II'
 ```
 
-## As part of a Self Ask With Search Agent
+## As part of a self ask with search Agent
 
 In order to create an agent that uses the Google Serper tool install LangGraph
 
@@ -37,26 +38,28 @@ In order to create an agent that uses the Google Serper tool install LangGraph
 pip install -qU langgraph langchain-openai
 ```
 
-and use the [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent) functionality to initialize a ReAct agent. You will also need to set up your OPENAI_API_KEY (visit [platform.openai.com](https://platform.openai.com)) in order to access OpenAI's chat models.
+and use the [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) functionality to initialize a ReAct agent. You will also need to set up your OPENAI_API_KEY (visit [platform.openai.com](https://platform.openai.com)) in order to access OpenAI's chat models.
 
 ```python
 from langchain.chat_models import init_chat_model
 from langchain_community.utilities import GoogleSerperAPIWrapper
-from langchain.tools import Tool
+from langchain.tools import tool
 from langchain.agents import create_agent
 
 
 os.environ["OPENAI_API_KEY"] = "[your openai key]"
 
-model = init_chat_model("gpt-4o-mini", model_provider="openai", temperature=0)
+model = init_chat_model("gpt-4.1-mini", model_provider="openai", temperature=0)
 search = GoogleSerperAPIWrapper()
-tools = [
-    Tool(
-        name="Intermediate_Answer",
-        func=search.run,
-        description="useful for when you need to ask with search",
-    )
-]
+
+
+@tool
+def intermediate_answer(query: str) -> str:
+    """Useful for when you need to ask with search."""
+    return search.run(query)
+
+
+tools = [intermediate_answer]
 agent = create_agent(model, tools)
 
 events = agent.stream(
@@ -82,7 +85,7 @@ results = search.results("Apple Inc.")
 pprint.pp(results)
 ```
 
-```output
+```text
 {'searchParameters': {'q': 'Apple Inc.',
                       'gl': 'us',
                       'hl': 'en',
@@ -217,7 +220,7 @@ pprint.pp(results)
  'credits': 1}
 ```
 
-## Searching for Google Images
+## Searching for Google images
 
 We can also query Google Images using this wrapper. For example:
 
@@ -227,7 +230,7 @@ results = search.results("Lion")
 pprint.pp(results)
 ```
 
-```output
+```text
 {'searchParameters': {'q': 'Lion',
                       'gl': 'us',
                       'hl': 'en',
@@ -363,7 +366,7 @@ pprint.pp(results)
  'credits': 1}
 ```
 
-## Searching for Google News
+## Searching for Google news
 
 We can also query Google News using this wrapper. For example:
 
@@ -373,7 +376,7 @@ results = search.results("Tesla Inc.")
 pprint.pp(results)
 ```
 
-```output
+```text
 {'searchParameters': {'q': 'Tesla Inc.',
                       'gl': 'us',
                       'hl': 'en',
@@ -486,7 +489,7 @@ results = search.results("Tesla Inc.")
 pprint.pp(results)
 ```
 
-```output
+```text
 {'searchParameters': {'q': 'Tesla Inc.',
                       'gl': 'us',
                       'hl': 'en',
@@ -524,7 +527,7 @@ You can specify intermediate time periods by adding a number:
 
 For all supported filters simply go to [Google Search](https://google.com), search for something, click on "Tools", add your date filter and check the URL for "tbs=".
 
-## Searching for Google Places
+## Searching for Google places
 
 We can also query Google Places using this wrapper. For example:
 
@@ -534,7 +537,7 @@ results = search.results("Italian restaurants in Upper East Side")
 pprint.pp(results)
 ```
 
-```output
+```text
 {'searchParameters': {'q': 'Italian restaurants in Upper East Side',
                       'gl': 'us',
                       'hl': 'en',
@@ -665,9 +668,9 @@ pprint.pp(results)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/google_serper.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/google_serper.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

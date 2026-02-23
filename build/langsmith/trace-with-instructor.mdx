@@ -1,5 +1,5 @@
 ---
-title: Trace with Instructor
+title: Trace Instructor applications
 sidebarTitle: Instructor (Python only)
 ---
 
@@ -54,7 +54,7 @@ class UserDetail(BaseModel):
 
 
 user = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     response_model=UserDetail,
     messages=[
         {"role": "user", "content": "Extract Jason is 25 years old"},
@@ -71,7 +71,7 @@ Please see [this guide](./annotate-code) for more information on how to annotate
 @traceable(name="Extract User Details")
 def my_function(text: str) -> UserDetail:
     return client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1-mini",
         response_model=UserDetail,
         messages=[
             {"role": "user", "content": f"Extract {text}"},
@@ -83,9 +83,9 @@ my_function("Jason is 25 years old")
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-instructor.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-instructor.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

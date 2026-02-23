@@ -1,5 +1,5 @@
 ---
-title: Splitting by token
+title: "Splitting by token - Text splitter integration guide"
 ---
 
 Language models have a token limit. You should not exceed the token limit. When you [split your text](/oss/python/integrations/splitters/) into chunks it is therefore a good idea to count the number of tokens. There are many tokenizers. When you count tokens in your text you should use the same tokenizer as used in the language model.
@@ -16,7 +16,7 @@ We can use `tiktoken` to estimate tokens used. It will probably be more accurate
 1. How the text is split: by character passed in.
 2. How the chunk size is measured: by `tiktoken` tokenizer.
 
-[CharacterTextSplitter](https://reference.langchain.com/python/langchain_text_splitters/#langchain_text_splitters.CharacterTextSplitter), [RecursiveCharacterTextSplitter](https://reference.langchain.com/python/langchain_text_splitters/#langchain_text_splitters.RecursiveCharacterTextSplitter), and [TokenTextSplitter](https://reference.langchain.com/python/langchain_text_splitters/#langchain_text_splitters.TokenTextSplitter) can be used with `tiktoken` directly.
+[CharacterTextSplitter](https://reference.langchain.com/python/langchain-text-splitters/character/CharacterTextSplitter), [RecursiveCharacterTextSplitter](https://reference.langchain.com/python/langchain-text-splitters/character/RecursiveCharacterTextSplitter), and [TokenTextSplitter](https://reference.langchain.com/python/langchain-text-splitters/base/TokenTextSplitter) can be used with `tiktoken` directly.
 
 
 ```python
@@ -32,7 +32,7 @@ with open("state_of_the_union.txt") as f:
     state_of_the_union = f.read()
 ```
 
-To split with a [CharacterTextSplitter](https://reference.langchain.com/python/langchain_text_splitters/#langchain_text_splitters.CharacterTextSplitter) and then merge chunks with `tiktoken`, use its `.from_tiktoken_encoder()` method. Note that splits from this method can be larger than the chunk size measured by the `tiktoken` tokenizer.
+To split with a [CharacterTextSplitter](https://reference.langchain.com/python/langchain-text-splitters/character/CharacterTextSplitter) and then merge chunks with `tiktoken`, use its `.from_tiktoken_encoder()` method. Note that splits from this method can be larger than the chunk size measured by the `tiktoken` tokenizer.
 
 The `.from_tiktoken_encoder()` method takes either `encoding_name` as an argument (e.g. `cl100k_base`), or the `model_name` (e.g. `gpt-4`). All additional arguments like `chunk_size`, `chunk_overlap`, and `separators` are used to instantiate `CharacterTextSplitter`:
 
@@ -48,7 +48,7 @@ texts = text_splitter.split_text(state_of_the_union)
 ```python
 print(texts[0])
 ```
-```output
+```text
 Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.
 
 Last year COVID-19 kept us apart. This year we are finally together again.
@@ -81,7 +81,7 @@ text_splitter = TokenTextSplitter(chunk_size=10, chunk_overlap=0)
 texts = text_splitter.split_text(state_of_the_union)
 print(texts[0])
 ```
-```output
+```text
 Madam Speaker, Madam Vice President, our
 ```
 Some written languages (e.g. Chinese and Japanese) have characters which encode to two or more tokens. Using the `TokenTextSplitter` directly can split the tokens for a character between two chunks causing malformed Unicode characters. Use `RecursiveCharacterTextSplitter.from_tiktoken_encoder` or `CharacterTextSplitter.from_tiktoken_encoder` to ensure chunks contain valid Unicode strings.
@@ -121,7 +121,7 @@ text_splitter = SpacyTextSplitter(chunk_size=1000)
 texts = text_splitter.split_text(state_of_the_union)
 print(texts[0])
 ```
-```output
+```text
 Madam Speaker, Madam Vice President, our First Lady and Second Gentleman.
 
 Members of Congress and the Cabinet.
@@ -191,7 +191,7 @@ count_start_and_stop_tokens = 2
 text_token_count = splitter.count_tokens(text=text) - count_start_and_stop_tokens
 print(text_token_count)
 ```
-```output
+```text
 2
 ```
 
@@ -203,7 +203,7 @@ text_to_split = text * token_multiplier
 
 print(f"tokens in text to split: {splitter.count_tokens(text=text_to_split)}")
 ```
-```output
+```text
 tokens in text to split: 514
 ```
 
@@ -212,7 +212,7 @@ text_chunks = splitter.split_text(text=text_to_split)
 
 print(text_chunks[1])
 ```
-```output
+```text
 lorem
 ```
 ## NLTK
@@ -251,7 +251,7 @@ text_splitter = NLTKTextSplitter(chunk_size=1000)
 texts = text_splitter.split_text(state_of_the_union)
 print(texts[0])
 ```
-```output
+```text
 Madam Speaker, Madam Vice President, our First Lady and Second Gentleman.
 
 Members of Congress and the Cabinet.
@@ -294,10 +294,10 @@ Groups of citizens blocking tanks with their bodies.
 
 Token splitting involves the segmentation of text into smaller, more manageable units called tokens. These tokens are often words, phrases, symbols, or other meaningful elements crucial for further processing and analysis. In languages like English, token splitting typically involves separating words by spaces and punctuation marks. The effectiveness of token splitting largely depends on the tokenizer's understanding of the language structure, ensuring the generation of meaningful tokens. Since tokenizers designed for the English language are not equipped to understand the unique semantic structures of other languages, such as Korean, they cannot be effectively used for Korean language processing.
 
-### Token splitting for Korean with KoNLPy's Kkma Analyzer
+### Token splitting for korean with KoNLPy's kkma analyzer
 In case of Korean text, KoNLPY includes at morphological analyzer called `Kkma` (Korean Knowledge Morpheme Analyzer). `Kkma` provides detailed morphological analysis of Korean text. It breaks down sentences into words and words into their respective morphemes, identifying parts of speech for each token. It can segment a block of text into individual sentences, which is particularly useful for processing long texts.
 
-### Usage Considerations
+### Usage considerations
 While `Kkma` is renowned for its detailed analysis, it is important to note that this precision may impact processing speed. Thus, `Kkma` is best suited for applications where analytical depth is prioritized over rapid text processing.
 
 
@@ -325,7 +325,7 @@ texts = text_splitter.split_text(korean_document)
 # The sentences are split with "\n\n" characters.
 print(texts[0])
 ```
-```output
+```text
 춘향전 옛날에 남원에 이 도령이라는 벼슬아치 아들이 있었다.
 
 그의 외모는 빛나는 달처럼 잘생겼고, 그의 학식과 기예는 남보다 뛰어났다.
@@ -392,7 +392,7 @@ texts = text_splitter.split_text(state_of_the_union)
 ```python
 print(texts[0])
 ```
-```output
+```text
 Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.
 
 Last year COVID-19 kept us apart. This year we are finally together again.
@@ -404,9 +404,9 @@ With a duty to one another to the American people to the Constitution.
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/split_by_token.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/split_by_token.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

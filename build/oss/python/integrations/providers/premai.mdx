@@ -1,5 +1,6 @@
 ---
-title: PremAI
+title: "Premai integrations"
+description: "Integrate with Premai using LangChain Python."
 ---
 
 [PremAI](https://premai.io/) is an all-in-one platform that simplifies the creation of robust, production-ready applications powered by Generative AI. By streamlining the development process, PremAI allows you to concentrate on enhancing user experience and driving overall growth for your application. You can quickly start using [our platform](https://docs.premai.io/quick-start).
@@ -44,10 +45,10 @@ import getpass
 if "PREMAI_API_KEY" not in os.environ:
     os.environ["PREMAI_API_KEY"] = getpass.getpass("PremAI API Key:")
 
-chat = ChatPremAI(project_id=1234, model_name="gpt-4o")
+chat = ChatPremAI(project_id=1234, model_name="gpt-4.1")
 ```
 
-### Chat Completions
+### Chat completions
 
 `ChatPremAI` supports two methods: `invoke` (which is the same as `generate`) and `stream`.
 
@@ -82,7 +83,7 @@ chat.invoke(
 
 > You can find all the optional parameters [here](https://docs.premai.io/get-started/sdk#optional-parameters). Any parameters other than [these supported parameters](https://docs.premai.io/get-started/sdk#optional-parameters) will be automatically removed before calling the model.
 
-### Native RAG Support with Prem Repositories
+### Native RAG support with prem repositories
 
 Prem Repositories which allows users to upload documents (.txt, .pdf etc) and connect those repositories to the LLMs. You can think Prem repositories as native RAG, where each repository can be considered as a vector database. You can connect multiple repositories. You can learn more about repositories [here](https://docs.premai.io/get-started/repositories).
 
@@ -169,13 +170,13 @@ This will stream tokens one after the other.
 
 > Please note: As of now, RAG with streaming is not supported. However we still support it with our API. You can learn more about that [here](https://docs.premai.io/get-started/chat-completion-sse).
 
-## Prem Templates
+## Prem templates
 
 Writing Prompt Templates can be super messy. Prompt templates are long, hard to manage, and must be continuously tweaked to improve and keep the same throughout the application.
 
 With **Prem**, writing and managing prompts can be super easy. The **_Templates_** tab inside the [launchpad](https://docs.premai.io/get-started/launchpad) helps you write as many prompts you need and use it inside the SDK to make your application running using those prompts. You can read more about Prompt Templates [here](https://docs.premai.io/get-started/prem-templates).
 
-To use Prem Templates natively with LangChain, you need to pass an id the `HumanMessage`. This id should be the name the variable of your prompt template. the `content` in [`HumanMessage`](https://reference.langchain.com/python/langchain/messages/#langchain.messages.HumanMessage) should be the value of that variable.
+To use Prem Templates natively with LangChain, you need to pass an id the `HumanMessage`. This id should be the name the variable of your prompt template. the `content` in [`HumanMessage`](https://reference.langchain.com/python/langchain-core/messages/human/HumanMessage) should be the value of that variable.
 
 let's say for example, if your prompt template was this:
 
@@ -201,9 +202,9 @@ template_id = "78069ce8-xxxxx-xxxxx-xxxx-xxx"
 response = chat.invoke([human_message], template_id=template_id)
 ```
 
-Prem Templates are also available for Streaming too.
+Prem Templates are also available for Streaming.
 
-## Prem Embeddings
+## Prem embeddings
 
 In this section we cover how we can get access to different embedding models using `PremEmbeddings` with LangChain. Let's start by importing our modules and setting our API Key.
 
@@ -271,7 +272,7 @@ doc_result[:5]
  0.02918623760342598,
  -0.02547479420900345]
 
-## Tool/Function Calling
+## Tool/Function calling
 
 LangChain PremAI supports tool/function calling. Tool/function calling allows a model to respond to a given prompt by generating output that matches a user-defined schema.
 
@@ -435,9 +436,9 @@ Now, as done above, we parse this and run this functions and call the LLM once a
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/premai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/premai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

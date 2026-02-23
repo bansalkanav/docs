@@ -1,5 +1,6 @@
 ---
-title: Google Calendar Toolkit
+title: "Google calendar toolkit integration"
+description: "Integrate with the Google calendar toolkit using LangChain Python."
 ---
 
 > [Google Calendar](https://workspace.google.com/intl/en-419/products/calendar/) is a product of Google Workspace that allows users to organize their schedules and events. It is a cloud-based calendar that allows users to create, edit, and delete events. It also allows users to share their calendars with others.
@@ -47,7 +48,7 @@ from langchain_google_community import CalendarToolkit
 toolkit = CalendarToolkit()
 ```
 
-### Customizing Authentication
+### Customizing authentication
 
 Behind the scenes, a `googleapi` resource is created using the following methods. you can manually build a `googleapi` resource for more auth control.
 
@@ -79,7 +80,7 @@ tools = toolkit.get_tools()
 tools
 ```
 
-```output
+```text
 [CalendarCreateEvent(api_resource=<googleapiclient.discovery.Resource object at 0x10ad13fb0>),
  CalendarSearchEvents(api_resource=<googleapiclient.discovery.Resource object at 0x10ad13fb0>),
  CalendarUpdateEvent(api_resource=<googleapiclient.discovery.Resource object at 0x10ad13fb0>),
@@ -122,7 +123,7 @@ tool.invoke(
 )
 ```
 
-```output
+```text
 'Event created: https://www.google.com/calendar/event?eid=amoxdjVsM2UzMW51Yjk2czc4ajhvaGdkcGcgam9yZ2VhbmczM0Bt'
 ```
 
@@ -140,7 +141,7 @@ We will need a LLM or chat model:
 
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0)
 ```
 
 ```python
@@ -161,7 +162,7 @@ for event in events:
     event["messages"][-1].pretty_print()
 ```
 
-```output
+```text
 ================================ Human Message =================================
 
 Create a green event for this afternoon to go for a 30-minute run.
@@ -202,9 +203,9 @@ I have created a green event for your run this afternoon. You can view it [here]
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/google_calendar.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/google_calendar.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

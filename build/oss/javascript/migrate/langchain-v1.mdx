@@ -136,14 +136,14 @@ const agent = createAgent({
 });
 
 await agent.invoke(
-    {
-        messages: [new HumanMessage("Explain async programming")]
+  {
+    messages: [new HumanMessage("Explain async programming")],
+  },
+  {
+    context: {
+      userRole: "expert",
     },
-    {
-        configurable: {
-            userRole: "expert",
-        }
-    }
+  }
 );
 ```
 
@@ -151,7 +151,7 @@ await agent.invoke(
 import { createReactAgent } from "@langchain/langgraph/prebuilts";
 
 const contextSchema = z.object({
-  userRole: z.enum(["expert", "beginner"]).default("user"),
+  userRole: z.enum(["expert", "beginner"]),
 });
 
 const agent = createReactAgent({
@@ -171,11 +171,17 @@ const agent = createReactAgent({
   contextSchema,
 });
 
-// Use with context
-await agent.invoke({
-  messages: [new HumanMessage("Explain async programming")],
-  context: { userRole: "expert" },
-});
+// Use with context via config.configurable
+await agent.invoke(
+  {
+    messages: [new HumanMessage("Explain async programming")],
+  },
+  {
+    config: {
+      configurable: { userRole: "expert" },
+    },
+  }
+);
 ```
 </CodeGroup>
 
@@ -381,11 +387,11 @@ To better support structured output, `createAgent` should receive a plain model 
 
 ```typescript
 // No longer supported
-// const modelWithTools = new ChatOpenAI({ model: "gpt-4o-mini" }).bindTools([someTool]);
+// const modelWithTools = new ChatOpenAI({ model: "gpt-4.1-mini" }).bindTools([someTool]);
 // const agent = createAgent({ model: modelWithTools, tools: [] });
 
 // Use instead
-const agent = createAgent({ model: "gpt-4o-mini", tools: [someTool] });
+const agent = createAgent({ model: "gpt-4.1-mini", tools: [someTool] });
 ```
 
 ### Tools
@@ -469,7 +475,7 @@ const OutputSchema = z.object({
 });
 
 const agent = createAgent({
-  model: "gpt-4o-mini",
+  model: "gpt-4.1-mini",
   tools,
   // explicitly using tool strategy
   responseFormat: toolStrategy(OutputSchema), // [!code highlight]
@@ -485,7 +491,7 @@ const OutputSchema = z.object({
 });
 
 const agent = createReactAgent({
-  model: "gpt-4o-mini",
+  model: "gpt-4.1-mini",
   tools,
   // Structured output was driven primarily via tool-calling with fewer options
   responseFormat: OutputSchema,
@@ -511,7 +517,7 @@ import { createAgent, HumanMessage } from "langchain";
 import * as z from "zod";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools,
   contextSchema: z.object({ userId: z.string(), sessionId: z.string() }),
 });
@@ -775,9 +781,9 @@ The following deprecated APIs have been removed in v1:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/migrate/langchain-v1.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/migrate/langchain-v1.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

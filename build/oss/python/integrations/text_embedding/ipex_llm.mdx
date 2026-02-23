@@ -1,5 +1,6 @@
 ---
-title: IPEX-LLM - Local BGE Embeddings on Intel CPU
+title: "IPEX-LLM local BGE embeddings on Intel CPU integration"
+description: "Integrate with the IPEX-LLM local BGE embeddings on Intel CPU embedding model using LangChain Python."
 ---
 
 > [IPEX-LLM](https://github.com/intel-analytics/ipex-llm) is a PyTorch library for running LLM on Intel CPU and GPU (e.g., local PC with iGPU, discrete GPU such as Arc, Flex and Max) with very low latency.
@@ -23,7 +24,7 @@ pip install sentence-transformers
 >
 > For Windows users, `--extra-index-url https://download.pytorch.org/whl/cpu` when install `ipex-llm` is not required.
 
-## Basic Usage
+## Basic usage
 
 ```python
 from langchain_community.embeddings import IpexLLMBgeEmbeddings
@@ -55,9 +56,9 @@ print(f"query_embedding[:10]: {query_embedding[:10]}")
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/ipex_llm.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/ipex_llm.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

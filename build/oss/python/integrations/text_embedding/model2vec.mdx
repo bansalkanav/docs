@@ -1,5 +1,6 @@
 ---
-title: Model2Vec
+title: "Model2vec integration"
+description: "Integrate with the Model2vec embedding model using LangChain Python."
 ---
 
 Model2Vec is a technique to turn any sentence transformer into a really small static model
@@ -19,7 +20,7 @@ Ensure that `model2vec` is installed
 pip install -U model2vec
 ```
 
-## Indexing and Retrieval
+## Indexing and retrieval
 
 ```python
 from langchain_community.embeddings import Model2vecEmbeddings
@@ -39,7 +40,7 @@ document_text = "This is a test document."
 document_result = embeddings.embed_documents([document_text])
 ```
 
-## Direct Usage
+## Direct usage
 
 Here's how you would directly make use of `model2vec`
 
@@ -64,9 +65,9 @@ For more information check out the model2vec github [repo](https://github.com/Mi
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/model2vec.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/model2vec.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

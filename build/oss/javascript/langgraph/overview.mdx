@@ -1,6 +1,7 @@
 ---
 title: LangGraph overview
 sidebarTitle: Overview
+description: Gain control with LangGraph to design agents that reliably handle complex tasks
 ---
 
 Trusted by companies shaping the future of agents-- including Klarna, Replit, Elastic, and more-- LangGraph is a low-level orchestration framework and runtime for building, managing, and deploying long-running, stateful agents.
@@ -39,13 +40,17 @@ Then, create a simple hello world example:
 
 
 ```typescript
-import { MessagesAnnotation, StateGraph, START, END } from "@langchain/langgraph";
+import { StateSchema, MessagesValue, GraphNode, StateGraph, START, END } from "@langchain/langgraph";
 
-const mockLlm = (state: typeof MessagesAnnotation.State) => {
+const State = new StateSchema({
+  messages: MessagesValue,
+});
+
+const mockLlm: GraphNode<typeof State> = (state) => {
   return { messages: [{ role: "ai", content: "hello world" }] };
 };
 
-const graph = new StateGraph(MessagesAnnotation)
+const graph = new StateGraph(State)
   .addNode("mock_llm", mockLlm)
   .addEdge(START, "mock_llm")
   .addEdge("mock_llm", END)
@@ -74,7 +79,7 @@ While LangGraph can be used standalone, it also integrates seamlessly with any L
         Trace requests, evaluate outputs, and monitor deployments in one place. Prototype locally with LangGraph, then move to production with integrated observability and evaluation to build more reliable agent systems.
     </Card>
 
-    <Card title="LangGraph" icon="server" href="/langsmith/agent-server" arrow cta="Learn more">
+    <Card title="LangSmith Agent Server" icon="server" href="/langsmith/agent-server" arrow cta="Learn more">
         Deploy and scale agents effortlessly with a purpose-built deployment platform for long running, stateful workflows. Discover, reuse, configure, and share agents across teams — and iterate quickly with visual prototyping in Studio.
     </Card>
 
@@ -89,9 +94,9 @@ LangGraph is inspired by [Pregel](https://research.google/pubs/pub37252/) and [A
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/overview.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/overview.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

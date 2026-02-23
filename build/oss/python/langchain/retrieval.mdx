@@ -40,7 +40,7 @@ Retrieval allows LLMs to access relevant context at runtime. But most real-world
 
 This is the core idea behind **Retrieval-Augmented Generation (RAG)**. The retrieval pipeline becomes a foundation for a broader system that combines search with generation.
 
-### Retrieval Pipeline
+### Retrieval pipeline
 
 A typical retrieval workflow looks like this:
 
@@ -60,7 +60,7 @@ flowchart LR
 
 Each component is modular: you can swap loaders, splitters, embeddings, or vector stores without rewriting the app’s logic.
 
-### Building Blocks
+### Building blocks
 
 <Columns cols={2}>
     <Card
@@ -69,7 +69,7 @@ Each component is modular: you can swap loaders, splitters, embeddings, or vecto
         href="/oss/python/integrations/document_loaders"
         arrow cta="Learn more"
     >
-        Ingest data from external sources (Google Drive, Slack, Notion, etc.), returning standardized [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) objects.
+        Ingest data from external sources (Google Drive, Slack, Notion, etc.), returning standardized [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) objects.
     </Card>
 
     <Card
@@ -84,7 +84,7 @@ Each component is modular: you can swap loaders, splitters, embeddings, or vecto
 
     <Card
         title="Embedding models"
-        icon="diagram-project"
+        icon="sitemap"
         href="/oss/python/integrations/text_embedding"
         arrow
         cta="Learn more"
@@ -113,7 +113,7 @@ Each component is modular: you can swap loaders, splitters, embeddings, or vecto
     </Card>
 </Columns>
 
-## RAG Architectures
+## RAG architectures
 
 RAG can be implemented in multiple ways, depending on your system's needs. We outline each type in the sections below.
 
@@ -362,9 +362,9 @@ This architecture is suitable for:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/retrieval.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/retrieval.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

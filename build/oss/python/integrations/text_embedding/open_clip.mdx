@@ -1,5 +1,6 @@
 ---
-title: OpenClip
+title: "Openclip integration"
+description: "Integrate with the Openclip embedding model using LangChain Python."
 ---
 
 [OpenClip](https://github.com/mlfoundations/open_clip/tree/main) is an source implementation of OpenAI's CLIP.
@@ -59,7 +60,7 @@ text_feat_dog = clip_embd.embed_documents(["dog"])
 text_feat_house = clip_embd.embed_documents(["house"])
 ```
 
-## Sanity Check
+## Sanity check
 
 Let's reproduce results shown in the OpenClip Colab [here](https://colab.research.google.com/github/mlfoundations/open_clip/blob/master/docs/Interacting_with_open_clip.ipynb#scrollTo=tMc1AXzBlhzm).
 
@@ -159,7 +160,7 @@ plt.ylim([count + 0.5, -2])
 plt.title("Cosine similarity between text and image features", size=20)
 ```
 
-```output
+```text
 Text(0.5, 1.0, 'Cosine similarity between text and image features')
 ```
 
@@ -169,9 +170,9 @@ Text(0.5, 1.0, 'Cosine similarity between text and image features')
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/open_clip.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/open_clip.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

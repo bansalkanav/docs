@@ -1,5 +1,6 @@
 ---
-title: YouTube transcripts
+title: "YouTube transcripts integration"
+description: "Integrate with the YouTube transcripts document loader using LangChain Python."
 ---
 
 >[YouTube](https://www.youtube.com/) is an online video sharing and social media platform created by Google.
@@ -55,7 +56,7 @@ loader.load()
 
 ### Get transcripts as timestamped chunks
 
-Get one or more [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) objects, each containing a chunk of the video transcript.  The length of the chunks, in seconds, may be specified.  Each chunk's metadata includes a URL of the video on YouTube, which will start the video at the beginning of the specific chunk.
+Get one or more [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) objects, each containing a chunk of the video transcript.  The length of the chunks, in seconds, may be specified.  Each chunk's metadata includes a URL of the video on YouTube, which will start the video at the beginning of the specific chunk.
 
 `transcript_format` param:  One of the `langchain_community.document_loaders.youtube.TranscriptFormat` values.  In this case, `TranscriptFormat.CHUNKS`.
 
@@ -73,7 +74,7 @@ loader = YoutubeLoader.from_youtube_url(
 print("\n\n".join(map(repr, loader.load())))
 ```
 
-## YouTube loader from Google Cloud
+## YouTube loader from Google cloud
 
 ### Prerequisites
 
@@ -82,7 +83,7 @@ print("\n\n".join(map(repr, loader.load())))
 1. [Authorize credentials for desktop app](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application)
 1. `pip install -U google-api-python-client google-auth-httplib2 google-auth-oauthlib youtube-transcript-api`
 
-### 🧑 Instructions for ingesting your Google Docs data
+### 🧑 Instructions for ingesting your Google docs data
 
 By default, the `GoogleDriveLoader` expects the `credentials.json` file to be `~/.credentials/credentials.json`, but this is configurable using the `credentials_file` keyword argument. Same thing with `token.json`. Note that `token.json` will be created automatically the first time you use the loader.
 
@@ -117,9 +118,9 @@ youtube_loader_channel.load()
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/youtube_transcript.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/youtube_transcript.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

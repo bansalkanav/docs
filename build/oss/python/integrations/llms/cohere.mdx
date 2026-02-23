@@ -1,5 +1,6 @@
 ---
-title: Cohere
+title: "Cohere integration"
+description: "Integrate with the Cohere LLM using LangChain Python."
 ---
 
 <Warning>
@@ -67,7 +68,7 @@ message = "Knock knock"
 model.invoke(message)
 ```
 
-```output
+```text
 " Who's there?"
 ```
 
@@ -75,7 +76,7 @@ model.invoke(message)
 await model.ainvoke(message)
 ```
 
-```output
+```text
 " Who's there?"
 ```
 
@@ -84,7 +85,7 @@ for chunk in model.stream(message):
     print(chunk, end="", flush=True)
 ```
 
-```output
+```text
  Who's there?
 ```
 
@@ -92,7 +93,7 @@ for chunk in model.stream(message):
 model.batch([message])
 ```
 
-```output
+```text
 [" Who's there?"]
 ```
 
@@ -104,9 +105,9 @@ For detailed documentation of all `Cohere` llm features and configurations head 
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/cohere.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/cohere.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

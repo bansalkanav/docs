@@ -1,5 +1,6 @@
 ---
-title: GooseAI
+title: "Gooseai integration"
+description: "Integrate with the Gooseai LLM using LangChain Python."
 ---
 
 `GooseAI` is a fully managed NLP-as-a-Service, delivered via API. GooseAI provides access to [these models](https://goose.ai/docs/models).
@@ -19,12 +20,12 @@ pip install -qU  langchain-openai
 ```python
 import os
 
-from langchain.chains import LLMChain
+from langchain_classic.chains import LLMChain
 from langchain_community.llms import GooseAI
 from langchain_core.prompts import PromptTemplate
 ```
 
-## Set the Environment API Key
+## Set the environment API Key
 
 Make sure to get your API key from GooseAI. You are given $10 in free credits to test different models.
 
@@ -46,7 +47,7 @@ You can specify different parameters such as the model name, max tokens generate
 llm = GooseAI()
 ```
 
-## Create a Prompt Template
+## Create a Prompt template
 
 We will create a prompt template for Question and Answer.
 
@@ -76,9 +77,9 @@ llm_chain.run(question)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/gooseai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/gooseai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

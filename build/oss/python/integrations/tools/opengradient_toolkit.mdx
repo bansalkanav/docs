@@ -1,5 +1,6 @@
 ---
-title: OpenGradientToolkit
+title: "OpenGradientToolkit integration"
+description: "Integrate with the OpenGradientToolkit tool using LangChain Python."
 ---
 
 This notebook shows how to build tools using the OpenGradient toolkit. This toolkit gives users the ability to create custom tools based on models and workflows on the [OpenGradient network](https://www.opengradient.ai/).
@@ -158,7 +159,7 @@ from langchain.agents import create_agent
 
 
 # Initialize LLM
-model = ChatOpenAI(model="gpt-4o")
+model = ChatOpenAI(model="gpt-4.1")
 
 # Create tools from the toolkit
 tools = toolkit.get_tools()
@@ -206,9 +207,9 @@ See the [GitHub page](https://github.com/OpenGradient/og-langchain) for more det
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/opengradient_toolkit.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/opengradient_toolkit.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -214,7 +214,7 @@ In practice, there are additional considerations for updating lists of messages:
 * We may wish to update an existing message in the state.
 * We may want to accept short-hands for [message formats](/oss/python/langgraph/graph-api#using-messages-in-your-graph), such as [OpenAI format](https://python.langchain.com/docs/concepts/messages/#openai-format).
 
-LangGraph includes a built-in reducer [`add_messages`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.message.add_messages) that handles these considerations:
+LangGraph includes a built-in reducer [`add_messages`](https://reference.langchain.com/python/langgraph/graph/message/add_messages) that handles these considerations:
 
 ```python
 from langgraph.graph.message import add_messages
@@ -434,7 +434,7 @@ Output of graph invocation: {'a': 'set by node_3'}
 
 
 
-### Use Pydantic models for graph state
+### Use pydantic models for graph state
 
 A [StateGraph](https://langchain-ai.github.io/langgraph/reference/graphs.md#langgraph.graph.StateGraph) accepts a [`state_schema`](https://reference.langchain.com/python/langchain/middleware/#langchain.agents.middleware.AgentMiddleware.state_schema) argument on initialization that specifies the "shape" of the state that the nodes in the graph can access and update.
 
@@ -783,7 +783,7 @@ print(graph.invoke({}, context={"my_runtime_value": "b"}))  # [!code highlight]
 
 There are many use cases where you may wish for your node to have a custom retry policy, for example if you are calling an API, querying a database, or calling an LLM, etc. LangGraph lets you add retry policies to nodes.
 
-To configure a retry policy, pass the `retry_policy` parameter to the [`add_node`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph.add_node). The `retry_policy` parameter takes in a `RetryPolicy` named tuple object. Below we instantiate a `RetryPolicy` object with the default parameters and associate it with a node:
+To configure a retry policy, pass the `retry_policy` parameter to the [`add_node`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph/add_node). The `retry_policy` parameter takes in a `RetryPolicy` named tuple object. Below we instantiate a `RetryPolicy` object with the default parameters and associate it with a node:
 
 ```python
 from langgraph.types import RetryPolicy
@@ -860,7 +860,7 @@ In addition, for exceptions from popular http request libraries such as `request
 
 Node caching is useful in cases where you want to avoid repeating operations, like when doing something expensive (either in terms of time or cost). LangGraph lets you add individualized caching policies to nodes in a graph.
 
-To configure a cache policy, pass the `cache_policy` parameter to the [`add_node`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph.add_node) function. In the following example, a [`CachePolicy`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.CachePolicy) object is instantiated with a time to live of 120 seconds and the default `key_func` generator. Then it is associated with a node:
+To configure a cache policy, pass the `cache_policy` parameter to the [`add_node`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph/add_node) function. In the following example, a [`CachePolicy`](https://reference.langchain.com/python/langgraph/types/CachePolicy) object is instantiated with a time to live of 120 seconds and the default `key_func` generator. Then it is associated with a node:
 
 ```python
 from langgraph.types import CachePolicy
@@ -893,7 +893,7 @@ Here we demonstrate how to construct a simple sequence of steps. We will show:
 1. How to build a sequential graph
 2. Built-in short-hand for constructing similar graphs.
 
-To add a sequence of nodes, we use the [`add_node`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph.add_node) and [`add_edge`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph.add_edge) methods of our [graph](/oss/python/langgraph/graph-api#stategraph):
+To add a sequence of nodes, we use the [`add_node`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph/add_node) and [`add_edge`](https://reference.langchain.com/python/langgraph/pregel/_draw/add_edge) methods of our [graph](/oss/python/langgraph/graph-api#stategraph):
 
 ```python
 from langgraph.graph import START, StateGraph
@@ -1001,7 +1001,7 @@ builder.add_edge("step_2", "step_3")
 
 <Tip>
 **Specifying custom names**
-You can specify custom names for nodes using [`add_node`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph.add_node):
+You can specify custom names for nodes using [`add_node`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph/add_node):
 
 ```python
 builder.add_node("my_node", step_1)
@@ -1013,7 +1013,7 @@ builder.add_node("my_node", step_1)
 
 Note that:
 
-* [`add_edge`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph.add_edge) takes the names of nodes, which for functions defaults to `node.__name__`.
+* [`add_edge`](https://reference.langchain.com/python/langgraph/pregel/_draw/add_edge) takes the names of nodes, which for functions defaults to `node.__name__`.
 * We must specify the entry point of the graph. For this we add an edge with the [START node](/oss/python/langgraph/graph-api#start-node).
 * The graph halts when there are no more nodes to execute.
 
@@ -1262,7 +1262,7 @@ In the above example, nodes `"b"` and `"c"` are executed concurrently in the sam
 
 ### Conditional branching
 
-If your fan-out should vary at runtime based on the state, you can use [`add_conditional_edges`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph.add_conditional_edges) to select one or more paths using the graph state. See example below, where node `a` generates a state update that determines the following node.
+If your fan-out should vary at runtime based on the state, you can use [`add_conditional_edges`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph/add_conditional_edges) to select one or more paths using the graph state. See example below, where node `a` generates a state update that determines the following node.
 
 ```python
 import operator
@@ -1342,7 +1342,7 @@ def route_bc_or_cd(state: State) -> Sequence[str]:
 
 </Tip>
 
-## Map-Reduce and the Send API
+## Map-Reduce and the send API
 
 LangGraph supports map-reduce and other advanced branching patterns using the Send API. Here is an example of how to use it:
 
@@ -1813,7 +1813,7 @@ def node_c(state: State):
     return {"foo": state["foo"] + "c"}
 ```
 
-We can now create the [`StateGraph`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph) with the above nodes. Notice that the graph doesn't have [conditional edges](/oss/python/langgraph/graph-api#conditional-edges) for routing! This is because control flow is defined with [`Command`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.Command) inside `node_a`.
+We can now create the [`StateGraph`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph) with the above nodes. Notice that the graph doesn't have [conditional edges](/oss/python/langgraph/graph-api#conditional-edges) for routing! This is because control flow is defined with [`Command`](https://reference.langchain.com/python/langgraph/types/Command) inside `node_a`.
 
 ```python
 builder = StateGraph(State)
@@ -1827,7 +1827,7 @@ graph = builder.compile()
 ```
 
 <Warning>
-You might have noticed that we used [`Command`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.Command) as a return type annotation, e.g. `Command[Literal["node_b", "node_c"]]`. This is necessary for the graph rendering and tells LangGraph that `node_a` can navigate to `node_b` and `node_c`.
+You might have noticed that we used [`Command`](https://reference.langchain.com/python/langgraph/types/Command) as a return type annotation, e.g. `Command[Literal["node_b", "node_c"]]`. This is necessary for the graph rendering and tells LangGraph that `node_a` can navigate to `node_b` and `node_c`.
 </Warning>
 
 ```python
@@ -1958,10 +1958,10 @@ def lookup_user_info(tool_call_id: Annotated[str, InjectedToolCallId], config: R
 
 
 <Warning>
-You MUST include `messages` (or any state key used for the message history) in `Command.update` when returning [`Command`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.Command) from a tool and the list of messages in `messages` MUST contain a `ToolMessage`. This is necessary for the resulting message history to be valid (LLM providers require AI messages with tool calls to be followed by the tool result messages).
+You MUST include `messages` (or any state key used for the message history) in `Command.update` when returning [`Command`](https://reference.langchain.com/python/langgraph/types/Command) from a tool and the list of messages in `messages` MUST contain a `ToolMessage`. This is necessary for the resulting message history to be valid (LLM providers require AI messages with tool calls to be followed by the tool result messages).
 </Warning>
 
-If you are using tools that update state via [`Command`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.Command), we recommend using prebuilt [`ToolNode`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.tool_node.ToolNode) which automatically handles tools returning [`Command`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.Command) objects and propagates them to the graph state. If you're writing a custom node that calls tools, you would need to manually propagate [`Command`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.Command) objects returned by the tools as the update from the node.
+If you are using tools that update state via [`Command`](https://reference.langchain.com/python/langgraph/types/Command), we recommend using prebuilt [`ToolNode`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.tool_node.ToolNode) which automatically handles tools returning [`Command`](https://reference.langchain.com/python/langgraph/types/Command) objects and propagates them to the graph state. If you're writing a custom node that calls tools, you would need to manually propagate [`Command`](https://reference.langchain.com/python/langgraph/types/Command) objects returned by the tools as the update from the node.
 
 ## Visualize your graph
 
@@ -2126,9 +2126,9 @@ except ImportError:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-graph-api.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-graph-api.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

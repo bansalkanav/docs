@@ -1,10 +1,11 @@
 ---
-title: Typesense
+title: "Typesense integration"
+description: "Integrate with the Typesense vector store using LangChain JavaScript."
 ---
 
 Vector store that utilizes the Typesense search engine.
 
-### Basic Usage
+### Basic usage
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/javascript/langchain/install).
@@ -121,7 +122,7 @@ vectorStore.deleteDocuments(["document_id_1", "document_id_2"]);
 Before starting, create a schema in Typesense with an id, a field for the vector and a field for the text. Add as many other fields as needed for the metadata.
 
 - `constructor(embeddings: Embeddings, config: TypesenseConfig)`: Constructs a new instance of the `Typesense` class.
-  - `embeddings`: An instance of the [`Embeddings`](https://reference.langchain.com/javascript/classes/_langchain_core.embeddings.Embeddings.html) class used for embedding documents.
+  - `embeddings`: An instance of the [`Embeddings`](https://reference.langchain.com/javascript/langchain-core/embeddings/Embeddings) class used for embedding documents.
   - `config`: Configuration object for the Typesense vector store.
     - `typesenseClient`: Typesense client instance.
     - `schemaName`: Name of the Typesense schema in which documents will be stored and searched.
@@ -147,9 +148,9 @@ Before starting, create a schema in Typesense with an id, a field for the vector
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/typesense.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/typesense.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

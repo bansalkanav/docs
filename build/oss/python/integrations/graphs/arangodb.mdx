@@ -1,5 +1,6 @@
 ---
-title: ArangoDB
+title: "ArangoDB integration"
+description: "Integrate with the ArangoDB graph using LangChain Python."
 ---
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/arangodb/interactive_tutorials/blob/master/notebooks/LangChain.ipynb)
@@ -43,7 +44,7 @@ db = ArangoClient(hosts=con["url"]).db(
 print(json.dumps(con, indent=2))
 ```
 
-```output
+```text
 Log: requesting new credentials...
 Succcess: new credentials acquired
 {
@@ -128,7 +129,7 @@ db.collection("Characters").import_bulk(documents)
 db.collection("ChildOf").import_bulk(edges)
 ```
 
-```output
+```text
 {'error': False,
  'created': 4,
  'errors': 0,
@@ -151,7 +152,7 @@ import json
 print(json.dumps(graph.schema, indent=4))
 ```
 
-```output
+```json
 {
     "Graph Schema": [],
     "Collection Schema": []
@@ -170,7 +171,7 @@ import json
 print(json.dumps(graph.schema, indent=4))
 ```
 
-```output
+```json
 {
     "Graph Schema": [
         {
@@ -285,7 +286,7 @@ os.environ["OPENAI_API_KEY"] = "your-key-here"
 ```
 
 ```python
-from langchain.chains import ArangoGraphQAChain
+from langchain_classic.chains import ArangoGraphQAChain
 from langchain_openai import ChatOpenAI
 
 chain = ArangoGraphQAChain.from_llm(
@@ -297,7 +298,7 @@ chain = ArangoGraphQAChain.from_llm(
 chain.run("Is Ned Stark alive?")
 ```
 
-```output
+```text
 > Entering new ArangoGraphQAChain chain...
 AQL Query (1):
 WITH Characters
@@ -311,7 +312,7 @@ AQL Result:
 > Finished chain.
 ```
 
-```output
+```text
 'Yes, Ned Stark is alive.'
 ```
 
@@ -319,7 +320,7 @@ AQL Result:
 chain.run("How old is Arya Stark?")
 ```
 
-```output
+```text
 > Entering new ArangoGraphQAChain chain...
 AQL Query (1):
 WITH Characters
@@ -333,7 +334,7 @@ AQL Result:
 > Finished chain.
 ```
 
-```output
+```text
 'Arya Stark is 11 years old.'
 ```
 
@@ -341,7 +342,7 @@ AQL Result:
 chain.run("Are Arya Stark and Ned Stark related?")
 ```
 
-```output
+```text
 > Entering new ArangoGraphQAChain chain...
 AQL Query (1):
 WITH Characters, ChildOf
@@ -355,7 +356,7 @@ AQL Result:
 > Finished chain.
 ```
 
-```output
+```text
 'Yes, Arya Stark and Ned Stark are related. According to the information retrieved from the database, there is a relationship between them. Arya Stark is the child of Ned Stark.'
 ```
 
@@ -363,7 +364,7 @@ AQL Result:
 chain.run("Does Arya Stark have a dead parent?")
 ```
 
-```output
+```text
 > Entering new ArangoGraphQAChain chain...
 AQL Query (1):
 WITH Characters, ChildOf
@@ -377,7 +378,7 @@ AQL Result:
 > Finished chain.
 ```
 
-```output
+```text
 'Yes, Arya Stark has a dead parent. The parent is Catelyn Stark.'
 ```
 
@@ -418,7 +419,7 @@ chain.run("Is Ned Stark alive?")
 # chain("Is Ned Stark alive?") # Returns a dictionary with the AQL Query & AQL Result
 ```
 
-```output
+```text
 > Entering new ArangoGraphQAChain chain...
 AQL Query (1):
 RETURN DOCUMENT('Characters/NedStark').alive
@@ -429,7 +430,7 @@ AQL Result:
 > Finished chain.
 ```
 
-```output
+```text
 'Yes, according to the information in the database, Ned Stark is alive.'
 ```
 
@@ -437,7 +438,7 @@ AQL Result:
 chain.run("Is Bran Stark the child of Ned Stark?")
 ```
 
-```output
+```text
 > Entering new ArangoGraphQAChain chain...
 AQL Query (1):
 FOR e IN ChildOf
@@ -450,15 +451,15 @@ AQL Result:
 > Finished chain.
 ```
 
-```output
+```text
 'Yes, according to the information in the ArangoDB database, Bran Stark is indeed the child of Ned Stark.'
 ```
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/graphs/arangodb.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/graphs/arangodb.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

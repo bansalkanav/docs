@@ -1,5 +1,6 @@
 ---
-title: JaguarDB Vector Database
+title: "Jaguardb vector database integration"
+description: "Integrate with the Jaguardb vector database retriever using LangChain Python."
 ---
 
 >[JaguarDB Vector Database]([www.jaguardb.com/windex.html](http://www.jaguardb.com/windex.html)
@@ -27,7 +28,7 @@ There are two requirements for running the examples in this file.
        pip install -U jaguardb-http-client
    ```
 
-## RAG With LangChain
+## RAG with LangChain
 
 This section demonstrates chatting with LLM together with Jaguar in the langchain software stack.
 
@@ -110,7 +111,7 @@ retriever = vectorstore.as_retriever()
 """ The retriever object can be used with LangChain and LLM """
 ```
 
-## Interaction With Jaguar Vector Store
+## Interaction with jaguar vector store
 
 Users can interact directly with the Jaguar vector store for similarity search and anomaly detection.
 
@@ -191,9 +192,9 @@ vectorstore.logout()
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/retrievers/jaguar.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/retrievers/jaguar.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

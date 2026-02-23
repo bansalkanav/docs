@@ -9,10 +9,10 @@ Build custom middleware by implementing hooks that run at specific points in the
 Middleware provides two styles of hooks to intercept agent execution:
 
 <CardGroup cols={2}>
-    <Card title="Node-style hooks" icon="share-nodes" href="#node-style-hooks">
+    <Card title="Node-style hooks" icon="share" href="#node-style-hooks">
         Run sequentially at specific execution points.
     </Card>
-    <Card title="Wrap-style hooks" icon="container-storage" href="#wrap-style-hooks">
+    <Card title="Wrap-style hooks" icon="container" href="#wrap-style-hooks">
         Run around each model or tool call.
     </Card>
 </CardGroup>
@@ -41,14 +41,17 @@ import { createMiddleware, AIMessage } from "langchain";
 const createMessageLimitMiddleware = (maxMessages: number = 50) => {
   return createMiddleware({
     name: "MessageLimitMiddleware",
-    beforeModel: (state) => {
-      if (state.messages.length === maxMessages) {
-        return {
-          messages: [new AIMessage("Conversation limit reached.")],
-          jumpTo: "end",
-        };
+    beforeModel: {
+      canJumpTo: ["end"],
+      hook: (state) => {
+        if (state.messages.length === maxMessages) {
+          return {
+            messages: [new AIMessage("Conversation limit reached.")],
+            jumpTo: "end",
+          };
+        }
+        return;
       }
-      return;
     },
     afterModel: (state) => {
       const lastMessage = state.messages[state.messages.length - 1];
@@ -144,19 +147,26 @@ Middleware can extend the agent's state with custom properties. This enables mid
 
 ```typescript
 import { createMiddleware, createAgent, HumanMessage } from "langchain";
+import { StateSchema } from "@langchain/langgraph";
 import * as z from "zod";
+
+const CustomState = new StateSchema({
+  modelCallCount: z.number().default(0),
+  userId: z.string().optional(),
+});
 
 const callCounterMiddleware = createMiddleware({
   name: "CallCounterMiddleware",
-  stateSchema: z.object({
-    modelCallCount: z.number().default(0),
-    userId: z.string().optional(),
-  }),
-  beforeModel: (state) => {
-    if (state.modelCallCount > 10) {
-      return { jumpTo: "end" };
-    }
-    return;
+  stateSchema: CustomState,
+  beforeModel: {
+    canJumpTo: ["end"],
+    hook: (state) => {
+      if (state.modelCallCount > 10) {
+        return { jumpTo: "end" };
+      }
+
+      return;
+    },
   },
   afterModel: (state) => {
     return { modelCallCount: state.modelCallCount + 1 };
@@ -164,7 +174,7 @@ const callCounterMiddleware = createMiddleware({
 });
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [...],
   middleware: [callCounterMiddleware],
 });
@@ -181,14 +191,19 @@ State fields can be either public or private. Fields that start with an undersco
 This is useful for storing internal middleware state that shouldn't be exposed to the caller, such as temporary tracking variables or internal flags:
 
 ```typescript
+import { StateSchema } from "@langchain/langgraph";
+import * as z from "zod";
+
+const PrivateState = new StateSchema({
+  // Public field - included in invoke result
+  publicCounter: z.number().default(0),
+  // Private field - excluded from invoke result
+  _internalFlag: z.boolean().default(false),
+});
+
 const middleware = createMiddleware({
   name: "ExampleMiddleware",
-  stateSchema: z.object({
-    // Public field - included in invoke result
-    publicCounter: z.number().default(0),
-    // Private field - excluded from invoke result
-    _internalFlag: z.boolean().default(false),
-  }),
+  stateSchema: PrivateState,
   afterModel: (state) => {
     // Both fields are accessible during execution
     if (state._internalFlag) {
@@ -250,7 +265,7 @@ const userContextMiddleware = createMiddleware({
 });
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   middleware: [userContextMiddleware],
   tools: [],
   contextSchema,
@@ -287,7 +302,7 @@ When using multiple middleware, understand how they execute:
 
 ```typescript
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   middleware: [middleware1, middleware2, middleware3],
   tools: [...],
 });
@@ -345,7 +360,7 @@ To exit early from middleware, return a dictionary with `jump_to`:
 import { createAgent, createMiddleware, AIMessage } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   middleware: [
     createMiddleware({
       name: "BlockedContentMiddleware",
@@ -403,9 +418,9 @@ const dynamicModelMiddleware = createMiddleware({
   wrapModelCall: (request, handler) => {
     const modifiedRequest = { ...request };
     if (request.messages.length > 10) {
-      modifiedRequest.model = initChatModel("gpt-4o");
+      modifiedRequest.model = initChatModel("gpt-4.1");
     } else {
-      modifiedRequest.model = initChatModel("gpt-4o-mini");
+      modifiedRequest.model = initChatModel("gpt-4.1-mini");
     }
     return handler(modifiedRequest);
   },
@@ -442,7 +457,7 @@ const toolMonitoringMiddleware = createMiddleware({
 
 ### Dynamically selecting tools
 
-Select relevant tools at runtime to improve performance and accuracy.
+Select relevant tools at runtime to improve performance and accuracy. This section covers filtering pre-registered tools. For registering tools that are discovered at runtime (e.g., from MCP servers), see [Runtime tool registration](/oss/javascript/langchain/agents#dynamic-tools).
 
 **Benefits:**
 - **Shorter prompts** - Reduce complexity by exposing only relevant tools
@@ -465,7 +480,7 @@ const toolSelectorMiddleware = createMiddleware({
 });
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: allTools,
   middleware: [toolSelectorMiddleware],
 });
@@ -477,7 +492,7 @@ const agent = createAgent({
 
 
 
-Modify system messages in middleware using the `systemMessage` field in `ModelRequest`. It contains a [`SystemMessage`](https://reference.langchain.com/javascript/classes/_langchain_core.messages.SystemMessage.html) object (even if the agent was created with a string [`systemPrompt`](https://reference.langchain.com/javascript/types/langchain.index.CreateAgentParams.html#systemprompt)).
+Modify system messages in middleware using the `systemMessage` field in `ModelRequest`. It contains a [`SystemMessage`](https://reference.langchain.com/javascript/langchain-core/messages/SystemMessage) object (even if the agent was created with a string [`systemPrompt`](https://reference.langchain.com/javascript/types/langchain.index.CreateAgentParams.html#systemprompt)).
 
 **Example: Chaining middleware** - Different middleware can use different approaches:
 
@@ -538,7 +553,7 @@ new SystemMessage({
 });
 ```
 
-Use [`SystemMessage.concat`](https://reference.langchain.com/javascript/classes/_langchain_core.messages.SystemMessage.html#concat) to preserve cache control metadata or structured content blocks created by other middleware.
+Use [`SystemMessage.concat`](https://reference.langchain.com/javascript/langchain-core/utils/stream/concat) to preserve cache control metadata or structured content blocks created by other middleware.
 
 
 
@@ -550,9 +565,9 @@ Use [`SystemMessage.concat`](https://reference.langchain.com/javascript/classes/
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/middleware/custom.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/middleware/custom.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,6 @@
 ---
-title: PGVector
+title: "PGVector integration"
+description: "Integrate with the PGVector vector store using LangChain Python."
 ---
 
 > An implementation of LangChain vectorstore abstraction using `postgres` as the backend and utilizing the `pgvector` extension.
@@ -124,7 +125,7 @@ docs = [
 vector_store.add_documents(docs, ids=[doc.metadata["id"] for doc in docs])
 ```
 
-```output
+```text
 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
@@ -138,7 +139,7 @@ vector_store.delete(ids=["3"])
 
 Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent.
 
-### Filtering Support
+### Filtering support
 
 The vectorstore supports a set of filters that can be applied against the metadata fields of the documents.
 
@@ -170,7 +171,7 @@ for doc in results:
     print(f"* {doc.page_content} [{doc.metadata}]")
 ```
 
-```output
+```text
 * there are cats in the pond [{'id': 1, 'topic': 'animals', 'location': 'pond'}]
 * the library hosts a weekly story time for kids [{'id': 9, 'topic': 'reading', 'location': 'library'}]
 * ducks are also found in the pond [{'id': 2, 'topic': 'animals', 'location': 'pond'}]
@@ -187,7 +188,7 @@ vector_store.similarity_search(
 )
 ```
 
-```output
+```text
 [Document(metadata={'id': 1, 'topic': 'animals', 'location': 'pond'}, page_content='there are cats in the pond'),
  Document(metadata={'id': 2, 'topic': 'animals', 'location': 'pond'}, page_content='ducks are also found in the pond')]
 ```
@@ -205,7 +206,7 @@ vector_store.similarity_search(
 )
 ```
 
-```output
+```text
 [Document(metadata={'id': 1, 'topic': 'animals', 'location': 'pond'}, page_content='there are cats in the pond'),
  Document(metadata={'id': 2, 'topic': 'animals', 'location': 'pond'}, page_content='ducks are also found in the pond')]
 ```
@@ -218,7 +219,7 @@ for doc, score in results:
     print(f"* [SIM={score:3f}] {doc.page_content} [{doc.metadata}]")
 ```
 
-```output
+```text
 * [SIM=0.763449] there are cats in the pond [{'id': 1, 'topic': 'animals', 'location': 'pond'}]
 ```
 
@@ -233,7 +234,7 @@ retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 1})
 retriever.invoke("kitty")
 ```
 
-```output
+```text
 [Document(metadata={'id': 1, 'topic': 'animals', 'location': 'pond'}, page_content='there are cats in the pond')]
 ```
 
@@ -253,9 +254,9 @@ For detailed documentation of all __ModuleName__VectorStore features and configu
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/pgvector.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/pgvector.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

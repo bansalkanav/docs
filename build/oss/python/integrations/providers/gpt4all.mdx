@@ -1,10 +1,11 @@
 ---
-title: GPT4All
+title: "Gpt4all integrations"
+description: "Integrate with Gpt4all using LangChain Python."
 ---
 
 This page covers how to use the `GPT4All` wrapper within LangChain. The tutorial is divided into two parts: installation and setup, followed by usage with an example.
 
-## Installation and Setup
+## Installation and setup
 
 - Install the Python package with `pip install gpt4all`
 - Download a [GPT4All model](https://gpt4all.io/index.html) and place it in your desired directory
@@ -50,7 +51,7 @@ model = GPT4All(model="./models/mistral-7b-openorca.Q4_0.gguf", n_threads=8)
 model.invoke("Once upon a time, ", callbacks=callbacks)
 ```
 
-## Model File
+## Model file
 
 You can download model files from the GPT4All client. You can download the client from the [GPT4All](https://gpt4all.io/index.html) website.
 
@@ -58,9 +59,9 @@ For a more detailed walkthrough of this, see [this notebook](/oss/python/integra
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/gpt4all.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/gpt4all.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

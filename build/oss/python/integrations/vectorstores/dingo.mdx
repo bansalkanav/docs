@@ -1,5 +1,6 @@
 ---
-title: DingoDB
+title: "Dingodb integration"
+description: "Integrate with the Dingodb vector store using LangChain Python."
 ---
 
 >[DingoDB](https://dingodb.readthedocs.io/en/latest/) is a distributed multi-mode vector database, which combines the characteristics of data lakes and vector databases, and can store data of any type and size (Key-Value, PDF, audio, video, etc.). It has real-time low-latency processing capabilities to achieve rapid insight and response, and can efficiently conduct instant analysis and process multi-modal data.
@@ -16,7 +17,7 @@ pip install -qU  dingodb
 pip install -qU  git+https://git@github.com/dingodb/pydingo.git
 ```
 
-We want to use [`OpenAIEmbeddings`](https://reference.langchain.com/python/integrations/langchain_openai/OpenAIEmbeddings) so we have to get the OpenAI API Key.
+We want to use [`OpenAIEmbeddings`](https://reference.langchain.com/python/langchain-openai/embeddings/base/OpenAIEmbeddings) so we have to get the OpenAI API Key.
 
 ```python
 import getpass
@@ -26,7 +27,7 @@ if "OPENAI_API_KEY" not in os.environ:
     os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
-```output
+```text
 OpenAI API Key:········
 ```
 
@@ -86,7 +87,7 @@ docs = docsearch.similarity_search(query)
 print(docs[0].page_content)
 ```
 
-### Adding More Text to an Existing Index
+### Adding more text to an existing index
 
 More text can embedded and upserted to an existing Dingo index using the `add_texts` function
 
@@ -96,7 +97,7 @@ vectorstore = Dingo(embeddings, "text", client=dingo_client, index_name=index_na
 vectorstore.add_texts(["More text!"])
 ```
 
-### Maximal Marginal Relevance Searches
+### Maximal marginal relevance searches
 
 In addition to using similarity search in the retriever object, you can also use `mmr` as retriever.
 
@@ -118,9 +119,9 @@ for i, doc in enumerate(found_docs):
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/dingo.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/dingo.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

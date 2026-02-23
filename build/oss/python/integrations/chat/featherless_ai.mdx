@@ -1,5 +1,6 @@
 ---
-title: ChatFeatherlessAi
+title: "ChatFeatherlessAI integration"
+description: "Integrate with the ChatFeatherlessAI chat model using LangChain Python."
 ---
 
 This will help you get started with FeatherlessAi [chat models](/oss/python/langchain/models). For detailed documentation of all ChatFeatherlessAi features and configurations head to the [API reference](https://python.langchain.com/api_reference/__package_name_short_snake__/chat_models/__module_name__.chat_models.ChatFeatherlessAi.html).
@@ -10,15 +11,15 @@ This will help you get started with FeatherlessAi [chat models](/oss/python/lang
 
 ### Integration details
 
-| Class | Package | Local | Serializable | [JS support](https://js.langchain.com/docs/integrations/chat/__package_name_short_snake__) | Downloads | Version |
-| :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
-| [ChatFeatherlessAi](https://python.langchain.com/api_reference/__package_name_short_snake__/chat_models/__module_name__.chat_models.ChatFeatherlessAi.html) | [langchain-featherless-ai](https://python.langchain.com/api_reference/__package_name_short_snake__/) | ✅ | ❌ | ❌ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-featherless-ai?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-featherless-ai?style=flat-square&label=%20) |
+| Class | Package | Serializable | [JS support](https://js.langchain.com/docs/integrations/chat/__package_name_short_snake__) | Downloads | Version |
+| :--- | :--- | :---: |  :---: | :---: | :---: |
+| [ChatFeatherlessAi](https://python.langchain.com/api_reference/__package_name_short_snake__/chat_models/__module_name__.chat_models.ChatFeatherlessAi.html) | [langchain-featherless-ai](https://python.langchain.com/api_reference/__package_name_short_snake__/) | ❌ | ❌ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-featherless-ai?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-featherless-ai?style=flat-square&label=%20) |
 
 ### Model features
 
-| [Tool calling](/oss/python/langchain/tools) | [Structured output](/oss/python/langchain/structured-output) | JSON mode | [Image input](/oss/python/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/python/langchain/streaming/) | Native async | [Token usage](/oss/python/langchain/models#token-usage) | [Logprobs](/oss/python/langchain/models#log-probabilities) |
-| :---: | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
-| ❌ | ❌ | ✅| ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ |
+| [Tool calling](/oss/python/langchain/tools) | [Structured output](/oss/python/langchain/structured-output) | [Image input](/oss/python/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/python/langchain/streaming/) | Native async | [Token usage](/oss/python/langchain/models#token-usage) | [Logprobs](/oss/python/langchain/models#log-probabilities) |
+| :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
+| ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ |
 
 ## Setup
 
@@ -82,13 +83,13 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
-```output
+```text
 c:\Python311\Lib\site-packages\pydantic\main.py:463: UserWarning: Pydantic serializer warnings:
   PydanticSerializationUnexpectedValue(Expected `int` - serialized value may not be as expected [input_value=1747322408.706, input_type=float])
   return self.__pydantic_serializer__.to_python(
 ```
 
-```output
+```text
 AIMessage(content="J'aime programmer.", additional_kwargs={'refusal': None}, response_metadata={'token_usage': {'completion_tokens': 5, 'prompt_tokens': 27, 'total_tokens': 32, 'completion_tokens_details': None, 'prompt_tokens_details': None}, 'model_name': 'featherless-ai/Qwerky-72B', 'system_fingerprint': '', 'id': 'G1sgui', 'service_tier': None, 'finish_reason': 'stop', 'logprobs': None}, id='run--6ecbe184-c94e-4d03-bf75-9bd85b04ba5b-0', usage_metadata={'input_tokens': 27, 'output_tokens': 5, 'total_tokens': 32, 'input_token_details': {}, 'output_token_details': {}})
 ```
 
@@ -96,7 +97,7 @@ AIMessage(content="J'aime programmer.", additional_kwargs={'refusal': None}, res
 print(ai_msg.content)
 ```
 
-```output
+```text
 J'aime programmer.
 ```
 
@@ -108,9 +109,9 @@ For detailed documentation of all ChatFeatherlessAi features and configurations 
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/featherless_ai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/featherless_ai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

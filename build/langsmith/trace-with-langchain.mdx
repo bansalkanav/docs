@@ -1,5 +1,5 @@
 ---
-title: Trace with LangChain (Python and JS/TS)
+title: Trace LangChain applications (Python and JS/TS)
 sidebarTitle: LangChain
 ---
 
@@ -70,7 +70,7 @@ prompt = ChatPromptTemplate.from_messages([
     ("user", "Question: {question}\nContext: {context}")
 ])
 
-model = ChatOpenAI(model="gpt-4o-mini")
+model = ChatOpenAI(model="gpt-4.1-mini")
 output_parser = StrOutputParser()
 chain = prompt | model | output_parser
 
@@ -90,7 +90,7 @@ const prompt = ChatPromptTemplate.fromMessages([
   ["user", "Question: {question}\nContext: {context}"],
 ]);
 
-const model = new ChatOpenAI({ modelName: "gpt-4o-mini" });
+const model = new ChatOpenAI({ modelName: "gpt-4.1-mini" });
 const outputParser = new StringOutputParser();
 const chain = prompt.pipe(model).pipe(outputParser);
 
@@ -106,7 +106,7 @@ await chain.invoke({ question: question, context: context });
 
 By default, the trace will be logged to the project with the name `default`. An example of a trace logged using the above code is made public and can be viewed [here](https://smith.langchain.com/public/e6a46eb2-d785-4804-a1e3-23f167a04300/r).
 
-![](/langsmith/images/langchain-trace.png)
+![Langchain trace](/langsmith/images/langchain-trace.png)
 
 ## Trace selectively
 
@@ -198,7 +198,7 @@ await chain.invoke(
 You can annotate your traces with arbitrary metadata and tags by providing them in the [`RunnableConfig`](https://reference.langchain.com/python/langchain_core/runnables/?h=runnablecon#langchain_core.runnables.RunnableConfig). This is useful for associating additional information with a trace, such as the environment in which it was executed, or the user who initiated it. For information on how to query traces and runs by metadata and tags, see [this guide](/langsmith/export-traces)
 
 <Note>
-When you attach metadata or tags to a runnable (either through the [`RunnableConfig`](https://reference.langchain.com/python/langchain_core/runnables/#langchain_core.runnables.RunnableConfig) or at runtime with invocation params), they are inherited by all child runnables of that runnable.
+When you attach metadata or tags to a runnable (either through the [`RunnableConfig`](https://reference.langchain.com/python/langchain-core/runnables/config/RunnableConfig) or at runtime with invocation params), they are inherited by all child runnables of that runnable.
 </Note>
 
 <CodeGroup>
@@ -249,7 +249,7 @@ await chain.invoke({input: "What is the meaning of life?"}, {tags: ["invoke-tag"
 
 ## Customize run name
 
-You can customize the name of a given run when invoking or streaming your LangChain code by providing it in the [Config](https://reference.langchain.com/python/langchain_core/runnables/?h=runnablecon#langchain_core.runnables.RunnableConfig). This name is used to identify the run in LangSmith and can be used to filter and group runs. The name is also used as the title of the run in the LangSmith UI. This can be done by setting a `run_name` in the [`RunnableConfig`](https://reference.langchain.com/python/langchain_core/runnables/#langchain_core.runnables.RunnableConfig) object at construction or by passing a `run_name` in the invocation parameters in JS/TS.
+You can customize the name of a given run when invoking or streaming your LangChain code by providing it in the [Config](https://reference.langchain.com/python/langchain_core/runnables/?h=runnablecon#langchain_core.runnables.RunnableConfig). This name is used to identify the run in LangSmith and can be used to filter and group runs. The name is also used as the title of the run in the LangSmith UI. This can be done by setting a `run_name` in the [`RunnableConfig`](https://reference.langchain.com/python/langchain-core/runnables/config/RunnableConfig) object at construction or by passing a `run_name` in the invocation parameters in JS/TS.
 
 <CodeGroup>
 
@@ -274,7 +274,7 @@ await chain.invoke({ input: "What is the meaning of life?" }, {runName: "MyCusto
 </CodeGroup>
 
 <Note>
-The `run_name` parameter only changes the name of the runnable you invoke (e.g., a chain, function). It does not rename the nested run automatically created when you invoke an LLM object like [`ChatOpenAI`](https://reference.langchain.com/python/integrations/langchain_openai/ChatOpenAI) (`gpt-4o-mini`). In the example, the enclosing run will appear in LangSmith as `MyCustomChain`, while the nested LLM run still shows the model’s default name.
+The `run_name` parameter only changes the name of the runnable you invoke (e.g., a chain, function). It does not rename the nested run automatically created when you invoke an LLM object like [`ChatOpenAI`](https://reference.langchain.com/python/langchain-openai/chat_models/base/ChatOpenAI) (`gpt-4.1-mini`). In the example, the enclosing run will appear in LangSmith as `MyCustomChain`, while the nested LLM run still shows the model’s default name.
 
 To give the LLM run a more meaningful name, you can either:
 
@@ -284,7 +284,7 @@ To give the LLM run a more meaningful name, you can either:
 
 ## Customize run ID
 
-You can customize the ID of a given run when invoking or streaming your LangChain code by providing it in the [Config](https://reference.langchain.com/python/langchain_core/runnables/?h=runnablecon#langchain_core.runnables.RunnableConfig). This ID is used to uniquely identify the run in LangSmith and can be used to query specific runs. The ID can be useful for linking runs across different systems or for implementing custom tracking logic. This can be done by setting a `run_id` in the [`RunnableConfig`](https://reference.langchain.com/python/langchain_core/runnables/#langchain_core.runnables.RunnableConfig) object at construction or by passing a `run_id` in the invocation parameters.
+You can customize the ID of a given run when invoking or streaming your LangChain code by providing it in the [Config](https://reference.langchain.com/python/langchain_core/runnables/?h=runnablecon#langchain_core.runnables.RunnableConfig). This ID is used to uniquely identify the run in LangSmith and can be used to query specific runs. The ID can be useful for linking runs across different systems or for implementing custom tracking logic. This can be done by setting a `run_id` in the [`RunnableConfig`](https://reference.langchain.com/python/langchain-core/runnables/config/RunnableConfig) object at construction or by passing a `run_id` in the invocation parameters.
 
 <Note>
 This feature is not currently supported directly for LLM objects.
@@ -333,7 +333,7 @@ prompt = ChatPromptTemplate.from_messages([
     ("system", "You are a helpful assistant. Please respond to the user's request only based on the given context."),
     ("user", "Question: {question}\n\nContext: {context}")
 ])
-model = ChatOpenAI(model="gpt-4o-mini")
+model = ChatOpenAI(model="gpt-4.1-mini")
 output_parser = StrOutputParser()
 
 chain = prompt | model | output_parser
@@ -355,7 +355,7 @@ const prompt = ChatPromptTemplate.fromMessages([
   ["system", "You are a helpful assistant. Please respond to the user's request only based on the given context."],
   ["user", "Question: {question}\n\nContext: {context}"],
 ]);
-const model = new ChatOpenAI({ modelName: "gpt-4o-mini" });
+const model = new ChatOpenAI({ modelName: "gpt-4.1-mini" });
 const outputParser = new StringOutputParser();
 
 const chain = prompt.pipe(model).pipe(outputParser);
@@ -510,7 +510,7 @@ prompt = ChatPromptTemplate.from_messages([
     ("user", "Question: {question}\nContext: {context}")
 ])
 
-model = ChatOpenAI(model="gpt-4o-mini")
+model = ChatOpenAI(model="gpt-4.1-mini")
 output_parser = StrOutputParser()
 chain = prompt | model | output_parser
 
@@ -526,7 +526,7 @@ def invoke_runnnable(question, context):
 invoke_runnnable("Can you summarize this morning's meetings?", "During this morning's meeting, we solved all world conflict.")
 ```
 
-This will produce the following trace tree: ![](/langsmith/images/trace-tree-python-interop.png)
+This will produce the following trace tree: ![Trace tree python interop](/langsmith/images/trace-tree-python-interop.png)
 
 ## Interoperability between LangChain.JS and LangSmith SDK
 
@@ -550,7 +550,7 @@ const prompt = ChatPromptTemplate.fromMessages([
   ["user", "Question: {question}\nContext: {context}"],
 ]);
 
-const model = new ChatOpenAI({ modelName: "gpt-4o-mini" });
+const model = new ChatOpenAI({ modelName: "gpt-4.1-mini" });
 const outputParser = new StringOutputParser();
 const chain = prompt.pipe(model).pipe(outputParser);
 
@@ -594,7 +594,7 @@ const parrot = new RunnableLambda({
 
 ![Trace Tree](/langsmith/images/trace-tree-manual-tracing.png)
 
-Alternatively, you can convert LangChain's [`RunnableConfig`](https://reference.langchain.com/python/langchain_core/runnables/#langchain_core.runnables.RunnableConfig) to a equivalent RunTree object by using `RunTree.fromRunnableConfig` or pass the [`RunnableConfig`](https://reference.langchain.com/python/langchain_core/runnables/#langchain_core.runnables.RunnableConfig) as the first argument of `traceable`-wrapped function.
+Alternatively, you can convert LangChain's [`RunnableConfig`](https://reference.langchain.com/python/langchain-core/runnables/config/RunnableConfig) to a equivalent RunTree object by using `RunTree.fromRunnableConfig` or pass the [`RunnableConfig`](https://reference.langchain.com/python/langchain-core/runnables/config/RunnableConfig) as the first argument of `traceable`-wrapped function.
 
 <CodeGroup>
 
@@ -645,9 +645,9 @@ If you prefer a video tutorial, check out the [Alternative Ways to Trace video](
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-langchain.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-langchain.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

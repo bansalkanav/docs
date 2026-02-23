@@ -1,6 +1,7 @@
 ---
-title: Google Generative AI Embeddings (AI Studio & Gemini API)
+title: "Google generative AI (AI studio & Gemini API) integration"
 sidebarTitle: GoogleGenerativeAIEmbeddings
+description: "Integrate with the Google generative AI (AI studio & Gemini API) embedding model using LangChain Python."
 ---
 
 Connect to Google's generative AI embeddings service using the `GoogleGenerativeAIEmbeddings` class, found in the [langchain-google-genai](https://pypi.org/project/langchain-google-genai/) package.
@@ -54,7 +55,7 @@ vector = embeddings.embed_query("hello, world!")
 vector[:5]
 ```
 
-```output
+```text
 [-0.024917153641581535,
  0.012005362659692764,
  -0.003886754624545574,
@@ -77,11 +78,11 @@ vectors = embeddings.embed_documents(
 len(vectors), len(vectors[0])
 ```
 
-```output
+```text
 (3, 3072)
 ```
 
-## Indexing and Retrieval
+## Indexing and retrieval
 
 Embedding models are often used in retrieval-augmented generation (RAG) flows, both as part of indexing data as well as later retrieving it. For more detailed instructions, please see our [RAG tutorials](/oss/python/langchain/rag).
 
@@ -108,7 +109,7 @@ retrieved_documents = retriever.invoke("What is LangChain?")
 retrieved_documents[0].page_content
 ```
 
-```output
+```text
 'LangChain is the framework for building context-aware reasoning applications'
 ```
 
@@ -150,7 +151,7 @@ for i, d in enumerate(d_embed):
     print("---")
 ```
 
-```output
+```text
 Document 1
 Cosine similarity with query: 0.7892893360164779
 ---
@@ -165,7 +166,7 @@ Cosine similarity with query: 0.5438283285204146
 
 For detailed documentation on `GoogleGenerativeAIEmbeddings` features and configuration options, please refer to the [API reference](https://python.langchain.com/api_reference/google_genai/embeddings/langchain_google_genai.embeddings.GoogleGenerativeAIEmbeddings.html).
 
-## Additional Configuration
+## Additional configuration
 
 You can pass the following parameters to ChatGoogleGenerativeAI in order to customize the SDK's behavior:
 
@@ -174,9 +175,9 @@ You can pass the following parameters to ChatGoogleGenerativeAI in order to cust
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/google_generative_ai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/google_generative_ai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

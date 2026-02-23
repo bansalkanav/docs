@@ -1,5 +1,6 @@
 ---
-title: OpenWeatherMap
+title: "Openweathermap integration"
+description: "Integrate with the Openweathermap tool using LangChain Python."
 ---
 
 This notebook goes over how to use the `OpenWeatherMap` component to fetch weather information.
@@ -34,7 +35,7 @@ weather_data = weather.run("London,GB")
 print(weather_data)
 ```
 
-```output
+```text
 In London,GB, the current weather is as follows:
 Detailed status: overcast clouds
 Wind speed: 4.12 m/s, direction: 10°
@@ -77,7 +78,7 @@ for step in agent.stream(
     step["messages"][-1].pretty_print()
 ```
 
-```output
+```text
 ================================ Human Message =================================
 
 What's the weather like in London?
@@ -113,9 +114,9 @@ The weather in London is currently overcast with 100% cloud cover. The temperatu
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/openweathermap.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/openweathermap.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

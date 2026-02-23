@@ -1,5 +1,6 @@
 ---
-title: MongoDB
+title: "MongoDB integration"
+description: "Integrate with the MongoDB document loader using LangChain Python."
 ---
 
 [MongoDB](https://www.mongodb.com/) is a NoSQL , document-oriented database that supports JSON-like documents with a dynamic schema.
@@ -21,7 +22,7 @@ The output takes the following format:
 * pageContent= Mongo Document
 * metadata=\{'database': '[database_name]', 'collection': '[collection_name]'\}
 
-## Load the Document Loader
+## Load the document loader
 
 ```python
 # add this import for running in jupyter notebook
@@ -50,7 +51,7 @@ docs = loader.load()
 len(docs)
 ```
 
-```output
+```text
 71
 ```
 
@@ -58,15 +59,15 @@ len(docs)
 docs[0]
 ```
 
-```output
+```python
 Document(page_content="Morris Park Bake Shop {'building': '1007', 'coord': [-73.856077, 40.848447], 'street': 'Morris Park Ave', 'zipcode': '10462'}", metadata={'database': 'sample_restaurants', 'collection': 'restaurants'})
 ```
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/mongodb.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/mongodb.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

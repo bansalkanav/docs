@@ -1,5 +1,6 @@
 ---
-title: UnstructuredLoader
+title: "UnstructuredLoader integration"
+description: "Integrate with the UnstructuredLoader document loader using LangChain JavaScript."
 ---
 
 <Tip>
@@ -69,7 +70,7 @@ const docs = await loader.load()
 docs[0]
 ```
 
-```output
+```javascript
 Document {
   pageContent: '# Testing the notion markdownloader',
   metadata: {
@@ -86,7 +87,7 @@ Document {
 console.log(docs[0].metadata)
 ```
 
-```output
+```javascript
 {
   filename: 'notion.mdx',
   languages: [ 'eng' ],
@@ -112,11 +113,11 @@ console.log(directoryDocs[0])
 
 ```
 
-```output
+```text
 Unknown file type: Star_Wars_The_Clone_Wars_S06E07_Crisis_at_the_Heart.srt
 Unknown file type: test.mp3
 ```
-```output
+```javascript
 directoryDocs.length:  247
 Document {
   pageContent: 'Bitcoin: A Peer-to-Peer Electronic Cash System',
@@ -139,9 +140,9 @@ For detailed documentation of all UnstructuredLoader features and configurations
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/file_loaders/unstructured.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/file_loaders/unstructured.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

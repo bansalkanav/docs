@@ -164,13 +164,13 @@ for step in agent.stream(
     config, # [!code highlight]
     stream_mode="values",
 ):
-    if "messages" in step:
-        step["messages"][-1].pretty_print()
-    elif "__interrupt__" in step: # [!code highlight]
+    if "__interrupt__" in step: # [!code highlight]
         print("INTERRUPTED:") # [!code highlight]
         interrupt = step["__interrupt__"][0] # [!code highlight]
         for request in interrupt.value["action_requests"]: # [!code highlight]
             print(request["description"]) # [!code highlight]
+    elif "messages" in step:
+        step["messages"][-1].pretty_print()
     else:
         pass
 ```
@@ -490,9 +490,9 @@ For deeper customization, check out [this tutorial](/oss/javascript/langgraph/sq
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/sql-agent.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/sql-agent.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

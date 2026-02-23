@@ -1,5 +1,6 @@
 ---
-title: OpenAI Adapter(Old)
+title: "OpenAI adapter(old) integration"
+description: "Integrate with the OpenAI adapter(old) adapter using LangChain Python."
 ---
 
 **Please ensure OpenAI library is less than 1.0.0; otherwise, refer to the newer doc [OpenAI Adapter](/oss/python/integrations/adapters/openai/).**
@@ -28,7 +29,7 @@ result = openai.ChatCompletion.create(
 result["choices"][0]["message"].to_dict_recursive()
 ```
 
-```output
+```python
 {'role': 'assistant', 'content': 'Hello! How can I assist you today?'}
 ```
 
@@ -41,7 +42,7 @@ lc_result = lc_openai.ChatCompletion.create(
 lc_result["choices"][0]["message"]
 ```
 
-```output
+```python
 {'role': 'assistant', 'content': 'Hello! How can I assist you today?'}
 ```
 
@@ -54,7 +55,7 @@ lc_result = lc_openai.ChatCompletion.create(
 lc_result["choices"][0]["message"]
 ```
 
-```output
+```python
 {'role': 'assistant', 'content': ' Hello!'}
 ```
 
@@ -69,7 +70,7 @@ for c in openai.ChatCompletion.create(
     print(c["choices"][0]["delta"].to_dict_recursive())
 ```
 
-```output
+```python
 {'role': 'assistant', 'content': ''}
 {'content': 'Hello'}
 {'content': '!'}
@@ -92,7 +93,7 @@ for c in lc_openai.ChatCompletion.create(
     print(c["choices"][0]["delta"])
 ```
 
-```output
+```python
 {'role': 'assistant', 'content': ''}
 {'content': 'Hello'}
 {'content': '!'}
@@ -119,7 +120,7 @@ for c in lc_openai.ChatCompletion.create(
     print(c["choices"][0]["delta"])
 ```
 
-```output
+```python
 {'role': 'assistant', 'content': ' Hello'}
 {'content': '!'}
 {}
@@ -127,9 +128,9 @@ for c in lc_openai.ChatCompletion.create(
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/adapters/openai-old.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/adapters/openai-old.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -86,6 +86,10 @@ The graph's state is used to store the messages and the number of LLM calls.
     The `Annotated` type with `operator.add` ensures that new messages are appended to the existing list rather than replacing it.
 </Tip>
 
+
+
+
+
 ```python
 from langchain.messages import AnyMessage
 from typing_extensions import TypedDict, Annotated
@@ -179,7 +183,7 @@ def should_continue(state: MessagesState) -> Literal["tool_node", END]:
 
 ## 6. Build and compile the agent
 
-The agent is built using the [`StateGraph`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph) class and compiled using the [`compile`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph.compile) method.
+The agent is built using the [`StateGraph`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph) class and compiled using the [`compile`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph/compile) method.
 
 ```python
 # Build workflow
@@ -457,7 +461,7 @@ from langgraph.func import entrypoint, task
 The model node is used to call the LLM and decide whether to call a tool or not.
 
 <Tip>
-    The [`@task`](https://reference.langchain.com/python/langgraph/func/#langgraph.func.task) decorator marks a function as a task that can be executed as part of the agent. Tasks can be called synchronously or asynchronously within your entrypoint function.
+    The [`@task`](https://reference.langchain.com/python/langgraph/func/task) decorator marks a function as a task that can be executed as part of the agent. Tasks can be called synchronously or asynchronously within your entrypoint function.
 </Tip>
 
 ```python
@@ -495,7 +499,7 @@ def call_tool(tool_call: ToolCall):
 
 ## 4. Define agent
 
-The agent is built using the [`@entrypoint`](https://reference.langchain.com/python/langgraph/func/#langgraph.func.entrypoint) function.
+The agent is built using the [`@entrypoint`](https://reference.langchain.com/python/langgraph/func/entrypoint) function.
 
 <Note>
     In the Functional API, instead of defining nodes and edges explicitly, you write standard control flow logic (loops, conditionals) within a single function.
@@ -660,9 +664,9 @@ for chunk in agent.stream(messages, stream_mode="updates"):
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/quickstart.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/quickstart.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

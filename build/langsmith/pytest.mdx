@@ -1,6 +1,6 @@
 ---
-title: How to run evaluations with pytest (beta)
-sidebarTitle: Run evaluations with pytest
+title: How to run evaluations with pytest
+sidebarTitle: Run evals with pytest
 ---
 
 The LangSmith pytest plugin lets Python developers define their datasets and evaluations as pytest test cases.
@@ -11,10 +11,6 @@ Compared to the standard evaluation flow, this is useful when:
 * **You want to assert binary expectations**: Track assertions in LangSmith and raise assertion errors locally (e.g. in CI pipelines). Testing tools help when both evaluating system outputs and asserting basic properties about them.
 * **You want pytest-like terminal outputs**: Get familiar pytest output formatting
 * **You already use pytest to test your app**: Add LangSmith tracking to existing pytest workflows
-
-<Warning>
-The pytest integration is in beta and is subject to change in upcoming releases.
-</Warning>
 
 <Info>
 The JS/TS SDK has an analogous [Vitest/Jest integration](/langsmith/vitest-jest).
@@ -32,7 +28,7 @@ pip install -U "langsmith[pytest]"
 ```
 
 ```bash uv
-uv add langsmith[pytest]
+uv add "langsmith[pytest]"
 ```
 </CodeGroup>
 
@@ -54,7 +50,7 @@ oai_client = wrappers.wrap_openai(openai.OpenAI())
 @traceable
 def generate_sql(user_query: str) -> str:
     result = oai_client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1-mini",
         messages=[
             {"role": "system", "content": "Convert the user query to a SQL query."},
             {"role": "user", "content": user_query},
@@ -189,7 +185,7 @@ def test_offtopic_input() -> None:
         )
 
         grade = oai_client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",
             messages=[
                 {"role": "system", "content": instructions},
                 {"role": "user", "content": f"ACTUAL: {sql}\nEXPECTED: {expected}"},
@@ -238,7 +234,7 @@ LANGSMITH_TEST_CACHE=tests/cassettes pytest tests/my_llm_tests
 ```
 
 ```bash uv
-uv add langsmith[pytest]
+uv add "langsmith[pytest]"
 LANGSMITH_TEST_CACHE=tests/cassettes pytest tests/my_llm_tests
 ```
 </CodeGroup>
@@ -299,7 +295,7 @@ pytest -n auto tests
 
 ### Watch mode with `pytest-watch`
 
-Use watch mode to quickly iterate on your tests. We *highly* recommend ony using this with test caching (see below) enabled to avoid unnecessary LLM calls:
+Use watch mode to quickly iterate on your tests. We *highly* recommend only using this with test caching (see below) enabled to avoid unnecessary LLM calls:
 
 <CodeGroup>
 ```bash pip
@@ -346,7 +342,7 @@ The tests will run as normal, but the experiment logs will not be sent to LangSm
 
 ## Expectations
 
-LangSmith provides an [expect](https://docs.smith.langchain.com/reference/python/_expect/langsmith._expect._Expect#langsmith._expect._Expect) utility to help define expectations about your LLM output. For example:
+LangSmith provides an [expect](https://reference.langchain.com/python/langsmith/observability/sdk/expect/) utility to help define expectations about your LLM output. For example:
 
 ```python
 from langsmith import expect
@@ -410,9 +406,9 @@ def test_foo() -> None:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/pytest.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/pytest.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

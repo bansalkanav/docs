@@ -1,5 +1,6 @@
 ---
-title: Chroma
+title: "Chroma integration"
+description: "Integrate with the Chroma vector store using LangChain JavaScript."
 ---
 
 [Chroma](https://docs.trychroma.com/getting-started) is a AI-native open-source vector database focused on developer productivity and happiness. Chroma is licensed under Apache 2.0.
@@ -93,7 +94,7 @@ const embeddings = new OpenAIEmbeddings({
 });
 ```
 
-### Running Locally
+### Running locally
 
 A simple `Chroma` instantiation will connect to a Chroma server running locally on `http://localhost:8000`:
 
@@ -117,7 +118,7 @@ const vectorStore = new Chroma(embeddings, {
 });
 ```
 
-### Chroma Cloud
+### Chroma cloud
 
 To connect to Chroma Cloud, provide your `tenant`, `database`, and `chromaCloudAPIKey`:
 
@@ -236,9 +237,9 @@ For detailed documentation of all `Chroma` features and configurations head to t
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/chroma.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/chroma.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

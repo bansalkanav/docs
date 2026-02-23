@@ -47,11 +47,25 @@ with tracing_context(client=client_no_trace):
 
 This allows you to control sampling rates at the operation level.
 
+## Sampling or conditional tracing
+
+Sampling provides **probabilistic** control over trace volume, while [conditional tracing](/langsmith/conditional-tracing) provides **deterministic** control based on business logic.
+
+Use **sampling** when you want to reduce overall trace volume while maintaining statistical representation of your application's behavior.
+
+Use [conditional tracing](/langsmith/conditional-tracing) when you need guaranteed tracing behavior for specific requests, such as:
+
+- Disabling tracing for clients with zero-retention policies.
+- Routing traces to different projects based on tenant.
+- Handling sensitive data that should never be traced.
+
+You can combine both approaches for fine-grained control over your observability strategy.
+
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/sample-traces.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/sample-traces.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,5 @@
 ---
-title: Splitting recursively
+title: "Splitting recursively - Text splitter integration guide"
 ---
 
 This [text splitter](/oss/python/integrations/splitters/) is the recommended one for generic text. It is parameterized by a list of characters. It tries to split on them in order until the chunks are small enough. The default list is `["\n\n", "\n", " ", ""]`. This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible, as those would generically seem to be the strongest semantically related pieces of text.
@@ -17,7 +17,7 @@ pip install -qU langchain-text-splitters
 
 To obtain the string content directly, use `.split_text`.
 
-To create LangChain [Document](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) objects (e.g., for use in downstream tasks), use `.create_documents`.
+To create LangChain [Document](https://reference.langchain.com/python/langchain-core/documents/base/Document) objects (e.g., for use in downstream tasks), use `.create_documents`.
 
 ```python
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -37,7 +37,7 @@ texts = text_splitter.create_documents([state_of_the_union])
 print(texts[0])
 print(texts[1])
 ```
-```output
+```python
 page_content='Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and'
 page_content='of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.'
 ```
@@ -46,7 +46,7 @@ page_content='of Congress and the Cabinet. Justices of the Supreme Court. My fel
 print(text_splitter.split_text(state_of_the_union)[:2])
 ```
 
-```output
+```python
 ['Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and',
  'of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.']
 ```
@@ -93,9 +93,9 @@ text_splitter = RecursiveCharacterTextSplitter(
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/recursive_text_splitter.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/recursive_text_splitter.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

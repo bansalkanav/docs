@@ -132,8 +132,8 @@ graph = builder.compile()
 
   ```
   ((), {'node_1': {'foo': 'hi! foo'}})
-  (('node_2:9c36dd0f-151a-cb42-cbad-fa2f851f9ab7',), {'grandchild_1': {'my_grandchild_key': 'hi Bob, how are you'}})
-  (('node_2:9c36dd0f-151a-cb42-cbad-fa2f851f9ab7',), {'grandchild_2': {'bar': 'hi! foobaz'}})
+  (('node_2:577b710b-64ae-31fb-9455-6a4d4cc2b0b9',), {'subgraph_node_1': {'baz': 'baz'}})
+  (('node_2:577b710b-64ae-31fb-9455-6a4d4cc2b0b9',), {'subgraph_node_2': {'bar': 'hi! foobaz'}})
   ((), {'node_2': {'foo': 'hi! foobaz'}})
   ```
 
@@ -240,7 +240,7 @@ When the parent graph and subgraph can communicate over a shared state key (chan
 If your subgraph shares state keys with the parent graph, you can follow these steps to add it to your graph:
 
 1. Define the subgraph workflow (`subgraph_builder` in the example below) and compile it
-2. Pass compiled subgraph to the [`add_node`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph.add_node) method when defining the parent graph workflow
+2. Pass compiled subgraph to the [`add_node`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph/add_node) method when defining the parent graph workflow
 
 ```python
 from typing_extensions import TypedDict
@@ -376,10 +376,9 @@ You can inspect the graph state via `graph.get_state(config)`. To view the subgr
 
 
 
-<Warning>
-**Available **only** when interrupted**
-Subgraph state can only be viewed **when the subgraph is interrupted**. Once you resume the graph, you won't be able to access the subgraph state.
-</Warning>
+<Note>
+Viewing subgraph state requires that LangGraph can **statically discover** the subgraph — i.e., it is [added as a node](#add-a-graph-as-a-node) or [invoked from a node function](#invoke-a-graph-from-a-node). It does not work when a subgraph is called inside a [tool](/oss/python/langchain/tools) function or other indirection (e.g., the [subagents](/oss/python/langchain/multi-agent/subagents) pattern). Note that interrupts themselves still propagate to the top-level graph regardless of nesting.
+</Note>
 
 <Accordion title="View interrupted subgraph state">
   ```python
@@ -417,15 +416,12 @@ Subgraph state can only be viewed **when the subgraph is interrupted**. Once you
   graph.invoke({"foo": ""}, config)
   parent_state = graph.get_state(config)
 
-  # This will be available only when the subgraph is interrupted.
-  # Once you resume the graph, you won't be able to access the subgraph state.
   subgraph_state = graph.get_state(config, subgraphs=True).tasks[0].state
 
   # resume the subgraph
   graph.invoke(Command(resume="bar"), config)
   ```
 
-  1. This will be available only when the subgraph is interrupted. Once you resume the graph, you won't be able to access the subgraph state.
 
 
 
@@ -507,9 +503,9 @@ for chunk in graph.stream(
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-subgraphs.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-subgraphs.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,18 +1,19 @@
 ---
-title: SerpAPI Loader
+title: "SerpAPI loader integration"
+description: "Integrate with the SerpAPI loader document loader using LangChain JavaScript."
 ---
 
-This guide shows how to use SerpAPI with LangChain to load web search results.
+This guide shows how to use SerpApi with LangChain to load web search results.
 
 ## Overview
 
-[SerpAPI](https://serpapi.com/) is a real-time API that provides access to search results from various search engines. It is commonly used for tasks like competitor analysis and rank tracking. It empowers businesses to scrape, extract, and make sense of data from all search engines' result pages.
+[SerpApi](https://serpapi.com/) is a real-time API that provides access to search results from various search engines. It is commonly used for tasks like competitor analysis and rank tracking. It empowers businesses to scrape, extract, and make sense of data from all search engines' result pages.
 
-This guide shows how to load web search results using the `SerpAPILoader` in LangChain. The `SerpAPILoader` simplifies the process of loading and processing web search results from SerpAPI.
+This guide shows how to load web search results using the `SerpAPILoader` in LangChain. The `SerpAPILoader` simplifies the process of loading and processing web search results from SerpApi.
 
 ## Setup
 
-You'll need to sign up and retrieve your [SerpAPI API key](https://serpapi.com/dashboard).
+You'll need to sign up and retrieve your [SerpApi API key](https://serpapi.com/dashboard).
 
 ## Usage
 
@@ -28,10 +29,10 @@ import { createRetrievalChain } from "@langchain/classic/chains/retrieval";
 
 // Initialize the necessary components
 const llm = new ChatOpenAI({
-  model: "gpt-4o-mini",
+  model: "gpt-4.1-mini",
 });
 const embeddings = new OpenAIEmbeddings();
-const apiKey = "Your SerpAPI API key";
+const apiKey = "Your SerpApi API key";
 
 // Define your question and query
 const question = "Your question here";
@@ -73,9 +74,9 @@ In this example, the `SerpAPILoader` is used to load web search results, which a
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/web_loaders/serpapi.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/web_loaders/serpapi.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,6 @@
 ---
-title: Dall-E Image Generator
+title: "Dall-e image generator integration"
+description: "Integrate with the Dall-e image generator tool using LangChain Python."
 ---
 
 >[OpenAI Dall-E](https://openai.com/dall-e-3) are text-to-image models developed by OpenAI using deep learning methodologies to generate digital images from natural language descriptions, called "prompts".
@@ -20,7 +21,7 @@ os.environ["OPENAI_API_KEY"] = "insertapikey"
 ## Run as a chain
 
 ```python
-from langchain.chains import LLMChain
+from langchain_classic.chains import LLMChain
 from langchain_community.utilities.dalle_image_generator import DallEAPIWrapper
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import OpenAI
@@ -103,9 +104,9 @@ print(response)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/dalle_image_generator.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/dalle_image_generator.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

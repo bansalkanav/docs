@@ -1,8 +1,8 @@
 ---
-title: Splitting code
+title: "Splitting code text splitter integration guide"
 ---
 
-[RecursiveCharacterTextSplitter](https://reference.langchain.com/javascript/classes/_langchain_textsplitters.RecursiveCharacterTextSplitter.html) includes pre-built lists of separators that are useful for [splitting text](/oss/javascript/integrations/splitters/) in a specific programming language.
+[RecursiveCharacterTextSplitter](https://reference.langchain.com/javascript/langchain-textsplitters/RecursiveCharacterTextSplitter) includes pre-built lists of separators that are useful for [splitting text](/oss/javascript/integrations/splitters/) in a specific programming language.
 
 
 
@@ -74,7 +74,7 @@ const pythonSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const pythonDocs = pythonSplitter.createDocuments([{ pageContent: PYTHON_CODE }]);
 console.log(pythonDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: 'def hello_world():\n    print("Hello, World!")' },
     Document { metadata: {}, pageContent: '# Call the function\nhello_world()' }
@@ -103,7 +103,7 @@ const jsSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const jsDocs = jsSplitter.createDocuments([{ pageContent: JS_CODE }]);
 console.log(jsDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: 'function helloWorld() {\n  console.log("Hello, World!");\n}' },
     Document { metadata: {}, pageContent: '// Call the function\nhelloWorld()' }
@@ -132,7 +132,7 @@ const tsSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const tsDocs = tsSplitter.createDocuments([{ pageContent: TS_CODE }]);
 console.log(tsDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: 'function helloWorld(): void {' },
     Document { metadata: {}, pageContent: 'console.log("Hello, World!");\n}' },
@@ -163,10 +163,10 @@ const mdSplitter = RecursiveCharacterTextSplitter.fromLanguage(
     "markdown",
     { chunkSize: 60, chunkOverlap: 0 }
 );
-const mdDocs = mdSplitter.createDocuments([{ pageContent: markdownText }]);
+const mdDocs = mdSplitter.createDocuments([ markdownText ]);
 console.log(mdDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: '# 🦜️🔗 LangChain' },
     Document { metadata: {}, pageContent: '⚡ Building applications with LLMs through composability ⚡' },
@@ -210,7 +210,7 @@ const latexSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const latexDocs = latexSplitter.createDocuments([{ pageContent: latexText }]);
 console.log(latexDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: '\\documentclass{article}\n\n\\begin{document}\n\n\\maketitle' },
     Document { metadata: {}, pageContent: '\\section{Introduction}' },
@@ -276,7 +276,7 @@ const htmlSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const htmlDocs = htmlSplitter.createDocuments([{ pageContent: htmlText }]);
 console.log(htmlDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: '<!DOCTYPE html>\n<html>' },
     Document { metadata: {}, pageContent: '<head>\n        <title>🦜️🔗 LangChain</title>' },
@@ -316,7 +316,7 @@ const solSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const solDocs = solSplitter.createDocuments([{ pageContent: SOL_CODE }]);
 console.log(solDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: 'pragma solidity ^0.8.20;' },
     Document { metadata: {}, pageContent: 'contract HelloWorld {\n   function add(uint a, uint b) pure public returns(uint) {\n       return a + b;\n   }\n}' }
@@ -361,7 +361,7 @@ const csharpSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const csharpDocs = csharpSplitter.createDocuments([{ pageContent: C_CODE }]);
 console.log(csharpDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: 'using System;' },
     Document { metadata: {}, pageContent: 'class Program\n{\n    static void Main()\n    {\n        int age = 30; // Change the age value as needed' },
@@ -393,7 +393,7 @@ const haskellSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const haskellDocs = haskellSplitter.createDocuments([{ pageContent: HASKELL_CODE }]);
 console.log(haskellDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: 'main :: IO ()' },
     Document { metadata: {}, pageContent: 'main = do\n    putStrLn "Hello, World!"\n-- Some' },
@@ -433,7 +433,7 @@ const phpSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const phpDocs = phpSplitter.createDocuments([{ pageContent: PHP_CODE }]);
 console.log(phpDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: '<?php\nnamespace foo;' },
     Document { metadata: {}, pageContent: 'class Hello {' },
@@ -472,7 +472,7 @@ const powershellSplitter = RecursiveCharacterTextSplitter.fromLanguage(
 const powershellDocs = powershellSplitter.createDocuments([{ pageContent: POWERSHELL_CODE }]);
 console.log(powershellDocs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: '$directoryPath = Get-Location\n\n$items = Get-ChildItem -Path $directoryPath' },
     Document { metadata: {}, pageContent: '$files = $items | Where-Object { -not $_.PSIsContainer }' },
@@ -483,7 +483,7 @@ console.log(powershellDocs);
 ```
 
 
-## Visual Basic 6
+## Visual basic 6
 
 ```ts
 const VISUALBASIC6_CODE = `Option Explicit
@@ -504,7 +504,7 @@ const visualbasic6Splitter = RecursiveCharacterTextSplitter.fromLanguage(
 const visualbasic6Docs = visualbasic6Splitter.createDocuments([{ pageContent: VISUALBASIC6_CODE }]);
 console.log(visualbasic6Docs);
 ```
-```output
+```javascript
 [
     Document { metadata: {}, pageContent: 'Option Explicit' },
     Document { metadata: {}, pageContent: 'Public Sub HelloWorld()\n    MsgBox "Hello, World!"\nEnd Sub' },
@@ -514,9 +514,9 @@ console.log(visualbasic6Docs);
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/code_splitter.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/code_splitter.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

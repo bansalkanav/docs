@@ -1,5 +1,6 @@
 ---
-title: ValyuContext
+title: "Valyucontext integration"
+description: "Integrate with the Valyucontext retriever using LangChain Python."
 ---
 
 >[Valyu](https://www.valyu.network/) allows AI applications and agents to search the internet and proprietary data sources for relevant LLM ready information.
@@ -97,7 +98,7 @@ Context: {context}
 Question: {question}"""
 )
 
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-4.1-mini")
 
 
 def format_docs(docs):
@@ -120,9 +121,9 @@ For detailed documentation of all Valyu Context API features and configurations 
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/retrievers/valyu.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/retrievers/valyu.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

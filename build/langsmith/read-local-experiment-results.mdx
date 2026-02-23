@@ -10,7 +10,7 @@ When running [evaluations](/langsmith/evaluation-concepts), you may want to proc
 - **Custom aggregations**: Calculate metrics and statistics using your own logic.
 - **Integration testing**: Use evaluation results to gate merges or deployments.
 
-This guide shows you how to iterate over and process [experiment](/langsmith/evaluation-concepts#experiment) results from the [`ExperimentResults`](https://reference.langchain.com/python/langsmith/observability/sdk/evaluation/#langsmith.evaluation._runner.ExperimentResults) object returned by [`Client.evaluate()`](https://reference.langchain.com/python/langsmith/observability/sdk/client/#langsmith.client.Client.evaluate).
+This guide shows you how to iterate over and process [experiment](/langsmith/evaluation-concepts#experiment) results from the [`ExperimentResults`](https://reference.langchain.com/python/langsmith/schemas/ExperimentResults) object returned by [`Client.evaluate()`](https://reference.langchain.com/python/langsmith/client/Client/evaluate).
 
 <Note>
 This page focuses on processing results programmatically while still uploading them to LangSmith.
@@ -20,7 +20,7 @@ If you want to run evaluations locally **without** recording anything to LangSmi
 
 ## Iterate over evaluation results
 
-The [`evaluate()`](https://reference.langchain.com/python/langsmith/observability/sdk/client/#langsmith.client.Client.evaluate) function returns an [`ExperimentResults`](https://reference.langchain.com/python/langsmith/observability/sdk/evaluation/#langsmith.evaluation._runner.ExperimentResults) object that you can iterate over. The `blocking` parameter controls when results become available:
+The [`evaluate()`](https://reference.langchain.com/python/langsmith/client/Client/evaluate) function returns an [`ExperimentResults`](https://reference.langchain.com/python/langsmith/schemas/ExperimentResults) object that you can iterate over. The `blocking` parameter controls when results become available:
 
 - `blocking=False`: Returns immediately with an iterator that yields results as they're produced. This allows you to process results in real-time as the evaluation runs.
 - `blocking=True` (default): Blocks until all evaluations complete before returning. When you iterate over the results, all data is already available.
@@ -177,9 +177,9 @@ For more information on running evaluations without uploading results, refer to 
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/read-local-experiment-results.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/read-local-experiment-results.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

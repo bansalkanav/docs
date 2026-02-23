@@ -8,10 +8,14 @@ import HostingSetup from '/snippets/langsmith/platform-setup-note.mdx';
 
 The following sections help you set up and use tracing, monitoring, and observability features:
 
+<Callout icon="plug" color="#DFC5FE">
+LangSmith works with many frameworks and providers. Browse [available integrations](/langsmith/integrations) to connect your stack including OpenAI, Anthropic, CrewAI, Vercel AI SDK, Pydantic AI, and more.
+</Callout>
+
 <Columns cols={3}>
   <Card
     title="Set up tracing"
-    icon="gear"
+    icon="settings"
     href="/langsmith/observability-quickstart"
     arrow="true"
   >
@@ -56,7 +60,7 @@ The following sections help you set up and use tracing, monitoring, and observab
 
   <Card
     title="Trace a RAG app"
-    icon="book-open"
+    icon="notebook"
     href="/langsmith/observability-llm-tutorial"
     arrow="true"
   >
@@ -66,13 +70,17 @@ The following sections help you set up and use tracing, monitoring, and observab
 
 For terminology definitions and core concepts, refer to [Observability concepts](/langsmith/observability-concepts).
 
+<Callout type="info" icon="feather">
+Use **[Polly](/langsmith/polly)**, LangSmith's AI assistant, to analyze traces and get AI-powered insights into your application's performance.
+</Callout>
+
 <HostingSetup/>
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/observability.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/observability.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

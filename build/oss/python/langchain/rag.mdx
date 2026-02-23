@@ -206,7 +206,7 @@ Indexing commonly works as follows:
 
 ### Loading documents
 
-We need to first load the blog post contents. We can use [DocumentLoaders](/oss/python/langchain/retrieval#document_loaders) for this, which are objects that load in data from a source and return a list of [Document](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) objects.
+We need to first load the blog post contents. We can use [DocumentLoaders](/oss/python/langchain/retrieval#document_loaders) for this, which are objects that load in data from a source and return a list of [Document](https://reference.langchain.com/python/langchain-core/documents/base/Document) objects.
 
 In this case we'll use the [`WebBaseLoader`](/oss/python/integrations/document_loaders/web_base), which uses `urllib` to load HTML from web URLs and `BeautifulSoup` to parse it to text. We can customize the HTML -\> text parsing by passing in parameters into the `BeautifulSoup` parser via `bs_kwargs` (see [BeautifulSoup docs](https://beautiful-soup-4.readthedocs.io/en/latest/#beautifulsoup)). In this case only HTML tags with class “post-content”, “post-title”, or “post-header” are relevant, so we'll remove all others.
 
@@ -225,14 +225,14 @@ docs = loader.load()
 assert len(docs) == 1
 print(f"Total characters: {len(docs[0].page_content)}")
 ```
-```output
+```text
 Total characters: 43131
 ```
 
 ```python
 print(docs[0].page_content[:500])
 ```
-```output
+```text
       LLM Powered Autonomous Agents
 
 Date: June 23, 2023  |  Estimated Reading Time: 31 min  |  Author: Lilian Weng
@@ -249,13 +249,13 @@ In
 `DocumentLoader`: Object that loads data from a source as list of `Documents`.
 
 - [Integrations](/oss/python/integrations/document_loaders/): 160+ integrations to choose from.
-- [`BaseLoader`](https://reference.langchain.com/python/langchain_core/document_loaders/#langchain_core.document_loaders.BaseLoader): API reference for the base interface.
+- [`BaseLoader`](https://reference.langchain.com/python/langchain-core/document_loaders/base/BaseLoader): API reference for the base interface.
 
 ### Splitting documents
 
 Our loaded document is over 42k characters which is too long to fit into the context window of many models. Even for those models that could fit the full post in their context window, models can struggle to find information in very long inputs.
 
-To handle this we'll split the [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) into chunks for embedding and vector storage. This should help us retrieve only the most relevant parts of the blog post at run time.
+To handle this we'll split the [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) into chunks for embedding and vector storage. This should help us retrieve only the most relevant parts of the blog post at run time.
 
 As in the [semantic search tutorial](/oss/python/langchain/knowledge-base), we use a `RecursiveCharacterTextSplitter`, which will recursively split the document using common separators like new lines until each chunk is the appropriate size. This is the recommended text splitter for generic text use cases.
 
@@ -271,13 +271,13 @@ all_splits = text_splitter.split_documents(docs)
 
 print(f"Split blog post into {len(all_splits)} sub-documents.")
 ```
-```output
+```text
 Split blog post into 66 sub-documents.
 ```
 
 **Go deeper**
 
-`TextSplitter`: Object that splits a list of [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) objects into smaller
+`TextSplitter`: Object that splits a list of [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) objects into smaller
 chunks for storage and retrieval.
 
 - [Integrations](/oss/python/integrations/splitters/)
@@ -298,7 +298,7 @@ document_ids = vector_store.add_documents(documents=all_splits)
 
 print(document_ids[:3])
 ```
-```output
+```python
 ['07c18af6-ad58-479a-bfb1-d508033f9c64', '9000bf8e-1993-446f-8d4d-f4e507ba4b8f', 'ba3b5d14-bed9-4f5f-88be-44c88aedc2e6']
 ```
 
@@ -308,7 +308,7 @@ print(document_ids[:3])
 `Embeddings`: Wrapper around a text embedding model, used for converting text to embeddings.
 
 - [Integrations](/oss/python/integrations/text_embedding/): 30+ integrations to choose from.
-- [Interface](https://reference.langchain.com/python/langchain_core/embeddings/#langchain_core.embeddings.embeddings.Embeddings): API reference for the base interface.
+- [Interface](https://reference.langchain.com/python/langchain-core/embeddings/embeddings/Embeddings): API reference for the base interface.
 
 `VectorStore`: Wrapper around a vector database, used for storing and querying embeddings.
 
@@ -317,7 +317,7 @@ print(document_ids[:3])
 
 This completes the **Indexing** portion of the pipeline. At this point we have a query-able vector store containing the chunked contents of our blog post. Given a user question, we should ideally be able to return the snippets of the blog post that answer the question.
 
-## 2. Retrieval and Generation
+## 2. Retrieval and generation
 
 RAG applications commonly work as follows:
 
@@ -353,7 +353,7 @@ def retrieve_context(query: str):
 
 <Tip>
 
-Here we use the [tool decorator](https://reference.langchain.com/python/langchain/tools/#langchain.tools.tool) to configure the tool to attach raw documents as [artifacts](/oss/python/langchain/messages#param-artifact) to each [ToolMessage](/oss/python/langchain/messages#tool-message). This will let us access document metadata in our application, separate from the stringified representation that is sent to the model.
+Here we use the [tool decorator](https://reference.langchain.com/python/langchain-core/tools/convert/tool) to configure the tool to attach raw documents as [artifacts](/oss/python/langchain/messages#param-artifact) to each [ToolMessage](/oss/python/langchain/messages#tool-message). This will let us access document metadata in our application, separate from the stringified representation that is sent to the model.
 
 </Tip>
 
@@ -571,7 +571,7 @@ agent = create_agent(
 
 ## Next steps
 
-Now that we've implemented a simple RAG application via [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent), we can easily incorporate new features and go deeper:
+Now that we've implemented a simple RAG application via [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent), we can easily incorporate new features and go deeper:
 
 
 
@@ -580,13 +580,13 @@ Now that we've implemented a simple RAG application via [`create_agent`](https:/
 - Add [conversational memory](/oss/python/langchain/short-term-memory) to support multi-turn interactions
 - Add [long-term memory](/oss/python/langchain/long-term-memory) to support memory across conversational threads
 - Add [structured responses](/oss/python/langchain/structured-output)
-- Deploy your application with [LangSmith Deployments](/langsmith/deployments)
+- Deploy your application with [LangSmith Deployment](/langsmith/deployments)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/rag.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/rag.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

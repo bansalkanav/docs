@@ -1,6 +1,6 @@
 ---
-title: ChatOllama
-description: Get started using Ollama [chat models](/oss/python/langchain/models) in LangChain.
+title: "ChatOllama integration"
+description: "Integrate with the ChatOllama chat model using LangChain Python."
 ---
 
 [Ollama](https://ollama.com/) allows you to run open-source Large Language Models (LLMs), such as `gpt-oss`, locally.
@@ -12,22 +12,22 @@ For a complete list of supported models and model variants, see the [Ollama mode
 <Tip>
     **API Reference**
 
-    For detailed documentation of all features and configuration options, head to the [`ChatOllama`](https://reference.langchain.com/python/integrations/langchain_ollama/#langchain_ollama.ChatOllama) API reference.
+    For detailed documentation of all features and configuration options, head to the [`ChatOllama`](https://reference.langchain.com/python/langchain-community/chat_models/ollama/ChatOllama) API reference.
 </Tip>
 
 ## Overview
 
 ### Integration details
 
-| Class | Package | Local | Serializable | [JS support](https://js.langchain.com/docs/integrations/chat/ollama) | Downloads | Version |
-| :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
-| [`ChatOllama`](https://reference.langchain.com/python/integrations/langchain_ollama/#langchain_ollama.ChatOllama) | [`langchain-ollama`](https://reference.langchain.com/python/integrations/langchain_ollama) | ✅ | ❌ | ✅ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-ollama?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-ollama?style=flat-square&label=%20) |
+| Class | Package | Serializable | [JS support](https://js.langchain.com/docs/integrations/chat/ollama) | Downloads | Version |
+| :--- | :--- | :---: |  :---: | :---: | :---: |
+| [`ChatOllama`](https://reference.langchain.com/python/langchain-community/chat_models/ollama/ChatOllama) | [`langchain-ollama`](https://reference.langchain.com/python/langchain-ollama/) | ❌ | ✅ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-ollama?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-ollama?style=flat-square&label=%20) |
 
 ### Model features
 
-| [Tool calling](/oss/python/langchain/tools/) | [Structured output](/oss/python/langchain/structured-output) | JSON mode | [Image input](/oss/python/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/python/langchain/streaming/) | Native async | [Token usage](/oss/python/langchain/models#token-usage) | [Logprobs](/oss/python/langchain/models#log-probabilities) |
-| :---: |:----------------------------------------------------:| :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
-| ✅ |                          ✅                           | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
+| [Tool calling](/oss/python/langchain/tools/) | [Structured output](/oss/python/langchain/structured-output) | [Image input](/oss/python/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/python/langchain/streaming/) | Native async | [Token usage](/oss/python/langchain/models#token-usage) | [Logprobs](/oss/python/langchain/models#log-probabilities) |
+| :---: |:----------------------------------------------------:| :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
+| ✅ |                          ✅                           | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
 
 ## Setup
 
@@ -102,15 +102,15 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
-```output
-AIMessage(content='The translation of "I love programming" in French is:\n\n"J\'adore le programmation."', additional_kwargs={}, response_metadata={'model': 'llama3.1', 'created_at': '2025-06-25T18:43:00.483666Z', 'done': True, 'done_reason': 'stop', 'total_duration': 619971208, 'load_duration': 27793125, 'prompt_eval_count': 35, 'prompt_eval_duration': 36354583, 'eval_count': 22, 'eval_duration': 555182667, 'model_name': 'llama3.1'}, id='run--348bb5ef-9dd9-4271-bc7e-a9ddb54c28c1-0', usage_metadata={'input_tokens': 35, 'output_tokens': 22, 'total_tokens': 57})
+```text
+AIMessage(content='The translation of "I love programming" in French is:\n\n"J\'adore la programmation."', additional_kwargs={}, response_metadata={'model': 'llama3.1', 'created_at': '2025-06-25T18:43:00.483666Z', 'done': True, 'done_reason': 'stop', 'total_duration': 619971208, 'load_duration': 27793125, 'prompt_eval_count': 35, 'prompt_eval_duration': 36354583, 'eval_count': 22, 'eval_duration': 555182667, 'model_name': 'llama3.1'}, id='run--348bb5ef-9dd9-4271-bc7e-a9ddb54c28c1-0', usage_metadata={'input_tokens': 35, 'output_tokens': 22, 'total_tokens': 57})
 ```
 
 ```python
 print(ai_msg.content)
 ```
 
-```output
+```text
 The translation of "I love programming" in French is:
 
 "J'adore le programmation."
@@ -128,7 +128,7 @@ We can use [tool calling](/oss/python/langchain/tools/) with an LLM [that has be
 ollama pull gpt-oss:20b
 ```
 
-Details on creating custom tools are available in [this guide](/oss/python/langchain/tools#customize-tool-properties). Below, we demonstrate how to create a tool using the [`@tool`](https://reference.langchain.com/python/langchain/tools/#langchain.tools.tool) decorator on a normal python function.
+Details on creating custom tools are available in [this guide](/oss/python/langchain/tools#customize-tool-properties). Below, we demonstrate how to create a tool using the [`@tool`](https://reference.langchain.com/python/langchain-core/tools/convert/tool) decorator on a normal python function.
 
 ```python
 from typing import List
@@ -165,7 +165,7 @@ if isinstance(result, AIMessage) and result.tool_calls:
     print(result.tool_calls)
 ```
 
-```output
+```text
 [{'name': 'validate_user', 'args': {'addresses': ['123 Fake St, Boston, MA', '234 Pretend Boulevard, Houston, TX'], 'user_id': '123'}, 'id': 'aef33a32-a34b-4b37-b054-e0d85584772f', 'type': 'tool_call'}]
 ```
 
@@ -261,7 +261,7 @@ query_chain = chain.invoke(
 print(query_chain)
 ```
 
-```output
+```text
 90%
 ```
 
@@ -287,7 +287,7 @@ response = llm.invoke(messages)
 print(response.content)
 ```
 
-```output
+```text
 Here is my thought process:
 The user is asking for the value of 3 raised to the power of 3, which is a basic exponentiation operation.
 
@@ -308,9 +308,9 @@ For detailed documentation of all `ChatOllama` features and configurations head 
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/ollama.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/ollama.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

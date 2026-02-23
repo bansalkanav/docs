@@ -1,5 +1,6 @@
 ---
-title: AssemblyAI Audio Transcripts
+title: "AssemblyAI audio transcripts integration"
+description: "Integrate with the AssemblyAI audio transcripts document loader using LangChain Python."
 ---
 
 The `AssemblyAIAudioTranscriptLoader` allows to transcribe audio files with the [AssemblyAI API](https://www.assemblyai.com) and loads the transcribed text into documents.
@@ -65,7 +66,7 @@ docs[0].metadata
 }
 ```
 
-## Transcript Formats
+## Transcript formats
 
 You can specify the `transcript_format` argument for different formats.
 
@@ -88,7 +89,7 @@ loader = AssemblyAIAudioTranscriptLoader(
 docs = loader.load()
 ```
 
-## Transcription Config
+## Transcription config
 
 You can also specify the `config` argument to use different audio intelligence models.
 
@@ -116,9 +117,9 @@ loader = AssemblyAIAudioTranscriptLoader(
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/assemblyai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/assemblyai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

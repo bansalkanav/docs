@@ -1,5 +1,6 @@
 ---
-title: ArxivRetriever
+title: "ArxivRetriever integration"
+description: "Integrate with the ArxivRetriever retriever using LangChain JavaScript."
 ---
 
 The `arXiv Retriever` allows users to query the arXiv database for academic articles. It supports both full-document retrieval (PDF parsing) and summary-based retrieval.
@@ -68,7 +69,7 @@ import { StringOutputParser } from "@langchain/core/output_parsers";
 import type { Document } from "@langchain/core/documents";
 
 const llm = new ChatOpenAI({
-  model: "gpt-4o-mini",
+  model: "gpt-4.1-mini",
   temperature: 0,
 });
 
@@ -108,9 +109,9 @@ For detailed documentation of all ArxivRetriever features and configurations, he
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/retrievers/arxiv-retriever.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/retrievers/arxiv-retriever.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -13,11 +13,11 @@ The `langchain` package namespace has been significantly reduced in v1 to focus 
 
 | Module                  | What's available                               | Notes                             |
 |-------------------------|------------------------------------------------|-----------------------------------|
-| [`langchain.agents`](https://reference.langchain.com/python/langchain/agents)      | [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent), [`AgentState`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.AgentState)                   | Core agent creation functionality |
-| [`langchain.messages`](https://reference.langchain.com/python/langchain/messages)    | Message types, [content blocks](https://reference.langchain.com/python/langchain/messages/#langchain.messages.ContentBlock), [`trim_messages`](https://reference.langchain.com/python/langchain/messages/#langchain.messages.trim_messages) | Re-exported from `langchain-core` |
-| [`langchain.tools`](https://reference.langchain.com/python/langchain/tools)       | [`@tool`](https://reference.langchain.com/python/langchain/tools/#langchain.tools.tool), [`BaseTool`](https://reference.langchain.com/python/langchain/tools/#langchain.tools.BaseTool), injection helpers          | Re-exported from `langchain-core` |
-| [`langchain.chat_models`](https://reference.langchain.com/python/langchain/models) | [`init_chat_model`](https://reference.langchain.com/python/langchain/models/#langchain.chat_models.init_chat_model), [`BaseChatModel`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.language_models.chat_models.BaseChatModel)             | Unified model initialization      |
-| [`langchain.embeddings`](https://reference.langchain.com/python/langchain/embeddings)  | [`init_embeddings`](https://reference.langchain.com/python/langchain_core/embeddings/#langchain_core.embeddings.embeddings.Embeddings), [`Embeddings`](https://reference.langchain.com/python/langchain_core/embeddings/#langchain_core.embeddings.embeddings.Embeddings)                | Embedding models                  |
+| [`langchain.agents`](https://reference.langchain.com/python/langchain/agents)      | [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent), [`AgentState`](https://reference.langchain.com/python/langchain/agents/middleware/types/AgentState)                   | Core agent creation functionality |
+| [`langchain.messages`](https://reference.langchain.com/python/langchain/messages)    | Message types, [content blocks](https://reference.langchain.com/python/langchain-core/messages/content/ContentBlock), [`trim_messages`](https://reference.langchain.com/python/langchain-core/messages/utils/trim_messages) | Re-exported from `langchain-core` |
+| [`langchain.tools`](https://reference.langchain.com/python/langchain/tools)       | [`@tool`](https://reference.langchain.com/python/langchain-core/tools/convert/tool), [`BaseTool`](https://reference.langchain.com/python/langchain-core/tools/base/BaseTool), injection helpers          | Re-exported from `langchain-core` |
+| [`langchain.chat_models`](https://reference.langchain.com/python/langchain/models) | [`init_chat_model`](https://reference.langchain.com/python/langchain/chat_models/base/init_chat_model), [`BaseChatModel`](https://reference.langchain.com/python/langchain-core/language_models/chat_models/BaseChatModel)             | Unified model initialization      |
+| [`langchain.embeddings`](https://reference.langchain.com/python/langchain/embeddings)  | [`init_embeddings`](https://reference.langchain.com/python/langchain/embeddings/base/init_embeddings), [`Embeddings`](https://reference.langchain.com/python/langchain-core/embeddings/embeddings/Embeddings)                | Embedding models                  |
 
 ### `langchain-classic`
 
@@ -48,7 +48,7 @@ If you were using any of the following from the `langchain` package, you'll need
 
     ```python v0 (old)
     # Chains
-    from langchain.chains import LLMChain
+    from langchain_classic.chains import LLMChain
 
     # Retrievers
     from langchain.retrievers import ...
@@ -77,9 +77,9 @@ uv add langchain-classic
 
 ## Migrate to `create_agent`
 
-Prior to v1.0, we recommended using [`langgraph.prebuilt.create_react_agent`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.chat_agent_executor.create_react_agent) to build agents. Now, we recommend you use [`langchain.agents.create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent) to build agents.
+Prior to v1.0, we recommended using [`langgraph.prebuilt.create_react_agent`](https://reference.langchain.com/python/langchain-classic/agents/react/agent/create_react_agent) to build agents. Now, we recommend you use [`langchain.agents.create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) to build agents.
 
-The table below outlines what functionality has changed from [`create_react_agent`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.chat_agent_executor.create_react_agent) to [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent):
+The table below outlines what functionality has changed from [`create_react_agent`](https://reference.langchain.com/python/langchain-classic/agents/react/agent/create_react_agent) to [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent):
 
 | Section | TL;DR - What's changed |
 |---------|--------------|
@@ -98,7 +98,7 @@ The table below outlines what functionality has changed from [`create_react_agen
 ### Import path
 
 The import path for the agent prebuilt has changed from `langgraph.prebuilt` to `langchain.agents`.
-The name of the function has changed from [`create_react_agent`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.chat_agent_executor.create_react_agent) to [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent):
+The name of the function has changed from [`create_react_agent`](https://reference.langchain.com/python/langchain-classic/agents/react/agent/create_react_agent) to [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent):
 
 ```python
 from langgraph.prebuilt import create_react_agent # [!code --]
@@ -136,7 +136,7 @@ agent = create_react_agent(
 
 #### `SystemMessage` to string
 
-If using [`SystemMessage`](https://reference.langchain.com/python/langchain/messages/#langchain.messages.SystemMessage) objects in the system prompt, extract the string content:
+If using [`SystemMessage`](https://reference.langchain.com/python/langchain-core/messages/system/SystemMessage) objects in the system prompt, extract the string content:
 
 <CodeGroup>
 ```python v1 (new)
@@ -162,7 +162,7 @@ agent = create_react_agent(
 
 #### Dynamic prompts
 
-Dynamic prompts are a core context engineering pattern— they adapt what you tell the model based on the current conversation state. To do this, use the [`@dynamic_prompt`](https://reference.langchain.com/python/langchain/middleware/#langchain.agents.middleware.dynamic_prompt) decorator:
+Dynamic prompts are a core context engineering pattern— they adapt what you tell the model based on the current conversation state. To do this, use the [`@dynamic_prompt`](https://reference.langchain.com/python/langchain/agents/middleware/types/dynamic_prompt) decorator:
 
 <CodeGroup>
 ```python v1 (new)
@@ -196,7 +196,7 @@ def dynamic_prompt(request: ModelRequest) -> str:  # [!code highlight]
     return prompt  # [!code highlight]
 
 agent = create_agent(
-    model="gpt-4o",
+    model="gpt-4.1",
     tools=tools,
     middleware=[dynamic_prompt],  # [!code highlight]
     context_schema=Context
@@ -231,7 +231,7 @@ def dynamic_prompt(state: AgentState) -> str:
     return base_prompt
 
 agent = create_react_agent(
-    model="gpt-4o",
+    model="gpt-4.1",
     tools=tools,
     prompt=dynamic_prompt,
     context_schema=Context
@@ -343,11 +343,11 @@ agent = create_react_agent(
 
 Custom state extends the default agent state with additional fields. You can define custom state in two ways:
 
-1. **Via [`state_schema`](https://reference.langchain.com/python/langchain/middleware/#langchain.agents.middleware.AgentMiddleware.state_schema) on [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent)** - Best for state used in tools
+1. **Via [`state_schema`](https://reference.langchain.com/python/langchain/middleware/#langchain.agents.middleware.AgentMiddleware.state_schema) on [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent)** - Best for state used in tools
 2. **Via middleware** - Best for state managed by specific middleware hooks and tools attached to said middleware
 
 <Note>
-Defining custom state via middleware is preferred over defining it via [`state_schema`](https://reference.langchain.com/python/langchain/middleware/#langchain.agents.middleware.AgentMiddleware.state_schema) on [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent) because it allows you to keep state extensions conceptually scoped to the relevant middleware and tools.
+Defining custom state via middleware is preferred over defining it via [`state_schema`](https://reference.langchain.com/python/langchain/middleware/#langchain.agents.middleware.AgentMiddleware.state_schema) on [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) because it allows you to keep state extensions conceptually scoped to the relevant middleware and tools.
 
 `state_schema` is still supported for backwards compatibility on `create_agent`.
 </Note>
@@ -439,7 +439,7 @@ See the [middleware documentation](/oss/python/langchain/middleware#custom-state
 
 #### State type restrictions
 
-[`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent) only supports `TypedDict` for state schemas. Pydantic models and dataclasses are no longer supported.
+[`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) only supports `TypedDict` for state schemas. Pydantic models and dataclasses are no longer supported.
 
 <CodeGroup>
 ```python v1 (new)
@@ -482,7 +482,7 @@ If you need to perform validation, handle it in middleware hooks instead.
 
 ### Model
 
-Dynamic model selection allows you to choose different models based on runtime context (e.g., task complexity, cost constraints, or user preferences). [`create_react_agent`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.chat_agent_executor.create_react_agent) released in v0.6 of [`langgraph-prebuilt`](https://pypi.org/project/langgraph-prebuilt) supported dynamic model and tool selection via a callable passed to the `model` parameter.
+Dynamic model selection allows you to choose different models based on runtime context (e.g., task complexity, cost constraints, or user preferences). [`create_react_agent`](https://reference.langchain.com/python/langchain-classic/agents/react/agent/create_react_agent) released in v0.6 of [`langgraph-prebuilt`](https://pypi.org/project/langgraph-prebuilt) supported dynamic model and tool selection via a callable passed to the `model` parameter.
 
 This functionality has been ported to the middleware interface in v1.
 
@@ -541,7 +541,7 @@ agent = create_react_agent(
 
 #### Pre-bound models
 
-To better support structured output, [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent) no longer accepts pre-bound models with tools or configuration:
+To better support structured output, [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) no longer accepts pre-bound models with tools or configuration:
 
 ```python
 # No longer supported
@@ -549,7 +549,7 @@ model_with_tools = ChatOpenAI().bind_tools([some_tool])
 agent = create_agent(model_with_tools, tools=[])
 
 # Use instead
-agent = create_agent("gpt-4o-mini", tools=[some_tool])
+agent = create_agent("gpt-4.1-mini", tools=[some_tool])
 ```
 
 <Note>
@@ -558,9 +558,9 @@ Dynamic model functions can return pre-bound models if structured output is *not
 
 ### Tools
 
-The [`tools`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent(tools)) argument to [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent) accepts a list of:
+The [`tools`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) argument to [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) accepts a list of:
 
-* LangChain [`BaseTool`](https://reference.langchain.com/python/langchain/tools/#langchain.tools.BaseTool) instances (functions decorated with [`@tool`](https://reference.langchain.com/python/langchain/tools/#langchain.tools.tool))
+* LangChain [`BaseTool`](https://reference.langchain.com/python/langchain-core/tools/base/BaseTool) instances (functions decorated with [`@tool`](https://reference.langchain.com/python/langchain-core/tools/convert/tool))
 * Callable objects (functions) with proper type hints and a docstring
 * `dict` that represents a built-in provider tools
 
@@ -668,7 +668,7 @@ class OutputSchema(BaseModel):
 
 # Using ToolStrategy
 agent = create_agent(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     tools=tools,
     # explicitly using tool strategy
     response_format=ToolStrategy(OutputSchema)  # [!code highlight]
@@ -684,7 +684,7 @@ class OutputSchema(BaseModel):
     sentiment: str
 
 agent = create_react_agent(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     tools=tools,
     # using tool strategy by default with no option for provider strategy
     response_format=OutputSchema  # [!code highlight]
@@ -693,7 +693,7 @@ agent = create_react_agent(
 # OR
 
 agent = create_react_agent(
-    model="gpt-4o-mini",
+    model="gpt-4.1-mini",
     tools=tools,
     # using a custom prompt to instruct the model to generate the output schema
     response_format=("please generate ...", OutputSchema)  # [!code highlight]
@@ -770,11 +770,11 @@ result = agent.invoke(
 
 ## Standard content
 
-In v1, messages gain provider-agnostic standard content blocks. Access them via [`message.content_blocks`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.messages.BaseMessage.content_blocks) for a consistent, typed view across providers. The existing [`message.content`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.messages.BaseMessage.content_blocks) field remains unchanged for strings or provider-native structures.
+In v1, messages gain provider-agnostic standard content blocks. Access them via [`message.content_blocks`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.messages.BaseMessage.content_blocks) for a consistent, typed view across providers. The existing [`message.content`](https://reference.langchain.com/python/langchain-core/messages/base/BaseMessage) field remains unchanged for strings or provider-native structures.
 
 ### What changed
 
-- New [`content_blocks`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.messages.BaseMessage.content_blocks) property on messages for normalized content
+- New [`content_blocks`](https://reference.langchain.com/python/langchain-core/messages/base/BaseMessage) property on messages for normalized content
 - Standardized block shapes, documented in [Messages](/oss/python/langchain/messages#standard-content-blocks)
 - Optional serialization of standard blocks into `content` via `LC_OUTPUT_VERSION=v1` or `output_version="v1"`
 
@@ -882,11 +882,11 @@ The `langchain` package namespace has been significantly reduced in v1 to focus 
 
 | Module                  | What's available                               | Notes                             |
 |-------------------------|------------------------------------------------|-----------------------------------|
-| [`langchain.agents`](https://reference.langchain.com/python/langchain/agents)      | [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent), [`AgentState`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.AgentState)                   | Core agent creation functionality |
-| [`langchain.messages`](https://reference.langchain.com/python/langchain/messages)    | Message types, [content blocks](https://reference.langchain.com/python/langchain/messages/#langchain.messages.ContentBlock), [`trim_messages`](https://reference.langchain.com/python/langchain/messages/#langchain.messages.trim_messages) | Re-exported from `langchain-core` |
-| [`langchain.tools`](https://reference.langchain.com/python/langchain/tools)       | [`@tool`](https://reference.langchain.com/python/langchain/tools/#langchain.tools.tool), [`BaseTool`](https://reference.langchain.com/python/langchain/tools/#langchain.tools.BaseTool), injection helpers          | Re-exported from `langchain-core` |
-| [`langchain.chat_models`](https://reference.langchain.com/python/langchain/models) | [`init_chat_model`](https://reference.langchain.com/python/langchain/models/#langchain.chat_models.init_chat_model), [`BaseChatModel`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.language_models.chat_models.BaseChatModel)             | Unified model initialization      |
-| [`langchain.embeddings`](https://reference.langchain.com/python/langchain/embeddings)  | [`init_embeddings`](https://reference.langchain.com/python/langchain_core/embeddings/#langchain_core.embeddings.embeddings.Embeddings), [`Embeddings`](https://reference.langchain.com/python/langchain_core/embeddings/#langchain_core.embeddings.embeddings.Embeddings)                | Embedding models                  |
+| [`langchain.agents`](https://reference.langchain.com/python/langchain/agents)      | [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent), [`AgentState`](https://reference.langchain.com/python/langchain/agents/middleware/types/AgentState)                   | Core agent creation functionality |
+| [`langchain.messages`](https://reference.langchain.com/python/langchain/messages)    | Message types, [content blocks](https://reference.langchain.com/python/langchain-core/messages/content/ContentBlock), [`trim_messages`](https://reference.langchain.com/python/langchain-core/messages/utils/trim_messages) | Re-exported from `langchain-core` |
+| [`langchain.tools`](https://reference.langchain.com/python/langchain/tools)       | [`@tool`](https://reference.langchain.com/python/langchain-core/tools/convert/tool), [`BaseTool`](https://reference.langchain.com/python/langchain-core/tools/base/BaseTool), injection helpers          | Re-exported from `langchain-core` |
+| [`langchain.chat_models`](https://reference.langchain.com/python/langchain/models) | [`init_chat_model`](https://reference.langchain.com/python/langchain/chat_models/base/init_chat_model), [`BaseChatModel`](https://reference.langchain.com/python/langchain-core/language_models/chat_models/BaseChatModel)             | Unified model initialization      |
+| [`langchain.embeddings`](https://reference.langchain.com/python/langchain/embeddings)  | [`init_embeddings`](https://reference.langchain.com/python/langchain/embeddings/base/init_embeddings), [`Embeddings`](https://reference.langchain.com/python/langchain-core/embeddings/embeddings/Embeddings)                | Embedding models                  |
 
 ### `langchain-classic`
 
@@ -917,7 +917,7 @@ If you were using any of the following from the `langchain` package, you'll need
 
     ```python v0 (old)
     # Chains
-    from langchain.chains import LLMChain
+    from langchain_classic.chains import LLMChain
 
     # Retrievers
     from langchain.retrievers import ...
@@ -945,7 +945,7 @@ All LangChain packages now require **Python 3.10 or higher**. Python 3.9 reaches
 
 ### Updated return type for chat models
 
-The return type signature for chat model invocation has been fixed from [`BaseMessage`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.messages.BaseMessage) to [`AIMessage`](https://reference.langchain.com/python/langchain/messages/#langchain.messages.AIMessage). Custom chat models implementing [`bind_tools`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.language_models.chat_models.BaseChatModel.bind_tools) should update their return signature:
+The return type signature for chat model invocation has been fixed from [`BaseMessage`](https://reference.langchain.com/python/langchain-core/messages/base/BaseMessage) to [`AIMessage`](https://reference.langchain.com/python/langchain-core/messages/ai/AIMessage). Custom chat models implementing [`bind_tools`](https://reference.langchain.com/python/langchain-core/language_models/chat_models/BaseChatModel/bind_tools) should update their return signature:
 
 <CodeGroup>
 ```python v1 (new)
@@ -960,13 +960,13 @@ def bind_tools(
 ```
 </CodeGroup>
 
-### Default message format for OpenAI Responses API
+### Default message format for OpenAI responses API
 
-When interacting with the Responses API, `langchain-openai` now defaults to storing response items in message `content`. To restore previous behavior, set the `LC_OUTPUT_VERSION` environment variable to `v0`, or specify `output_version="v0"` when instantiating [`ChatOpenAI`](https://reference.langchain.com/python/integrations/langchain_openai/ChatOpenAI).
+When interacting with the Responses API, `langchain-openai` now defaults to storing response items in message `content`. To restore previous behavior, set the `LC_OUTPUT_VERSION` environment variable to `v0`, or specify `output_version="v0"` when instantiating [`ChatOpenAI`](https://reference.langchain.com/python/langchain-openai/chat_models/base/ChatOpenAI).
 
 ```python
 # Enforce previous behavior with output_version flag
-model = ChatOpenAI(model="gpt-4o-mini", output_version="v0")
+model = ChatOpenAI(model="gpt-4.1-mini", output_version="v0")
 ```
 
 ### Default `max_tokens` in `langchain-anthropic`
@@ -997,12 +997,12 @@ Existing usage patterns (i.e., `.text()`) will continue to function but now emit
 
 ### `example` parameter removed from `AIMessage`
 
-The `example` parameter has been removed from [`AIMessage`](https://reference.langchain.com/python/langchain/messages/#langchain.messages.AIMessage) objects. We recommend migrating to use `additional_kwargs` for passing extra metadata as needed.
+The `example` parameter has been removed from [`AIMessage`](https://reference.langchain.com/python/langchain-core/messages/ai/AIMessage) objects. We recommend migrating to use `additional_kwargs` for passing extra metadata as needed.
 
 ## Minor changes
 
 - `AIMessageChunk` objects now include a `chunk_position` attribute with position `'last'` to indicate the final chunk in a stream. This allows for clearer handling of streamed messages. If the chunk is not the final one, `chunk_position` will be `None`.
-- `LanguageModelOutputVar` is now typed to [`AIMessage`](https://reference.langchain.com/python/langchain/messages/#langchain.messages.AIMessage) instead of [`BaseMessage`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.messages.BaseMessage).
+- `LanguageModelOutputVar` is now typed to [`AIMessage`](https://reference.langchain.com/python/langchain-core/messages/ai/AIMessage) instead of [`BaseMessage`](https://reference.langchain.com/python/langchain-core/messages/base/BaseMessage).
 - The logic for merging message chunks (`AIMessageChunk.add`) has been updated with more sophisticated selection handling for the final id for the merged chunk. It prioritizes provider-assigned IDs over LangChain-generated IDs.
 - We now open files with `utf-8` encoding by default.
 - Standard tests now use multimodal content blocks.
@@ -1016,9 +1016,9 @@ Old docs are archived for reference:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/migrate/langchain-v1.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/migrate/langchain-v1.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

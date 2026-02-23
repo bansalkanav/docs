@@ -1,5 +1,6 @@
 ---
-title: AzionRetriever
+title: "AzionRetriever integration"
+description: "Integrate with the AzionRetriever retriever using LangChain JavaScript."
 ---
 
 ## Overview
@@ -63,7 +64,7 @@ const embeddingModel = new OpenAIEmbeddings({
 })
 
 const chatModel = new ChatOpenAI({
-  model: "gpt-4o-mini",
+  model: "gpt-4.1-mini",
   apiKey: process.env.OPENAI_API_KEY
 })
 
@@ -89,7 +90,7 @@ const query = "Australia"
 await retriever.invoke(query);
 ```
 
-```output
+```javascript
 [
   Document {
     pageContent: 'Australia s indigenous people have inhabited the continent for over 65,000 years',
@@ -117,9 +118,9 @@ For detailed documentation of all AzionRetriever features and configurations hea
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/retrievers/azion-edgesql.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/retrievers/azion-edgesql.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

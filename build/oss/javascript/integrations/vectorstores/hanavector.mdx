@@ -1,5 +1,6 @@
 ---
-title: SAP HANA Cloud Vector Engine
+title: "Sap hana cloud vector engine integration"
+description: "Integrate with the Sap hana cloud vector engine vector store using LangChain JavaScript."
 ---
 
 [SAP HANA Cloud Vector Engine](https://www.sap.com/events/teched/news-guide/ai.html#article8) is a vector store fully integrated into the `SAP HANA Cloud database`.
@@ -207,7 +208,7 @@ docsMMR.forEach((docsMMR) => {
 client.disconnect();
 ```
 
-## Creating an HNSW Vector Index
+## Creating an HNSW vector index
 
 A vector index can significantly speed up top-k nearest neighbor queries for vectors. Users can create a Hierarchical Navigable Small World (HNSW) vector index using the `create_hnsw_index` function.
 
@@ -314,7 +315,7 @@ docsL2.forEach((doc) => {
 client.disconnect();
 ```
 
-## Basic Vectorstore Operations
+## Basic vectorstore operations
 
 ```typescript
 import { OpenAIEmbeddings } from "@langchain/openai";
@@ -727,9 +728,9 @@ client.disconnect();
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/hanavector.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/vectorstores/hanavector.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

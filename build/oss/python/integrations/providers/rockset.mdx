@@ -1,10 +1,11 @@
 ---
-title: Rockset
+title: "Rockset integrations"
+description: "Integrate with Rockset using LangChain Python."
 ---
 
 >[Rockset](https://rockset.com/product/) is a real-time analytics database service for serving low latency, high concurrency analytical queries at scale. It builds a Converged Index™ on structured and semi-structured data with an efficient store for vector embeddings. Its support for running SQL on schemaless data makes it a perfect choice for running vector search with metadata filters.
 
-## Installation and Setup
+## Installation and setup
 
 Make sure you have Rockset account and go to the web console to get the API key. Details can be found on [the website](https://rockset.com/docs/rest-api/).
 
@@ -18,7 +19,7 @@ uv add rockset
 ```
 </CodeGroup>
 
-## Vector Store
+## Vector store
 
 See a [usage example](/oss/python/integrations/vectorstores/rockset).
 
@@ -26,7 +27,7 @@ See a [usage example](/oss/python/integrations/vectorstores/rockset).
 from langchain_community.vectorstores import Rockset
 ```
 
-## Document Loader
+## Document loader
 
 See a [usage example](/oss/python/integrations/document_loaders/rockset).
 ```python
@@ -35,9 +36,9 @@ from langchain_community.document_loaders import RocksetLoader
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/rockset.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/rockset.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,6 @@
 ---
-title: Huawei OBS Directory
+title: "Huawei obs directory integration"
+description: "Integrate with the Huawei obs directory document loader using LangChain Python."
 ---
 
 The following code demonstrates how to load objects from the Huawei OBS (Object Storage Service) as documents.
@@ -27,7 +28,7 @@ loader = OBSDirectoryLoader("your-bucket-name", endpoint=endpoint, config=config
 loader.load()
 ```
 
-## Specify a Prefix for Loading
+## Specify a prefix for loading
 
 If you want to load objects with a specific prefix from the bucket, you can use the following code:
 
@@ -41,7 +42,7 @@ loader = OBSDirectoryLoader(
 loader.load()
 ```
 
-## Get Authentication Information from ECS
+## Get authentication information from ECS
 
 If your langchain is deployed on Huawei Cloud ECS and [Agency is set up](https://support.huaweicloud.com/intl/en-us/usermanual-ecs/ecs_03_0166.html#section7), the loader can directly get the security token from ECS without needing access key and secret key.
 
@@ -54,7 +55,7 @@ loader = OBSDirectoryLoader("your-bucket-name", endpoint=endpoint, config=config
 loader.load()
 ```
 
-## Use a Public Bucket
+## Use a public bucket
 
 If your bucket's bucket policy allows anonymous access (anonymous users have `listBucket` and `GetObject` permissions), you can directly load the objects without configuring the `config` parameter.
 
@@ -68,9 +69,9 @@ loader.load()
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/huawei_obs_directory.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/huawei_obs_directory.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

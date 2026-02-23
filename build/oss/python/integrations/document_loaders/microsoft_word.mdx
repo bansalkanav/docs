@@ -1,5 +1,6 @@
 ---
-title: Microsoft Word
+title: "Microsoft Word integration"
+description: "Integrate with the Microsoft Word document loader using LangChain Python."
 ---
 
 >[Microsoft Word](https://www.microsoft.com/en-us/microsoft-365/word) is a word processor developed by Microsoft.
@@ -24,11 +25,11 @@ data = loader.load()
 data
 ```
 
-```output
+```python
 [Document(page_content='Lorem ipsum dolor sit amet.', metadata={'source': './example_data/fake.docx'})]
 ```
 
-## Using Unstructured
+## Using unstructured
 
 Please see [this guide](/oss/python/integrations/providers/unstructured/) for more instructions on setting up Unstructured locally, including setting up required system dependencies.
 
@@ -42,11 +43,11 @@ data = loader.load()
 data
 ```
 
-```output
+```python
 [Document(page_content='Lorem ipsum dolor sit amet.', metadata={'source': 'example_data/fake.docx'})]
 ```
 
-### Retain Elements
+### Retain elements
 
 Under the hood, Unstructured creates different "elements" for different chunks of text. By default we combine those together, but you can easily keep that separation by specifying `mode="elements"`.
 
@@ -58,11 +59,11 @@ data = loader.load()
 data[0]
 ```
 
-```output
+```python
 Document(page_content='Lorem ipsum dolor sit amet.', metadata={'source': './example_data/fake.docx', 'category_depth': 0, 'file_directory': './example_data', 'filename': 'fake.docx', 'last_modified': '2023-12-19T13:42:18', 'languages': ['por', 'cat'], 'filetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'category': 'Title'})
 ```
 
-## Using Azure AI Document Intelligence
+## Using Azure AI document intelligence
 
 >[Azure AI Document Intelligence](https://aka.ms/doc-intelligence) (formerly known as `Azure Form Recognizer`) is machine-learning
 >based service that extracts texts (including handwriting), tables, document structures (e.g., titles, section headings, etc.) and key-value-pairs from
@@ -93,9 +94,9 @@ documents = loader.load()
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/microsoft_word.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/microsoft_word.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

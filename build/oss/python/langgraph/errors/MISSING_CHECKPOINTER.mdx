@@ -4,7 +4,7 @@ title: MISSING_CHECKPOINTER
 
 You are attempting to use built-in LangGraph persistence without providing a checkpointer.
 
-This happens when a `checkpointer` is missing in the `compile()` method of [`StateGraph`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph) or [`@entrypoint`](https://reference.langchain.com/python/langgraph/func/#langgraph.func.entrypoint).
+This happens when a `checkpointer` is missing in the `compile()` method of [`StateGraph`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph) or [`@entrypoint`](https://reference.langchain.com/python/langgraph/func/entrypoint).
 
 
 
@@ -14,7 +14,7 @@ This happens when a `checkpointer` is missing in the `compile()` method of [`Sta
 
 The following may help resolve this error:
 
--   Initialize and pass a checkpointer to the `compile()` method of [`StateGraph`](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.StateGraph) or [`@entrypoint`](https://reference.langchain.com/python/langgraph/func/#langgraph.func.entrypoint).
+-   Initialize and pass a checkpointer to the `compile()` method of [`StateGraph`](https://reference.langchain.com/python/langgraph/graph/state/StateGraph) or [`@entrypoint`](https://reference.langchain.com/python/langgraph/func/entrypoint).
 
 
 
@@ -43,9 +43,9 @@ def workflow(messages: list[str]) -> str:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/errors/MISSING_CHECKPOINTER.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/errors/MISSING_CHECKPOINTER.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

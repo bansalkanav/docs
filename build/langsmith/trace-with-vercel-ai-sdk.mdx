@@ -1,5 +1,5 @@
 ---
-title: Trace with the Vercel AI SDK (JS/TS only)
+title: Trace Vercel AI SDK applications (JS/TS only)
 sidebarTitle: Vercel AI SDK
 ---
 
@@ -168,7 +168,7 @@ The resulting trace will look [like this](https://smith.langchain.com/public/ff2
 When tracing in serverless environments, you must wait for all runs to flush before your environment
 shuts down. To do this, you can pass a LangSmith [`Client`](https://docs.smith.langchain.com/reference/js/classes/client.Client) instance when wrapping the AI SDK method,
 then call `await client.awaitPendingTraceBatches()`.
-Make sure to also pass it into any `traceable` wrappers you create as well:
+Make sure to also pass it into any `traceable` wrappers you create:
 
 ```typescript
 import * as ai from "ai";
@@ -437,9 +437,9 @@ if you wish to avoid the cast.
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-vercel-ai-sdk.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-vercel-ai-sdk.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

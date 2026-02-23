@@ -1,5 +1,6 @@
 ---
-title: Fireworks
+title: "Fireworks integration"
+description: "Integrate with the Fireworks LLM using LangChain Python."
 ---
 
 <Warning>
@@ -64,7 +65,7 @@ output = llm.invoke("Who's the best quarterback in the NFL?")
 print(output)
 ```
 
-```output
+```text
   That's an easy one. It's Aaron Rodgers. Rodgers has consistently been one
 ```
 
@@ -81,7 +82,7 @@ output = llm.generate(
 print(output.generations)
 ```
 
-```output
+```text
 [[Generation(text=' You could choose one of the top performers in 2016, such as Vir')], [Generation(text=' -- Keith Jackson\nA: LeBron James, Chris Paul and Kobe Bryant are the')]]
 ```
 
@@ -98,7 +99,7 @@ llm = Fireworks(
 print(llm.invoke("What's the weather like in Kansas City in December?"))
 ```
 
-```output
+```text
 December is a cold month in Kansas City, with temperatures of
 ```
 
@@ -122,7 +123,7 @@ chain = prompt | llm
 print(chain.invoke({"topic": "bears"}))
 ```
 
-```output
+```text
  What do you call a bear with no teeth? A gummy bear!
 ```
 
@@ -135,7 +136,7 @@ for token in chain.stream({"topic": "bears"}):
     print(token, end="", flush=True)
 ```
 
-```output
+```text
  Why do bears hate shoes so much? They like to run around in their
 ```
 
@@ -147,9 +148,9 @@ For detailed documentation of all `Fireworks` LLM features and configurations he
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/fireworks.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/fireworks.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

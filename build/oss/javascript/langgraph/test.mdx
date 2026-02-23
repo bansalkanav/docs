@@ -8,7 +8,7 @@ After you've prototyped your LangGraph agent, a natural next step is to add test
 
 
 
-Note that this guide is LangGraph-specific and covers scenarios around graphs with custom structures - if you are just getting started, check out [this section](/oss/javascript/langchain/test/) that uses LangChain's built-in [`createAgent`](https://reference.langchain.com/javascript/functions/langchain.index.createAgent.html) instead.
+Note that this guide is LangGraph-specific and covers scenarios around graphs with custom structures - if you are just getting started, check out [this section](/oss/javascript/langchain/test/) that uses LangChain's built-in [`createAgent`](https://reference.langchain.com/javascript/langchain/index/createAgent) instead.
 
 
 
@@ -35,13 +35,14 @@ The below example shows how this works with a simple, linear graph that progress
 import { test, expect } from 'vitest';
 import {
   StateGraph,
+  StateSchema,
   START,
   END,
   MemorySaver,
 } from '@langchain/langgraph';
-import { z } from "zod/v4";
+import * as z from "zod";
 
-const State = z.object({
+const State = new StateSchema({
   my_key: z.string(),
 });
 
@@ -80,10 +81,11 @@ import {
   START,
   END,
   MemorySaver,
+  StateSchema,
 } from '@langchain/langgraph';
-import { z } from "zod/v4";
+import * as z from "zod";
 
-const State = z.object({
+const State = new StateSchema({
   my_key: z.string(),
 });
 
@@ -130,13 +132,14 @@ Here's an example that executes only the second and third nodes in a linear grap
 import { test, expect } from 'vitest';
 import {
   StateGraph,
+  StateSchema,
   START,
   END,
   MemorySaver,
 } from '@langchain/langgraph';
-import { z } from "zod/v4";
+import * as z from "zod";
 
-const State = z.object({
+const State = new StateSchema({
   my_key: z.string(),
 });
 
@@ -181,9 +184,9 @@ test('partial execution from node2 to node3', async () => {
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/test.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/test.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

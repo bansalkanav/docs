@@ -9,11 +9,11 @@ LangChain provides standard interfaces for several different components (languag
 
 ## Why contribute an integration to LangChain?
 
-<Card title="Discoverability" icon="magnifying-glass">
+<Card title="Discoverability" icon="search">
     LangChain is the most used framework for building LLM applications, with over 20 million monthly downloads.
 </Card>
 
-<Card title="Interoperability" icon="arrows-rotate">
+<Card title="Interoperability" icon="refresh">
     LangChain components expose a standard interface, allowing developers to easily swap them for each other. If you implement a LangChain integration, any developer using a different component will easily be able to swap yours in.
 </Card>
 
@@ -31,6 +31,14 @@ While any component can be integrated into LangChain, there are specific types o
 - [**Retrievers**](/oss/javascript/integrations/retrievers): Core to RAG applications
 - [**Embedding Models**](/oss/javascript/integrations/text_embedding): Foundation for vector operations
 - [**Vector Stores**](/oss/javascript/integrations/vectorstores): Essential for semantic search
+- [**Sandboxes**](/oss/javascript/deepagents/subagents): Run code safely with deep agents
+
+<Accordion title="Additional third-party sandbox integration criteria">
+Be aware that we feature third-party sandbox integrations only when:
+
+- The integration is authored and maintained by the company that provides the sandbox.
+- **Or** the integration is widely used, meaning the integration must have a minimum of 10,000 daily downloads on PyPI or npm to be considered for featuring.
+</Accordion>
 
 **Not these ❌**:
 - **LLMs (Text-Completion Models)**: Deprecated in favor of [Chat Models](/oss/javascript/integrations/chat)
@@ -84,16 +92,16 @@ While any component can be integrated into LangChain, there are specific types o
         </Accordion>
     </Step>
 
-    <Step title="Co-marketing" icon="megaphone">
+    <Step title="Co-marketing" icon="speakerphone">
         (Optional) Engage with the LangChain team for joint [co-marketing](/oss/javascript/contributing/comarketing).
     </Step>
 </Steps>
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/contributing/integrations-langchain.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/contributing/integrations-langchain.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

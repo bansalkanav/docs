@@ -1,5 +1,6 @@
 ---
-title: Vsdx
+title: "Vsdx integration"
+description: "Integrate with the Vsdx document loader using LangChain Python."
 ---
 
 > A [visio file](https://fr.wikipedia.org/wiki/Microsoft_Visio) (with extension .vsdx) is associated with Microsoft Visio, a diagram creation software. It stores information about the structure, layout, and graphical elements of a diagram. This format facilitates the creation and sharing of visualizations in areas such as business, engineering, and computer science.
@@ -28,7 +29,7 @@ for i, doc in enumerate(documents):
     print(doc.page_content)
 ```
 
-```output
+```text
 ------ Page 0 ------
 Title page : Summary
 Source : ./example_data/fake.vsdx
@@ -418,9 +419,9 @@ Only connectors on this page. This is the CoNNeCtor page
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/vsdx.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/vsdx.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

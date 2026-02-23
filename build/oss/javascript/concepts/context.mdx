@@ -99,15 +99,11 @@ await graph.invoke(
 
 
     ```typescript
-    import type { BaseMessage } from "@langchain/core/messages";
-    import { StateGraph, MessagesZodMeta, START } from "@langchain/langgraph";
-    import { registry } from "@langchain/langgraph/zod";
-    import * as z from "zod";
+    import { z } from "zod/v4";
+    import { StateGraph, StateSchema, MessagesValue, START } from "@langchain/langgraph";
 
-    const CustomState = z.object({  // [!code highlight]
-      messages: z
-        .array(z.custom<BaseMessage>())
-        .register(registry, MessagesZodMeta),
+    const CustomState = new StateSchema({  // [!code highlight]
+      messages: MessagesValue,
       extraField: z.number(),
     });
 
@@ -138,18 +134,17 @@ await graph.invoke(
 
 **Dynamic cross-conversation context** represents persistent, mutable data that spans across multiple conversations or sessions and is managed through the LangGraph store. This includes user profiles, preferences, and historical interactions. The LangGraph store acts as [long-term memory](/oss/javascript/concepts/memory#long-term-memory) across multiple runs. This can be used to read or update persistent facts (e.g., user profiles, preferences, prior interactions).
 
-## See also
+## Learn more
 
 - [Memory conceptual overview](/oss/javascript/concepts/memory)
 - [Short-term memory in LangChain](/oss/javascript/langchain/short-term-memory)
-- [Long-term memory in LangChain](/oss/javascript/langchain/long-term-memory)
 - [Memory in LangGraph](/oss/javascript/langgraph/add-memory)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/concepts/context.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/concepts/context.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

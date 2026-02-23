@@ -1,5 +1,6 @@
 ---
-title: GitLab Toolkit
+title: "Gitlab toolkit integration"
+description: "Integrate with the Gitlab toolkit using LangChain Python."
 ---
 
 The `GitLab` toolkit contains tools that enable an LLM agent to interact with a gitlab repository.
@@ -46,7 +47,7 @@ pip install -qU  python-gitlab langchain-community
 * read_repository
 * write_repository
 
-### 3. Set Environmental Variables
+### 3. Set environmental variables
 
 Before initializing your agent, the following environmental variables need to be set:
 
@@ -61,7 +62,7 @@ Before initializing your agent, the following environmental variables need to be
 ```python
 import os
 
-from langchain.agents import AgentType, initialize_agent
+from langchain.agents import create_agent
 from langchain_community.agent_toolkits.gitlab.toolkit import GitLabToolkit
 from langchain_community.utilities.gitlab import GitLabAPIWrapper
 from langchain_openai import OpenAI
@@ -83,18 +84,22 @@ os.environ["OPENAI_API_KEY"] = ""
 llm = OpenAI(temperature=0)
 gitlab = GitLabAPIWrapper()
 toolkit = GitLabToolkit.from_gitlab_api_wrapper(gitlab)
-agent = initialize_agent(
-    toolkit.get_tools(), llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
+agent = create_agent(
+    model=llm,
+    tools=toolkit.get_tools(),
+    verbose=True,
 )
 ```
 
 ```python
-agent.run(
-    "You have the software engineering capabilities of a Google Principle engineer. You are tasked with completing issues on a gitlab repository. Please look at the open issues and complete them by creating merge requests that solve the issues."
+agent.invoke(
+    {
+        "input": "You have the software engineering capabilities of a Google Principle engineer. You are tasked with completing issues on a gitlab repository. Please look at the open issues and complete them by creating merge requests that solve the issues."
+    }
 )
 ```
 
-```output
+```text
 > Entering new AgentExecutor chain...
  I need to look at the open issues and figure out how to solve them.
 Action: Get Issues
@@ -144,7 +149,7 @@ Final Answer: I have created a merge request with number 12 that solves issue 15
 > Finished chain.
 ```
 
-```output
+```text
 'I have created a merge request with number 12 that solves issue 15.'
 ```
 
@@ -154,9 +159,9 @@ Final Answer: I have created a merge request with number 12 that solves issue 15
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/gitlab.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/gitlab.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

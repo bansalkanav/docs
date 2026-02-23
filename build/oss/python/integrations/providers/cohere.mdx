@@ -1,11 +1,12 @@
 ---
-title: Cohere
+title: "Cohere integrations"
+description: "Integrate with Cohere using LangChain Python."
 ---
 
 >[Cohere](https://cohere.ai/about) is a Canadian startup that provides natural language processing models
 > that help companies improve human-machine interactions.
 
-## Installation and Setup
+## Installation and setup
 - Install the Python SDK :
 <CodeGroup>
 ```bash pip
@@ -136,7 +137,7 @@ agent_executor.invoke({
 ```
 The ReAct agent can be used to call multiple tools in sequence.
 
-### RAG Retriever
+### RAG retriever
 
 ```python
 from langchain_cohere import ChatCohere
@@ -149,7 +150,7 @@ print(rag.invoke("What is cohere ai?"))
 
 Usage of the Cohere [RAG Retriever](/oss/python/integrations/retrievers/cohere)
 
-### Text Embedding
+### Text embedding
 
 ```python
 from langchain_cohere import CohereEmbeddings
@@ -166,9 +167,9 @@ Usage of the Cohere [Reranker](/oss/python/integrations/retrievers/cohere-rerank
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/cohere.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/cohere.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

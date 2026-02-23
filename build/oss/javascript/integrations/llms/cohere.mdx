@@ -1,5 +1,6 @@
 ---
-title: Cohere
+title: "Cohere integration"
+description: "Integrate with the Cohere LLM using LangChain JavaScript."
 ---
 
 <Warning>
@@ -69,7 +70,7 @@ const llm = new Cohere({
 })
 ```
 
-### Custom client for Cohere on Azure, Cohere on AWS Bedrock, and Standalone Cohere Instance
+### Custom client for Cohere on Azure, Cohere on AWS Bedrock, and standalone Cohere instance
 
 We can instantiate a custom `CohereClient` and pass it to the ChatCohere constructor.
 
@@ -100,7 +101,7 @@ const completion = await llm.invoke(inputText)
 completion
 ```
 
-```output
+```text
 Cohere is a company that provides natural language processing models that help companies improve human-machine interactions. Cohere was founded in 2019 by Aidan Gomez, Ivan Zhang, and Nick Frosst.
 ```
 
@@ -112,9 +113,9 @@ For detailed documentation of all Cohere features and configurations head to the
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/llms/cohere.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/llms/cohere.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

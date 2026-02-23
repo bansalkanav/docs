@@ -14,19 +14,19 @@ Agentic applications tend to lean more on integration because they chain multipl
 
 
 
-## Integration Testing
+## Integration testing
 
 Many agent behaviors only emerge when using a real LLM, such as which tool the agent decides to call, how it formats responses, or whether a prompt modification affects the entire execution trajectory. LangChain's [`agentevals`](https://github.com/langchain-ai/agentevals) package provides evaluators specifically designed for testing agent trajectories with live models.
 
 AgentEvals lets you easily evaluate the trajectory of your agent (the exact sequence of messages, including tool calls) by performing a **trajectory match** or by using an **LLM judge**:
 
-<Card title="Trajectory match" icon="equals" arrow="true" href="#trajectory-match-evaluator">
+<Card title="Trajectory match" icon="equal" arrow="true" href="#trajectory-match-evaluator">
 Hard-code a reference trajectory for a given input and validate the run via a step-by-step comparison.
 
 Ideal for testing well-defined workflows where you know the expected behavior. Use when you have specific expectations about which tools should be called and in what order. This approach is deterministic, fast, and cost-effective since it doesn't require additional LLM calls.
 </Card>
 
-<Card title="LLM-as-judge" icon="gavel" arrow="true" href="#llm-as-judge-evaluator">
+<Card title="LLM-as-judge" icon="hammer" arrow="true" href="#llm-as-judge-evaluator">
 Use a LLM to qualitatively validate your agent's execution trajectory. The "judge" LLM reviews the agent's decisions against a prompt rubric (which can include a reference trajectory).
 
 More flexible and can assess nuanced aspects like efficiency and appropriateness, but requires an LLM call and is less deterministic. Use when you want to evaluate the overall quality and reasonableness of the agent's trajectory without strict tool call or ordering requirements.
@@ -43,7 +43,7 @@ npm install agentevals @langchain/core
 
 Or, clone the [AgentEvals repository](https://github.com/langchain-ai/agentevals) directly.
 
-### Trajectory Match Evaluator
+### Trajectory match evaluator
 
 
 AgentEvals offers the `createTrajectoryMatchEvaluator` function to match your agent's trajectory against a reference trajectory. There are four modes to choose from:
@@ -81,7 +81,7 @@ const getWeather = tool(
 );
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [getWeather]
 });
 
@@ -159,7 +159,7 @@ const getEvents = tool(
 );
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [getWeather, getEvents]
 });
 
@@ -244,7 +244,7 @@ const getDetailedForecast = tool(
 );
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [getWeather, getDetailedForecast]
 });
 
@@ -295,7 +295,7 @@ You can also set the `toolArgsMatchMode` property and/or `toolArgsMatchOverrides
 
 </Info>
 
-### LLM-as-Judge Evaluator
+### LLM-as-Judge evaluator
 
 
 You can also use an LLM to evaluate the agent's execution path with the `createTrajectoryLLMAsJudge` function. Unlike the trajectory match evaluators, it doesn't require a reference trajectory, but one can be provided if available.
@@ -322,7 +322,7 @@ const getWeather = tool(
 );
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [getWeather]
 });
 
@@ -379,7 +379,7 @@ For more configurability over how the LLM evaluates the trajectory, visit the [r
 
 
 
-## LangSmith Integration
+## LangSmith integration
 
 For tracking experiments over time, you can log evaluator results to [LangSmith](https://smith.langchain.com/), a platform for building production-grade LLM applications that includes tracing, evaluation, and experimentation tools.
 
@@ -496,9 +496,9 @@ To learn more about evaluating your agent, see the [LangSmith docs](/langsmith/v
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/test.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/test.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,6 @@
 ---
-title: LocalFileStore
+title: "LocalFileStore integration"
+description: "Integrate with the LocalFileStore store using LangChain JavaScript."
 ---
 
 <Tip>
@@ -90,7 +91,7 @@ const results = await kvStore.mget(
 console.log(results.map((v) => decoder.decode(v)));
 ```
 
-```output
+```python
 [ 'value1', 'value2' ]
 ```
 
@@ -112,7 +113,7 @@ await kvStore.mget(
 )
 ```
 
-```output
+```text
 [ undefined, undefined ]
 ```
 
@@ -143,7 +144,7 @@ for await (const key of kvStoreForYield.yieldKeys("message:id:")) {
 console.log(yieldedKeys);
 ```
 
-```output
+```python
 [ 'message:id:key1', 'message:id:key2' ]
 ```
 
@@ -162,9 +163,9 @@ For detailed documentation of all LocalFileStore features and configurations, he
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/stores/file_system.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/stores/file_system.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

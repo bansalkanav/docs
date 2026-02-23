@@ -1,5 +1,6 @@
 ---
-title: MistralAIEmbeddings
+title: "MistralAIEmbeddings integration"
+description: "Integrate with the MistralAIEmbeddings embedding model using LangChain JavaScript."
 ---
 
 This will help you get started with MistralAIEmbeddings [embedding models](/oss/javascript/integrations/text_embedding) using LangChain. For detailed documentation on `MistralAIEmbeddings` features and configuration options, please refer to the [API reference](https://api.js.langchain.com/classes/langchain_mistralai.MistralAIEmbeddings.html).
@@ -59,7 +60,7 @@ const embeddings = new MistralAIEmbeddings({
 });
 ```
 
-## Indexing and Retrieval
+## Indexing and retrieval
 
 Embedding models are often used in retrieval-augmented generation (RAG) flows, both as part of indexing data as well as later retrieving it. For more detailed instructions, please see our RAG tutorials under the [**Learn** tab](/oss/javascript/learn/).
 
@@ -85,11 +86,11 @@ const retrievedDocuments = await retriever.invoke("What is LangChain?");
 retrievedDocuments[0].pageContent;
 ```
 
-```output
+```text
 LangChain is the framework for building context-aware reasoning applications
 ```
 
-## Direct Usage
+## Direct usage
 
 Under the hood, the vectorstore and retriever implementations are calling `embeddings.embedDocument(...)` and `embeddings.embedQuery(...)` to create embeddings for the text(s) used in `fromDocuments` and the retriever's `invoke` operations, respectively.
 
@@ -105,7 +106,7 @@ const singleVector = await embeddings.embedQuery(text);
 console.log(singleVector.slice(0, 100));
 ```
 
-```output
+```text
 [
           -0.04443359375,         0.01885986328125,      0.018035888671875,
     -0.00864410400390625,        0.049652099609375,     -0.001190185546875,
@@ -157,7 +158,7 @@ console.log(vectors[0].slice(0, 100));
 console.log(vectors[1].slice(0, 100));
 ```
 
-```output
+```text
 [
           -0.04443359375,         0.01885986328125,    0.0180511474609375,
      -0.0086517333984375,        0.049652099609375,  -0.00121307373046875,
@@ -303,9 +304,9 @@ For detailed documentation of all `MistralAIEmbeddings` features and configurati
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/text_embedding/mistralai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/text_embedding/mistralai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

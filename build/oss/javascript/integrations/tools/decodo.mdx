@@ -1,5 +1,6 @@
 ---
-title: Decodo Tools
+title: "Decodo integration"
+description: "Integrate with the Decodo tool using LangChain JavaScript."
 ---
 
 The [@decodo/langchain-ts](https://www.npmjs.com/package/@decodo/langchain-ts) package enables developers to use Decodo's Web Scraper API alongside their LangChain applications.
@@ -52,7 +53,7 @@ const main = async () => {
   const decodoUniversalTool = new DecodoUniversalTool({ username, password });
 
   const model = new ChatOpenAI({
-    model: "gpt-4o-mini",
+    model: "gpt-4.1-mini",
   });
 
   const agent = createAgent({
@@ -80,7 +81,7 @@ if (require.main === module) {
 
 For more examples, see the [@decodo/langchain-ts](https://github.com/Decodo/decodo-langchain-ts) on GitHub.
 
-## Google Search
+## Google search
 
 ```typescript
 const main = async () => {
@@ -117,7 +118,7 @@ const main = async () => {
 };
 ```
 
-## Amazon Search
+## Amazon search
 
 ```typescript
 const main = async () => {
@@ -165,7 +166,7 @@ type DecodoConfig = {
 };
 ```
 
-## API Parameters
+## API parameters
 
 See the [Scraper API documentation](https://help.decodo.com/docs/web-scraping-api-parameters) for a list of available parameters
 
@@ -179,9 +180,9 @@ For support, please visit [Decodo's documentation](https://help.decodo.com/) or 
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/tools/decodo.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/tools/decodo.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

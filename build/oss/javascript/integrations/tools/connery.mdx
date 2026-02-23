@@ -1,5 +1,6 @@
 ---
-title: Connery Action Tool
+title: "Connery action integration"
+description: "Integrate with the Connery action tool using LangChain JavaScript."
 ---
 
 ```typescript
@@ -32,7 +33,7 @@ const manualRunResult = await sendEmailAction.invoke({
 console.log(manualRunResult);
 
 // Run the action using the OpenAI Functions agent.
-const llm = new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0 });
+const llm = new ChatOpenAI({ model: "gpt-4.1-mini", temperature: 0 });
 const agent = await initializeAgentExecutorWithOptions([sendEmailAction], llm, {
   agentType: "openai-functions",
   verbose: true,
@@ -54,9 +55,9 @@ Connery Action is a structured tool, so you can only use it in the agents suppor
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/tools/connery.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/tools/connery.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

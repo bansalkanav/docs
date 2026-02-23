@@ -1,5 +1,6 @@
 ---
-title: ZhipuAIEmbeddings
+title: "ZhipuAIEmbeddings integration"
+description: "Integrate with the ZhipuAIEmbeddings embedding model using LangChain Python."
 ---
 
 This will help you get started with ZhipuAI embedding models using LangChain. For detailed documentation on `ZhipuAIEmbeddings` features and configuration options, please refer to the [API reference](https://bigmodel.cn/dev/api#vector).
@@ -59,7 +60,7 @@ embeddings = ZhipuAIEmbeddings(
 )
 ```
 
-## Indexing and Retrieval
+## Indexing and retrieval
 
 Embedding models are often used in retrieval-augmented generation (RAG) flows, both as part of indexing data as well as later retrieving it. For more detailed instructions, please see our [RAG tutorials](/oss/python/langchain/rag).
 
@@ -86,11 +87,11 @@ retrieved_documents = retriever.invoke("What is LangChain?")
 retrieved_documents[0].page_content
 ```
 
-```output
+```text
 'LangChain is the framework for building context-aware reasoning applications'
 ```
 
-## Direct Usage
+## Direct usage
 
 Under the hood, the vectorstore and retriever implementations are calling `embeddings.embed_documents(...)` and `embeddings.embed_query(...)` to create embeddings for the text(s) used in `from_texts` and retrieval `invoke` operations, respectively.
 
@@ -105,7 +106,7 @@ single_vector = embeddings.embed_query(text)
 print(str(single_vector)[:100])  # Show the first 100 characters of the vector
 ```
 
-```output
+```text
 [-0.022979736, 0.007785797, 0.04598999, 0.012741089, -0.01689148, 0.008277893, 0.016464233, 0.009246
 ```
 
@@ -122,7 +123,7 @@ for vector in two_vectors:
     print(str(vector)[:100])  # Show the first 100 characters of the vector
 ```
 
-```output
+```text
 [-0.022979736, 0.007785797, 0.04598999, 0.012741089, -0.01689148, 0.008277893, 0.016464233, 0.009246
 [-0.02330017, -0.013916016, 0.00022411346, 0.017196655, -0.034240723, 0.011131287, 0.011497498, -0.0
 ```
@@ -135,9 +136,9 @@ For detailed documentation on `ZhipuAIEmbeddings` features and configuration opt
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/zhipuai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/zhipuai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

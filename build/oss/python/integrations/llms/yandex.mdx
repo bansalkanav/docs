@@ -1,5 +1,6 @@
 ---
-title: YandexGPT
+title: "Yandexgpt integration"
+description: "Integrate with the Yandexgpt LLM using LangChain Python."
 ---
 
 This notebook goes over how to use LangChain with [YandexGPT](https://cloud.yandex.com/en/services/yandexgpt).
@@ -25,7 +26,7 @@ To specify the model you can use `model_uri` parameter, see [the documentation](
 By default, the latest version of `yandexgpt-lite` is used from the folder specified in the parameter `folder_id` or `YC_FOLDER_ID` environment variable.
 
 ```python
-from langchain.chains import LLMChain
+from langchain_classic.chains import LLMChain
 from langchain_community.llms import YandexGPT
 from langchain_core.prompts import PromptTemplate
 ```
@@ -49,15 +50,15 @@ country = "Russia"
 llm_chain.invoke(country)
 ```
 
-```output
+```text
 'The capital of Russia is Moscow.'
 ```
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/yandex.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/yandex.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

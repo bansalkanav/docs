@@ -5,7 +5,7 @@ sidebarTitle: Observability
 
 import observability from '/snippets/oss/observability.mdx';
 
-As you build and run agents with LangChain, you need visibility into how they behave: which [tools](/oss/python/langchain/tools) they call, what prompts they generate, and how they make decisions. LangChain agents built with [`create_agent`](https://reference.langchain.com/python/langchain/agents/#langchain.agents.create_agent) automatically support tracing through [LangSmith](/langsmith/home), a platform for capturing, debugging, evaluating, and monitoring LLM application behavior.
+As you build and run agents with LangChain, you need visibility into how they behave: which [tools](/oss/python/langchain/tools) they call, what prompts they generate, and how they make decisions. LangChain agents built with [`create_agent`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) automatically support tracing through [LangSmith](/langsmith/home), a platform for capturing, debugging, evaluating, and monitoring LLM application behavior.
 
 
 
@@ -49,7 +49,7 @@ def search_web(query: str):
     return f"Search results for: {query}"
 
 agent = create_agent(
-    model="gpt-4o",
+    model="gpt-4.1",
     tools=[send_email, search_web],
     system_prompt="You are a helpful assistant that can send emails and search the web."
 )
@@ -69,9 +69,9 @@ By default, the trace will be logged to the project with the name `default`. To 
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/observability.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/observability.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

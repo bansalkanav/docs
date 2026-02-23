@@ -1,5 +1,6 @@
 ---
-title: Rockset
+title: "Rockset integration"
+description: "Integrate with the Rockset document loader using LangChain Python."
 ---
 
 ⚠️ **Deprecation Notice: Rockset Integration Disabled**
@@ -24,7 +25,7 @@ This notebook demonstrates how to use Rockset as a document loader in langchain.
 pip install -qU  rockset
 ```
 
-# Loading Documents
+# Loading documents
 
 The Rockset integration with LangChain allows you to load documents from Rockset collections with SQL queries. In order to do this you must construct a `RocksetLoader` object. Here is an example snippet that initializes a `RocksetLoader`.
 
@@ -94,7 +95,7 @@ loader = RocksetLoader(
 )
 ```
 
-Assuming the "sentence1" field is `"This is the first sentence."` and the "sentence2" field is `"This is the second sentence."`, the `page_content` of the resulting [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) would be:
+Assuming the "sentence1" field is `"This is the first sentence."` and the "sentence2" field is `"This is the second sentence."`, the `page_content` of the resulting [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) would be:
 
 ```
 This is the first sentence.
@@ -116,7 +117,7 @@ RocksetLoader(
 )
 ```
 
-The `page_content` of the resulting [`Document`](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Document) would be:
+The `page_content` of the resulting [`Document`](https://reference.langchain.com/python/langchain-core/documents/base/Document) would be:
 
 ```
 This is the first sentence. This is the second sentence.
@@ -144,9 +145,9 @@ sentence2: This is the second sentence.
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/rockset.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/rockset.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

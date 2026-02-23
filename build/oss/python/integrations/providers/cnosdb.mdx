@@ -1,10 +1,11 @@
 ---
-title: CnosDB
+title: "Cnosdb integrations"
+description: "Integrate with Cnosdb using LangChain Python."
 ---
 
 > [CnosDB](https://github.com/cnosdb/cnosdb) is an open-source distributed time series database with high performance, high compression rate and high ease of use.
 
-## Installation and Setup
+## Installation and setup
 
 ```python
 pip install cnos-connector
@@ -45,7 +46,7 @@ from langchain_openai import ChatOpenAI
 llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
 ```
 
-### SQL Database Chain
+### SQL Database chain
 This example demonstrates the use of the SQL Chain for answering a question over a CnosDB.
 ```python
 from langchain_community.utilities import SQLDatabaseChain
@@ -114,9 +115,9 @@ Final Answer: 68.0
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/cnosdb.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/cnosdb.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

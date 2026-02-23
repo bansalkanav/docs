@@ -12,7 +12,7 @@ It is designed to integrate these features into existing code that may use stand
 The Functional API uses two key building blocks:
 
 * **`@entrypoint`** – Marks a function as the starting point of a workflow, encapsulating logic and managing execution flow, including handling long-running tasks and interrupts.
-* **[`@task`](https://reference.langchain.com/python/langgraph/func/#langgraph.func.task)** – Represents a discrete unit of work, such as an API call or data processing step, that can be executed asynchronously within an entrypoint. Tasks return a future-like object that can be awaited or resolved synchronously.
+* **[`@task`](https://reference.langchain.com/python/langgraph/func/task)** – Represents a discrete unit of work, such as an API call or data processing step, that can be executed asynchronously within an entrypoint. Tasks return a future-like object that can be awaited or resolved synchronously.
 
 
 
@@ -155,7 +155,7 @@ def workflow(topic: str) -> dict:
 
 ## Entrypoint
 
-The [`@entrypoint`](https://reference.langchain.com/python/langgraph/func/#langgraph.func.entrypoint) decorator can be used to create a workflow from a function. It encapsulates workflow logic and manages execution flow, including handling _long-running tasks_ and [interrupts](/oss/python/langgraph/interrupts).
+The [`@entrypoint`](https://reference.langchain.com/python/langgraph/func/entrypoint) decorator can be used to create a workflow from a function. It encapsulates workflow logic and manages execution flow, including handling _long-running tasks_ and [interrupts](/oss/python/langgraph/interrupts).
 
 
 
@@ -207,7 +207,7 @@ The **inputs** and **outputs** of entrypoints must be JSON-serializable to suppo
 
 ### Injectable parameters
 
-When declaring an `entrypoint`, you can request access to additional parameters that will be injected automatically at run time. These parameters include:
+When declaring an `entrypoint`, you can request access to additional parameters that will be injected automatically at runtime. These parameters include:
 
 | Parameter    | Description                                                                                                                                                        |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -226,11 +226,14 @@ Declare the parameters with the appropriate name and type annotation.
   from langgraph.func import entrypoint
   from langgraph.store.base import BaseStore
   from langgraph.store.memory import InMemoryStore
+  from langgraph.checkpoint.memory import InMemorySaver
+  from langgraph.types import StreamWriter
 
+  in_memory_checkpointer = InMemorySaver(...)
   in_memory_store = InMemoryStore(...)  # An instance of InMemoryStore for long-term memory
 
   @entrypoint(
-      checkpointer=checkpointer,  # Specify the checkpointer
+      checkpointer=in_memory_checkpointer,  # Specify the checkpointer
       store=in_memory_store  # Specify the store
   )
   def my_workflow(
@@ -301,7 +304,7 @@ Using the [`@entrypoint`](#entrypoint) yields a [`Pregel`](https://reference.lan
 
 ### Resuming
 
-Resuming an execution after an [interrupt](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) can be done by passing a **resume** value to the [`Command`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.Command) primitive.
+Resuming an execution after an [interrupt](https://reference.langchain.com/python/langgraph/types/interrupt) can be done by passing a **resume** value to the [`Command`](https://reference.langchain.com/python/langgraph/types/Command) primitive.
 
 <Tabs>
     <Tab title="Invoke">
@@ -454,7 +457,7 @@ my_workflow.invoke(2, config)  # 3 (previous was 1 from the previous invocation)
 
 #### `entrypoint.final`
 
-[`entrypoint.final`](https://reference.langchain.com/python/langgraph/func/#langgraph.func.entrypoint.final) is a special primitive that can be returned from an entrypoint and allows **decoupling** the value that is **saved in the checkpoint** from the **return value of the entrypoint**.
+[`entrypoint.final`](https://reference.langchain.com/python/langgraph/func/entrypoint/final) is a special primitive that can be returned from an entrypoint and allows **decoupling** the value that is **saved in the checkpoint** from the **return value of the entrypoint**.
 
 The first value is the return value of the entrypoint, and the second value is the value that will be saved in the checkpoint. The type annotation is `entrypoint.final[return_type, save_type]`.
 
@@ -578,7 +581,7 @@ While different runs of a workflow can produce different results, resuming a **s
 
 Idempotency ensures that running the same operation multiple times produces the same result. This helps prevent duplicate API calls and redundant processing if a step is rerun due to a failure. Always place API calls inside **tasks** functions for checkpointing, and design them to be idempotent in case of re-execution. Re-execution can occur if a **task** starts, but does not complete successfully. Then, if the workflow is resumed, the **task** will run again. Use idempotency keys or verify existing results to avoid duplication.
 
-## Common Pitfalls
+## Common pitfalls
 
 ### Handling side effects
 
@@ -633,12 +636,9 @@ Operations that might give different results each time (like getting current tim
 * In a task: Get random number (5) → interrupt → resume → (returns 5 again) → ...
 * Not in a task: Get random number (5) → interrupt → resume → get new random number (7) → ...
 
-This is especially important when using **human-in-the-loop** workflows with multiple interrupts calls. LangGraph keeps a list of resume values for each task/entrypoint. When an interrupt is encountered, it's matched with the corresponding resume value. This matching is strictly **index-based**, so the order of the resume values should match the order of the interrupts.
+This is especially important when using **human-in-the-loop** workflows with multiple interrupt calls. LangGraph keeps a list of resume values for each task/entrypoint. When an interrupt is encountered, it's matched with the corresponding resume value. This matching is strictly **index-based**, so the order of the resume values should match the order of the interrupts.
 
-
-
-
-If order of execution is not maintained when resuming, one [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) call may be matched with the wrong `resume` value, leading to incorrect results.
+If order of execution is not maintained when resuming, one [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt) call may be matched with the wrong `resume` value, leading to incorrect results.
 
 Please read the section on [determinism](#determinism) for more details.
 
@@ -709,11 +709,17 @@ Please read the section on [determinism](#determinism) for more details.
     </Tab>
 </Tabs>
 
+## Learn more
+
+- [How to use the Functional API](/oss/python/langgraph/use-functional-api)
+- [Graph API conceptual overview](/oss/python/langgraph/graph-api)
+- [Choosing between Graph API and Functional API](/oss/python/langgraph/choosing-apis)
+
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/functional-api.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/functional-api.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

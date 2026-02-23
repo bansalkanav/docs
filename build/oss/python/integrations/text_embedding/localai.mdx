@@ -1,5 +1,6 @@
 ---
-title: LocalAI Embeddings
+title: "Localai integration"
+description: "Integrate with the Localai embedding model using LangChain Python."
 ---
 
 <Info>
@@ -17,62 +18,49 @@ pip install -U langchain-localai
 
 ```python
 from langchain_localai import LocalAIEmbeddings
-```
 
-```python
 embeddings = LocalAIEmbeddings(
     openai_api_base="http://localhost:8080", model="embedding-model-name"
 )
-```
-
-```python
 text = "This is a test document."
-```
 
-```python
 query_result = embeddings.embed_query(text)
-```
-
-```python
 doc_result = embeddings.embed_documents([text])
 ```
 
-Let's load the LocalAI Embedding class with first generation models (e.g. text-search-ada-doc-001/text-search-ada-query-001). Note: These are not recommended models - see [here](https://platform.openai.com/docs/guides/embeddings/what-are-embeddings)
+# Legacy `langchain-community` LocalAIEmbeddings documentation
+
+<Warning>
+**For proper compatibility, please ensure you are using the `openai` SDK at version **0.x**.**
+</Warning>
+
+Let's load the LocalAI Embedding class with embeddings model.
+
+```python
+pip install -U langchain-community
+```
 
 ```python
 from langchain_community.embeddings import LocalAIEmbeddings
-```
-
-```python
-embeddings = LocalAIEmbeddings(
-    openai_api_base="http://localhost:8080", model="embedding-model-name"
-)
-```
-
-```python
-text = "This is a test document."
-```
-
-```python
-query_result = embeddings.embed_query(text)
-```
-
-```python
-doc_result = embeddings.embed_documents([text])
-```
-
-```python
 import os
 
 # if you are behind an explicit proxy, you can use the OPENAI_PROXY environment variable to pass through
 os.environ["OPENAI_PROXY"] = "http://proxy.yourcompany.com:8080"
+
+embeddings = LocalAIEmbeddings(
+    openai_api_base="http://localhost:8080", model="embedding-model-name"
+)
+
+text = "This is a test document."
+query_result = embeddings.embed_query(text)
+doc_result = embeddings.embed_documents([text])
 ```
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/localai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/localai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

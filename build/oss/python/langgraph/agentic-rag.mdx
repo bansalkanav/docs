@@ -132,7 +132,7 @@ Note that the components will operate on the [`MessagesState`](/oss/python/langg
   from langgraph.graph import MessagesState
   from langchain.chat_models import init_chat_model
 
-  response_model = init_chat_model("gpt-4o", temperature=0)
+  response_model = init_chat_model("gpt-4.1", temperature=0)
 
 
   def generate_query_or_respond(state: MessagesState):
@@ -205,7 +205,7 @@ Note that the components will operate on the [`MessagesState`](/oss/python/langg
       )
 
 
-  grader_model = init_chat_model("gpt-4o", temperature=0)
+  grader_model = init_chat_model("gpt-4.1", temperature=0)
 
 
   def grade_documents(
@@ -425,7 +425,7 @@ Now we'll assemble all the nodes and edges into a complete graph:
   * Otherwise, respond directly to the user
 * Grade retrieved document content for relevance to the question (`grade_documents`) and route to next step:
   * If not relevant, rewrite the question using `rewrite_question` and then call `generate_query_or_respond` again
-  * If relevant, proceed to `generate_answer` and generate final response using the [`ToolMessage`](https://reference.langchain.com/python/langchain/messages/#langchain.messages.ToolMessage) with the retrieved document context
+  * If relevant, proceed to `generate_answer` and generate final response using the [`ToolMessage`](https://reference.langchain.com/python/langchain-core/messages/tool/ToolMessage) with the retrieved document context
 
 ```python
 from langgraph.graph import StateGraph, START, END
@@ -541,9 +541,9 @@ Lilian Weng categorizes reward hacking into two types: environment or goal missp
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/agentic-rag.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/agentic-rag.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

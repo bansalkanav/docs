@@ -1,5 +1,6 @@
 ---
-title: Gel
+title: "Gel integration"
+description: "Integrate with the Gel vector store using LangChain Python."
 ---
 
 > An implementation of LangChain vectorstore abstraction using `gel` as the backend.
@@ -40,7 +41,7 @@ For a comprehensive list of ways to run Gel, take a look at [Running Gel](https:
 [Gel schema](https://docs.geldata.com/reference/datamodel) is an explicit high-level description of your application's data model.
 Aside from enabling you to define exactly how your data is going to be laid out, it drives Gel's many powerful features such as links, access policies, functions, triggers, constraints, indexes, and more.
 
-The LangChain's [`VectorStore`](https://reference.langchain.com/python/langchain_core/vectorstores/?h=#langchain_core.vectorstores.base.VectorStore) expects the following layout for the schema:
+The LangChain's [`VectorStore`](https://reference.langchain.com/python/langchain-core/vectorstores/base/VectorStore) expects the following layout for the schema:
 
 ```python
 schema_content = """
@@ -162,7 +163,7 @@ vector_store.delete(ids=["3"])
 
 Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent.
 
-### Filtering Support
+### Filtering support
 
 The vectorstore supports a set of filters that can be applied against the metadata fields of the documents.
 
@@ -253,9 +254,9 @@ For detailed documentation of all GelVectorStore features and configurations hea
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/gel.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/gel.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

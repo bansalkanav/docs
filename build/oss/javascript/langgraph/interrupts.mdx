@@ -2,8 +2,6 @@
 title: Interrupts
 ---
 
-
-
 Interrupts allow you to pause graph execution at specific points and wait for external input before continuing. This enables human-in-the-loop patterns where you need external input to proceed. When an interrupt is triggered, LangGraph saves the graph state using its [persistence](/oss/javascript/langgraph/persistence) layer and waits indefinitely until you resume execution.
 
 Interrupts work by calling the `interrupt()` function at any point in your graph nodes. The function accepts any JSON-serializable value which is surfaced to the caller. When you're ready to continue, you resume execution by re-invoking the graph using `Command`, which then becomes the return value of the `interrupt()` call from inside the node.
@@ -20,9 +18,9 @@ The `thread_id` you choose is effectively your persistent cursor. Reusing it res
 
 ## Pause using `interrupt`
 
-The [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) function pauses graph execution and returns a value to the caller. When you call [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) within a node, LangGraph saves the current graph state and waits for you to resume execution with input.
+The [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) function pauses graph execution and returns a value to the caller. When you call [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) within a node, LangGraph saves the current graph state and waits for you to resume execution with input.
 
-To use [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html), you need:
+To use [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt), you need:
 1. A **checkpointer** to persist the graph state (use a durable checkpointer in production)
 2. A **thread ID** in your config so the runtime knows which state to resume from
 3. To call `interrupt()` where you want to pause (payload must be JSON-serializable)
@@ -42,9 +40,9 @@ async function approvalNode(state: State) {
 ```
 
 
-When you call [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html), here's what happens:
+When you call [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt), here's what happens:
 
-1. **Graph execution gets suspended** at the exact point where [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) is called
+1. **Graph execution gets suspended** at the exact point where [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) is called
 2. **State is saved** using the checkpointer so execution can be resumed later, In production, this should be a persistent checkpointer (e.g. backed by a database)
 3. **Value is returned** to the caller under `__interrupt__`; it can be any JSON-serializable value (string, object, array, etc.)
 4. **Graph waits indefinitely** until you resume execution with a response
@@ -74,22 +72,152 @@ console.log(result.__interrupt__);
 await graph.invoke(new Command({ resume: true }), config);
 ```
 
-
 **Key points about resuming:**
 
 - You must use the **same thread ID** when resuming that was used when the interrupt occurred
-- The value passed to `Command(resume=...)` becomes the return value of the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) call
-- The node restarts from the beginning of the node where the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) was called when resumed, so any code before the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) runs again
+- The value passed to `new Command({ resume: ... })` becomes the return value of the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) call
+- The node restarts from the beginning of the node where the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) was called when resumed, so any code before the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) runs again
 - You can pass any JSON-serializable value as the resume value
+
 
 ## Common patterns
 
 The key thing that interrupts unlock is the ability to pause execution and wait for external input. This is useful for a variety of use cases, including:
 
-- <Icon icon="check-circle" /> [Approval workflows](#approve-or-reject): Pause before executing critical actions (API calls, database changes, financial transactions)
+- <Icon icon="circle-check" /> [Approval workflows](#approve-or-reject): Pause before executing critical actions (API calls, database changes, financial transactions)
+- <Icon icon="link" /> [Handling multiple interrupts](#handling-multiple-interrupts): Pair interrupt IDs with resume values when resuming multiple interrupts in a single invocation
 - <Icon icon="pencil" /> [Review and edit](#review-and-edit-state): Let humans review and modify LLM outputs or tool calls before continuing
-- <Icon icon="wrench" /> [Interrupting tool calls](#interrupts-in-tools): Pause before executing tool calls to review and edit the tool call before execution
+- <Icon icon="tool" /> [Interrupting tool calls](#interrupts-in-tools): Pause before executing tool calls to review and edit the tool call before execution
 - <Icon icon="shield-check" /> [Validating human input](#validating-human-input): Pause before proceeding to the next step to validate human input
+
+### Stream with human-in-the-loop (HITL) interrupts
+
+When building interactive agents with human-in-the-loop workflows, you can stream both message chunks and node updates simultaneously to provide real-time feedback while handling interrupts.
+
+Use multiple stream modes (`"messages"` and `"updates"`) with `subgraphs=True` (if subgraphs are present) to:
+- Stream AI responses in real-time as they're generated
+- Detect when the graph encounters an interrupt
+- Handle user input and resume execution seamlessly
+
+```python
+async for metadata, mode, chunk in graph.astream(
+    initial_input,
+    stream_mode=["messages", "updates"],
+    subgraphs=True,
+    config=config
+):
+    if mode == "messages":
+        # Handle streaming message content
+        msg, _ = chunk
+        if isinstance(msg, AIMessageChunk) and msg.content:
+            # Display content in real-time
+            display_streaming_content(msg.content)
+
+    elif mode == "updates":
+        # Check for interrupts
+        if "__interrupt__" in chunk:
+            # Stop streaming display
+            interrupt_info = chunk["__interrupt__"][0].value
+
+            # Handle user input
+            user_response = get_user_input(interrupt_info)
+
+            # Resume graph with updated input
+            initial_input = Command(resume=user_response)
+            break
+
+        else:
+            # Track node transitions
+            current_node = list(chunk.keys())[0]
+```
+
+- **`stream_mode=["messages", "updates"]`**: Enables dual streaming of both message chunks and graph state updates
+- **`subgraphs=True`**: Required for interrupt detection in nested graphs
+- **`"__interrupt__"` detection**: Signals when human input is needed
+- **`Command(resume=...)`**: Resumes graph execution with user-provided data
+
+### Handling multiple interrupts
+
+When parallel branches interrupt simultaneously (for example, fan-out to multiple nodes that each call `interrupt()`), you may need to resume multiple interrupts in a single invocation.
+When resuming multiple interrupts with a single invocation, map each interrupt ID to its resume value.
+This ensures each response is paired with the correct interrupt at runtime.
+
+
+
+```typescript
+import {
+  Annotation,
+  Command,
+  END,
+  INTERRUPT,
+  MemorySaver,
+  START,
+  StateGraph,
+  interrupt,
+  isInterrupted,
+} from "@langchain/langgraph";
+
+const State = Annotation.Root({
+  vals: Annotation<string[]>({
+    reducer: (left, right) =>
+      left.concat(Array.isArray(right) ? right : [right]),
+    default: () => [],
+  }),
+});
+
+function nodeA(_state: typeof State.State) {
+  const answer = interrupt("question_a") as string;
+  return { vals: [`a:${answer}`] };
+}
+
+function nodeB(_state: typeof State.State) {
+  const answer = interrupt("question_b") as string;
+  return { vals: [`b:${answer}`] };
+}
+
+const graph = new StateGraph(State)
+  .addNode("a", nodeA)
+  .addNode("b", nodeB)
+  .addEdge(START, "a")
+  .addEdge(START, "b")
+  .addEdge("a", END)
+  .addEdge("b", END)
+  .compile({ checkpointer: new MemorySaver() });
+
+const config = { configurable: { thread_id: "1" } };
+
+async function main() {
+  // Step 1: invoke — both parallel nodes hit interrupt() and pause
+  const interruptedResult = await graph.invoke({ vals: [] }, config);
+  console.log(interruptedResult);
+  /*
+  {
+    vals: [],
+    __interrupt__: [
+      { id: '...', value: 'question_a' },
+      { id: '...', value: 'question_b' }
+    ]
+  }
+  */
+
+  // Step 2: resume all pending interrupts at once
+  const resumeMap: Record<string, string> = {};
+  if (isInterrupted(interruptedResult)) {
+    for (const i of interruptedResult[INTERRUPT]) {
+      if (i.id != null) {
+        resumeMap[i.id] = `answer for ${i.value}`;
+      }
+    }
+  }
+  const result = await graph.invoke(new Command({ resume: resumeMap }), config);
+
+  console.log("Final state:", result);
+  //> Final state: { vals: ['a:answer for question_a', 'b:answer for question_b'] }
+}
+
+main().catch(console.error);
+```
+
 
 ### Approve or reject
 
@@ -100,7 +228,7 @@ One of the most common uses of interrupts is to pause before a critical action a
 ```typescript
 import { interrupt, Command } from "@langchain/langgraph";
 
-function approvalNode(state: State): Command {
+const approvalNode: typeof State.Node = (state) => {
   // Pause execution; payload surfaces in result.__interrupt__
   const isApproved = interrupt({
     question: "Do you want to proceed?",
@@ -140,11 +268,12 @@ await graph.invoke(new Command({ resume: false }), config);
       START,
       END,
       StateGraph,
+      StateSchema,
       interrupt,
     } from "@langchain/langgraph";
     import * as z from "zod";
 
-    const State = z.object({
+    const State = new StateSchema({
       actionDetails: z.string(),
       status: z.enum(["pending", "approved", "rejected"]).nullable(),
     });
@@ -193,7 +322,7 @@ Sometimes you want to let a human review and edit part of the graph state before
 ```typescript
 import { interrupt } from "@langchain/langgraph";
 
-function reviewNode(state: State) {
+const reviewNode: typeof State.Node = (state) => {
   // Pause and show the current content for review (surfaces in result.__interrupt__)
   const editedContent = interrupt({
     instruction: "Review and edit this content",
@@ -228,11 +357,12 @@ await graph.invoke(
       START,
       END,
       StateGraph,
+      StateSchema,
       interrupt,
     } from "@langchain/langgraph";
     import * as z from "zod";
 
-    const State = z.object({
+    const State = new StateSchema({
       generatedText: z.string(),
     });
 
@@ -271,7 +401,7 @@ await graph.invoke(
 
 You can also place interrupts directly inside tool functions. This makes the tool itself pause for approval whenever it's called, and allows for human review and editing of the tool call before it is executed.
 
-First, define a tool that uses [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html):
+First, define a tool that uses [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt):
 
 
 
@@ -327,6 +457,9 @@ This approach is useful when you want the approval logic to live with the tool i
       START,
       END,
       StateGraph,
+      StateSchema,
+      MessagesValue,
+      GraphNode,
       interrupt,
     } from "@langchain/langgraph";
     import * as z from "zod";
@@ -364,21 +497,18 @@ This approach is useful when you want the approval logic to live with the tool i
 
     const model = new ChatAnthropic({ model: "claude-sonnet-4-5-20250929" }).bindTools([sendEmailTool]);
 
-    const Message = z.object({
-      role: z.enum(["user", "assistant", "tool"]),
-      content: z.string(),
+    const State = new StateSchema({
+      messages: MessagesValue,
     });
 
-    const State = z.object({
-      messages: z.array(Message),
-    });
+    const agent: typeof State.Node = async (state) => {
+      // LLM may decide to call the tool; interrupt pauses before sending
+      const response = await model.invoke(state.messages);
+      return { messages: [response] };
+    };
 
     const graphBuilder = new StateGraph(State)
-      .addNode("agent", async (state) => {
-        // LLM may decide to call the tool; interrupt pauses before sending
-        const response = await model.invoke(state.messages);
-        return { messages: [...state.messages, response] };
-      })
+      .addNode("agent", agent)
       .addEdge(START, "agent")
       .addEdge("agent", END);
 
@@ -411,14 +541,14 @@ This approach is useful when you want the approval logic to live with the tool i
 
 ### Validating human input
 
-Sometimes you need to validate input from humans and ask again if it's invalid. You can do this using multiple [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) calls in a loop.
+Sometimes you need to validate input from humans and ask again if it's invalid. You can do this using multiple [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) calls in a loop.
 
 
 
 ```typescript
 import { interrupt } from "@langchain/langgraph";
 
-function getAgeNode(state: State) {
+const getAgeNode: typeof State.Node = (state) => {
   let prompt = "What is your age?";
 
   while (true) {
@@ -449,11 +579,12 @@ Each time you resume the graph with invalid input, it will ask again with a clea
       START,
       END,
       StateGraph,
+      StateSchema,
       interrupt,
     } from "@langchain/langgraph";
     import * as z from "zod";
 
-    const State = z.object({
+    const State = new StateSchema({
       age: z.number().nullable(),
     });
 
@@ -495,52 +626,52 @@ Each time you resume the graph with invalid input, it will ask again with a clea
 
 ## Rules of interrupts
 
-When you call [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) within a node, LangGraph suspends execution by raising an exception that signals the runtime to pause. This exception propagates up through the call stack and is caught by the runtime, which notifies the graph to save the current state and wait for external input.
+When you call [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) within a node, LangGraph suspends execution by raising an exception that signals the runtime to pause. This exception propagates up through the call stack and is caught by the runtime, which notifies the graph to save the current state and wait for external input.
 
-When execution resumes (after you provide the requested input), the runtime restarts the entire node from the beginning—it does not resume from the exact line where [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) was called. This means any code that ran before the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) will execute again. Because of this, there's a few important rules to follow when working with interrupts to ensure they behave as expected.
+When execution resumes (after you provide the requested input), the runtime restarts the entire node from the beginning—it does not resume from the exact line where [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) was called. This means any code that ran before the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) will execute again. Because of this, there's a few important rules to follow when working with interrupts to ensure they behave as expected.
 
 
 
 ### Do not wrap `interrupt` calls in try/catch
 
-The way that [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) pauses execution at the point of the call is by throwing a special exception. If you wrap the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) call in a try/catch block, you will catch this exception and the interrupt will not be passed back to the graph.
+The way that [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) pauses execution at the point of the call is by throwing a special exception. If you wrap the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) call in a try/catch block, you will catch this exception and the interrupt will not be passed back to the graph.
 
-* ✅ Separate [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) calls from error-prone code
+* ✅ Separate [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) calls from error-prone code
 * ✅ Conditionally catch errors if needed
 
 <CodeGroup>
 ```typescript Separating logic
-async function nodeA(state: State) {
-    // ✅ Good: interrupting first, then handling error conditions separately
-    const name = interrupt("What's your name?");
-    try {
-        await fetchData(); // This can fail
-    } catch (err) {
-        console.error(error);
-    }
-    return state;
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ✅ Good: interrupting first, then handling error conditions separately
+  const name = interrupt("What's your name?");
+  try {
+    await fetchData(); // This can fail
+  } catch (err) {
+    console.error(error);
+  }
+  return state;
 }
 ```
 ```typescript Conditionally handling errors
-async function nodeA(state: State) {
-    // ✅ Good: re-throwing the exception will
-    // allow the interrupt to be passed back to
-    // the graph
-    try {
-        const name = interrupt("What's your name?");
-        await fetchData(); // This can fail
-    } catch (err) {
-        if (error instanceof NetworkError) {
-            console.error(error);
-        }
-        throw error;
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ✅ Good: re-throwing the exception will
+  // allow the interrupt to be passed back to
+  // the graph
+  try {
+    const name = interrupt("What's your name?");
+    await fetchData(); // This can fail
+  } catch (err) {
+    if (error instanceof NetworkError) {
+      console.error(error);
     }
-    return state;
+    throw error;
+  }
+  return state;
 }
 ```
 </CodeGroup>
 
-* 🔴 Do not wrap [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) calls in bare try/catch blocks
+* 🔴 Do not wrap [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) calls in bare try/catch blocks
 
 ```typescript
 async function nodeA(state: State) {
@@ -561,7 +692,7 @@ It's common to use multiple interrupts in a single node, however this can lead t
 
 When a node contains multiple interrupt calls, LangGraph keeps a list of resume values specific to the task executing the node. Whenever execution resumes, it starts at the beginning of the node. For each interrupt encountered, LangGraph checks if a matching value exists in the task's resume list. Matching is **strictly index-based**, so the order of interrupt calls within the node is important.
 
-* ✅ Keep [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) calls consistent across node executions
+* ✅ Keep [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) calls consistent across node executions
 
 
 ```typescript
@@ -580,38 +711,38 @@ async function nodeA(state: State) {
 ```
 
 
-* 🔴 Do not conditionally skip [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) calls within a node
-* 🔴 Do not loop [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) calls using logic that isn't deterministic across executions
+* 🔴 Do not conditionally skip [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) calls within a node
+* 🔴 Do not loop [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) calls using logic that isn't deterministic across executions
 
 
 <CodeGroup>
 ```typescript Skipping interrupts
-async function nodeA(state: State) {
-    // ❌ Bad: conditionally skipping interrupts changes the order
-    const name = interrupt("What's your name?");
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ❌ Bad: conditionally skipping interrupts changes the order
+  const name = interrupt("What's your name?");
 
-    // On first run, this might skip the interrupt
-    // On resume, it might not skip it - causing index mismatch
-    if (state.needsAge) {
-        const age = interrupt("What's your age?");
-    }
+  // On first run, this might skip the interrupt
+  // On resume, it might not skip it - causing index mismatch
+  if (state.needsAge) {
+    const age = interrupt("What's your age?");
+  }
 
-    const city = interrupt("What's your city?");
+  const city = interrupt("What's your city?");
 
-    return { name, city };
+  return { name, city };
 }
 ```
 ```typescript Looping interrupts
-async function nodeA(state: State) {
-    // ❌ Bad: looping based on non-deterministic data
-    // The number of interrupts changes between executions
-    const results = [];
-    for (const item of state.dynamicList || []) {  // List might change between runs
-        const result = interrupt(`Approve ${item}?`);
-        results.push(result);
-    }
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ❌ Bad: looping based on non-deterministic data
+  // The number of interrupts changes between executions
+  const results = [];
+  for (const item of state.dynamicList || []) {  // List might change between runs
+    const result = interrupt(`Approve ${item}?`);
+    results.push(result);
+  }
 
-    return { results };
+  return { results };
 }
 ```
 </CodeGroup>
@@ -621,38 +752,38 @@ async function nodeA(state: State) {
 
 Depending on which checkpointer is used, complex values may not be serializable (e.g. you can't serialize a function). To make your graphs adaptable to any deployment, it's best practice to only use values that can be reasonably serialized.
 
-* ✅ Pass simple, JSON-serializable types to [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html)
+* ✅ Pass simple, JSON-serializable types to [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt)
 * ✅ Pass dictionaries/objects with simple values
 
 
 
 <CodeGroup>
 ```typescript Simple values
-async function nodeA(state: State) {
-    // ✅ Good: passing simple types that are serializable
-    const name = interrupt("What's your name?");
-    const count = interrupt(42);
-    const approved = interrupt(true);
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ✅ Good: passing simple types that are serializable
+  const name = interrupt("What's your name?");
+  const count = interrupt(42);
+  const approved = interrupt(true);
 
-    return { name, count, approved };
+  return { name, count, approved };
 }
 ```
 ```typescript Structured data
-async function nodeA(state: State) {
-    // ✅ Good: passing objects with simple values
-    const response = interrupt({
-        question: "Enter user details",
-        fields: ["name", "email", "age"],
-        currentValues: state.user || {}
-    });
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ✅ Good: passing objects with simple values
+  const response = interrupt({
+    question: "Enter user details",
+    fields: ["name", "email", "age"],
+    currentValues: state.user || {}
+  });
 
-    return { user: response };
+  return { user: response };
 }
 ```
 </CodeGroup>
 
 
-* 🔴 Do not pass functions, class instances, or other complex objects to [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html)
+* 🔴 Do not pass functions, class instances, or other complex objects to [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt)
 
 
 
@@ -662,14 +793,14 @@ function validateInput(value: string): boolean {
     return value.length > 0;
 }
 
-async function nodeA(state: State) {
-    // ❌ Bad: passing a function to interrupt
-    // The function cannot be serialized
-    const response = interrupt({
-        question: "What's your name?",
-        validator: validateInput  // This will fail
-    });
-    return { name: response };
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ❌ Bad: passing a function to interrupt
+  // The function cannot be serialized
+  const response = interrupt({
+    question: "What's your name?",
+    validator: validateInput  // This will fail
+  });
+  return { name: response };
 }
 ```
 ```typescript Class instances
@@ -677,16 +808,16 @@ class DataProcessor {
     constructor(private config: any) {}
 }
 
-async function nodeA(state: State) {
-    const processor = new DataProcessor({ mode: "strict" });
+const nodeA: GraphNode<typeof State> = async (state) => {
+  const processor = new DataProcessor({ mode: "strict" });
 
-    // ❌ Bad: passing a class instance to interrupt
-    // The instance cannot be serialized
-    const response = interrupt({
-        question: "Enter data to process",
-        processor: processor  // This will fail
-    });
-    return { result: response };
+  // ❌ Bad: passing a class instance to interrupt
+  // The instance cannot be serialized
+  const response = interrupt({
+    question: "Enter data to process",
+    processor: processor  // This will fail
+  });
+  return { result: response };
 }
 ```
 </CodeGroup>
@@ -694,101 +825,101 @@ async function nodeA(state: State) {
 
 ### Side effects called before `interrupt` must be idempotent
 
-Because interrupts work by re-running the nodes they were called from, side effects called before [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) should (ideally) be idempotent. For context, idempotency means that the same operation can be applied multiple times without changing the result beyond the initial execution.
+Because interrupts work by re-running the nodes they were called from, side effects called before [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) should (ideally) be idempotent. For context, idempotency means that the same operation can be applied multiple times without changing the result beyond the initial execution.
 
-As an example, you might have an API call to update a record inside of a node. If [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) is called after that call is made, it will be re-run multiple times when the node is resumed, potentially overwriting the initial update or creating duplicate records.
+As an example, you might have an API call to update a record inside of a node. If [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) is called after that call is made, it will be re-run multiple times when the node is resumed, potentially overwriting the initial update or creating duplicate records.
 
-* ✅ Use idempotent operations before [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html)
-* ✅ Place side effects after [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) calls
+* ✅ Use idempotent operations before [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt)
+* ✅ Place side effects after [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) calls
 * ✅ Separate side effects into separate nodes when possible
 
 
 
 <CodeGroup>
 ```typescript Idempotent operations
-async function nodeA(state: State) {
-    // ✅ Good: using upsert operation which is idempotent
-    // Running this multiple times will have the same result
-    await db.upsertUser({
-        userId: state.userId,
-        status: "pending_approval"
-    });
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ✅ Good: using upsert operation which is idempotent
+  // Running this multiple times will have the same result
+  await db.upsertUser({
+    userId: state.userId,
+    status: "pending_approval"
+  });
 
-    const approved = interrupt("Approve this change?");
+  const approved = interrupt("Approve this change?");
 
-    return { approved };
+  return { approved };
 }
 ```
 ```typescript Side effects after interrupt
-async function nodeA(state: State) {
-    // ✅ Good: placing side effect after the interrupt
-    // This ensures it only runs once after approval is received
-    const approved = interrupt("Approve this change?");
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ✅ Good: placing side effect after the interrupt
+  // This ensures it only runs once after approval is received
+  const approved = interrupt("Approve this change?");
 
-    if (approved) {
-        await db.createAuditLog({
-            userId: state.userId,
-            action: "approved"
-        });
-    }
+  if (approved) {
+    await db.createAuditLog({
+      userId: state.userId,
+      action: "approved"
+    });
+  }
 
-    return { approved };
+  return { approved };
 }
 ```
 ```typescript Separating into different nodes
-async function approvalNode(state: State) {
-    // ✅ Good: only handling the interrupt in this node
-    const approved = interrupt("Approve this change?");
+const approvalNode: GraphNode<typeof State> = async (state) => {
+  // ✅ Good: only handling the interrupt in this node
+  const approved = interrupt("Approve this change?");
 
-    return { approved };
+  return { approved };
 }
 
-async function notificationNode(state: State) {
-    // ✅ Good: side effect happens in a separate node
-    // This runs after approval, so it only executes once
-    if (state.approved) {
-        await sendNotification({
-            userId: state.userId,
-            status: "approved"
-        });
-    }
+const notificationNode: GraphNode<typeof State> = async (state) => {
+  // ✅ Good: side effect happens in a separate node
+  // This runs after approval, so it only executes once
+  if (state.approved) {
+    await sendNotification({
+      userId: state.userId,
+      status: "approved",
+    });
+  }
 
-    return state;
+  return state;
 }
 ```
 </CodeGroup>
 
 
-* 🔴 Do not perform non-idempotent operations before [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html)
+* 🔴 Do not perform non-idempotent operations before [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt)
 * 🔴 Do not create new records without checking if they exist
 
 
 
 <CodeGroup>
 ```typescript Creating records
-async function nodeA(state: State) {
-    // ❌ Bad: creating a new record before interrupt
-    // This will create duplicate records on each resume
-    const auditId = await db.createAuditLog({
-        userId: state.userId,
-        action: "pending_approval",
-        timestamp: new Date()
-    });
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ❌ Bad: creating a new record before interrupt
+  // This will create duplicate records on each resume
+  const auditId = await db.createAuditLog({
+    userId: state.userId,
+    action: "pending_approval",
+    timestamp: new Date()
+  });
 
-    const approved = interrupt("Approve this change?");
+  const approved = interrupt("Approve this change?");
 
-    return { approved, auditId };
+  return { approved, auditId };
 }
 ```
 ```typescript Appending to arrays
-async function nodeA(state: State) {
-    // ❌ Bad: appending to an array before interrupt
-    // This will add duplicate entries on each resume
-    await db.appendToHistory(state.userId, "approval_requested");
+const nodeA: GraphNode<typeof State> = async (state) => {
+  // ❌ Bad: appending to an array before interrupt
+  // This will add duplicate entries on each resume
+  await db.appendToHistory(state.userId, "approval_requested");
 
-    const approved = interrupt("Approve this change?");
+  const approved = interrupt("Approve this change?");
 
-    return { approved };
+  return { approved };
 }
 ```
 </CodeGroup>
@@ -796,7 +927,7 @@ async function nodeA(state: State) {
 
 ## Using with subgraphs called as functions
 
-When invoking a subgraph within a node, the parent graph will resume execution from the **beginning of the node** where the subgraph was invoked and the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) was triggered. Similarly, the **subgraph** will also resume from the beginning of the node where [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) was called.
+When invoking a subgraph within a node, the parent graph will resume execution from the **beginning of the node** where the subgraph was invoked and the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) was triggered. Similarly, the **subgraph** will also resume from the beginning of the node where [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) was called.
 
 
 ```typescript
@@ -823,7 +954,7 @@ To debug and test a graph, you can use static interrupts as breakpoints to step 
 
 
 <Note>
-    Static interrupts are **not** recommended for human-in-the-loop workflows. Use the [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) function instead.
+    Static interrupts are **not** recommended for human-in-the-loop workflows. Use the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) function instead.
 </Note>
 
 <Tabs>
@@ -882,17 +1013,17 @@ To debug and test a graph, you can use static interrupts as breakpoints to step 
     </Tab>
 </Tabs>
 
-### Using LangGraph Studio
+### Using LangSmith Studio
 
-You can use [LangGraph Studio](/langsmith/studio) to set static interrupts in your graph in the UI before running the graph. You can also use the UI to inspect the graph state at any point in the execution.
+You can use [LangSmith Studio](/langsmith/studio) to set static interrupts in your graph in the UI before running the graph. You can also use the UI to inspect the graph state at any point in the execution.
 
 ![image](/oss/images/static-interrupt.png)
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/interrupts.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/interrupts.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

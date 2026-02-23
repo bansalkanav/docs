@@ -1,5 +1,6 @@
 ---
-title: TogetherAIEmbeddings
+title: "TogetherAIEmbeddings integration"
+description: "Integrate with the TogetherAIEmbeddings embedding model using LangChain JavaScript."
 ---
 
 This will help you get started with TogetherAIEmbeddings [embedding models](/oss/javascript/integrations/text_embedding) using LangChain. For detailed documentation on `TogetherAIEmbeddings` features and configuration options, please refer to the [API reference](https://api.js.langchain.com/classes/langchain_community_embeddings_togetherai.TogetherAIEmbeddings.html).
@@ -59,7 +60,7 @@ const embeddings = new TogetherAIEmbeddings({
 });
 ```
 
-## Indexing and Retrieval
+## Indexing and retrieval
 
 Embedding models are often used in retrieval-augmented generation (RAG) flows, both as part of indexing data as well as later retrieving it. For more detailed instructions, please see our RAG tutorials under the [**Learn** tab](/oss/javascript/learn/).
 
@@ -85,11 +86,11 @@ const retrievedDocuments = await retriever.invoke("What is LangChain?");
 retrievedDocuments[0].pageContent;
 ```
 
-```output
+```text
 LangChain is the framework for building context-aware reasoning applications
 ```
 
-## Direct Usage
+## Direct usage
 
 Under the hood, the vectorstore and retriever implementations are calling `embeddings.embedDocument(...)` and `embeddings.embedQuery(...)` to create embeddings for the text(s) used in `fromDocuments` and the retriever's `invoke` operations, respectively.
 
@@ -105,7 +106,7 @@ const singleVector = await embeddings.embedQuery(text);
 console.log(singleVector.slice(0, 100));
 ```
 
-```output
+```text
 [
      0.3812227, -0.052848946,  -0.10564975,   0.03480297,    0.2878488,
   0.0084609175,   0.11605915,   0.05303011,   0.14711718,  -0.14407106,
@@ -143,7 +144,7 @@ console.log(vectors[0].slice(0, 100));
 console.log(vectors[1].slice(0, 100));
 ```
 
-```output
+```text
 [
      0.3812227, -0.052848946,  -0.10564975,   0.03480297,    0.2878488,
   0.0084609175,   0.11605915,   0.05303011,   0.14711718,  -0.14407106,
@@ -198,9 +199,9 @@ For detailed documentation of all TogetherAIEmbeddings features and configuratio
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/text_embedding/togetherai.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/text_embedding/togetherai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -1,5 +1,6 @@
 ---
-title: DaytonaDataAnalysisTool
+title: "DaytonaDataAnalysisTool integration"
+description: "Integrate with the DaytonaDataAnalysisTool tool using LangChain Python."
 ---
 
 This guide provides a quick overview for getting started with the `DaytonaDataAnalysisTool`.
@@ -138,7 +139,7 @@ tool.invoke({'data_analysis_python_code': "print('Hello World')"})
 
 ### As a `ToolCall`
 
-```python ToolCall icon="toolbox"
+```python ToolCall icon="briefcase"
 model_generated_tool_call = {
     "args": {'data_analysis_python_code': "print('Hello World')"},
     "id": "1",
@@ -173,7 +174,7 @@ agent = create_agent(model, tools=[tool])
 
 The `DaytonaDataAnalysisTool` provides several methods for managing files and the sandbox environment:
 
-### File Management
+### File management
 
 **Upload files to the sandbox:**
 
@@ -197,7 +198,7 @@ file_bytes = tool.download_file("/home/daytona/results.csv")
 tool.remove_uploaded_file(uploaded)
 ```
 
-### Package Management
+### Package management
 
 **Install Python packages in the sandbox:**
 
@@ -213,7 +214,7 @@ tool.install_python_packages(["numpy", "matplotlib", "seaborn"])
 For a list of preinstalled packages, see the [Daytona Default Snapshot documentation](https://www.daytona.io/docs/en/snapshots/#default-snapshot).
 </Note>
 
-### Sandbox Management
+### Sandbox management
 
 **Access the sandbox instance:**
 
@@ -239,9 +240,9 @@ For detailed documentation of all `DaytonaDataAnalysisTool` features and configu
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/daytona_data_analysis.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/daytona_data_analysis.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

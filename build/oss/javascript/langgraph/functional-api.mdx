@@ -144,7 +144,11 @@ const workflow = entrypoint(
   // In this case, we're using a bool, but this can be any json-serializable value.
   const humanReview = true;
 
-  for await (const item of workflow.stream(new Command({ resume: humanReview }), config)) {
+  const stream = await workflow.stream(
+    new Command({ resume: humanReview }),
+    config
+  );
+  for await (const item of stream) {
     console.log(item);
   }
   ```
@@ -161,7 +165,7 @@ const workflow = entrypoint(
 
 
 
-The [`entrypoint`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.entrypoint.html) function can be used to create a workflow from a function. It encapsulates workflow logic and manages execution flow, including handling _long-running tasks_ and [interrupts](/oss/javascript/langgraph/interrupts).
+The [`entrypoint`](https://reference.langchain.com/javascript/langchain-langgraph/index/entrypoint) function can be used to create a workflow from a function. It encapsulates workflow logic and manages execution flow, including handling _long-running tasks_ and [interrupts](/oss/javascript/langgraph/interrupts).
 
 
 ### Definition
@@ -234,7 +238,7 @@ Using the [`entrypoint`](#entrypoint) function will return an object that can be
 
 
 
-Resuming an execution after an [interrupt](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) can be done by passing a **resume** value to the [`Command`](https://reference.langchain.com/javascript/classes/_langchain_langgraph.index.Command.html) primitive.
+Resuming an execution after an [interrupt](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) can be done by passing a **resume** value to the [`Command`](https://reference.langchain.com/javascript/langchain-langgraph/index/Command) primitive.
 
 <Tabs>
     <Tab title="Invoke">
@@ -463,7 +467,7 @@ While different runs of a workflow can produce different results, resuming a **s
 
 Idempotency ensures that running the same operation multiple times produces the same result. This helps prevent duplicate API calls and redundant processing if a step is rerun due to a failure. Always place API calls inside **tasks** functions for checkpointing, and design them to be idempotent in case of re-execution. Re-execution can occur if a **task** starts, but does not complete successfully. Then, if the workflow is resumed, the **task** will run again. Use idempotency keys or verify existing results to avoid duplication.
 
-## Common Pitfalls
+## Common pitfalls
 
 ### Handling side effects
 
@@ -526,12 +530,9 @@ Operations that might give different results each time (like getting current tim
 * In a task: Get random number (5) → interrupt → resume → (returns 5 again) → ...
 * Not in a task: Get random number (5) → interrupt → resume → get new random number (7) → ...
 
-
-
 This is especially important when using **human-in-the-loop** workflows with multiple interrupt calls. LangGraph keeps a list of resume values for each task/entrypoint. When an interrupt is encountered, it's matched with the corresponding resume value. This matching is strictly **index-based**, so the order of the resume values should match the order of the interrupts.
 
-
-If order of execution is not maintained when resuming, one [`interrupt`](https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.interrupt.html) call may be matched with the wrong `resume` value, leading to incorrect results.
+If order of execution is not maintained when resuming, one [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) call may be matched with the wrong `resume` value, leading to incorrect results.
 
 Please read the section on [determinism](#determinism) for more details.
 
@@ -598,11 +599,17 @@ Please read the section on [determinism](#determinism) for more details.
     </Tab>
 </Tabs>
 
+## Learn more
+
+- [How to use the Functional API](/oss/javascript/langgraph/use-functional-api)
+- [Graph API conceptual overview](/oss/javascript/langgraph/graph-api)
+- [Choosing between Graph API and Functional API](/oss/javascript/langgraph/choosing-apis)
+
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/functional-api.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/functional-api.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

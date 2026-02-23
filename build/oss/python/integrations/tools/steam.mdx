@@ -1,5 +1,6 @@
 ---
-title: Steam Toolkit
+title: "Steam toolkit integration"
+description: "Integrate with the Steam toolkit using LangChain Python."
 ---
 
 >[Steam (Wikipedia)](https://en.wikipedia.org/wiki/Steam_(service)) is a video game digital distribution service and storefront developed by `Valve Corporation`. It provides game updates automatically for Valve's games, and expanded to distributing third-party titles. `Steam` offers various features, like game server matchmaking with Valve Anti-Cheat measures, social networking, and game streaming services.
@@ -23,7 +24,7 @@ We have to install two python libraries.
 pip install -qU python-steam-api python-decouple steamspypi
 ```
 
-## Assign Environmental Variables
+## Assign environmental variables
 
 To use this toolkit, please have your OpenAI API Key, Steam API key (from [here](https://steamcommunity.com/dev/apikey)) and your own SteamID handy. Once you have received a Steam API Key, you can input it as an environmental variable below.
 The toolkit will read the "STEAM_KEY" API Key as an environmental variable to authenticate you so please set them here. You will also need to set your "OPENAI_API_KEY" and your "STEAM_ID".
@@ -65,7 +66,7 @@ for event in events:
     event["messages"][-1].pretty_print()
 ```
 
-```output
+```text
 ================================ Human Message =================================
 
 can you give the information about the game Terraria?
@@ -102,9 +103,9 @@ You can find more information and purchase it here: [Terraria on Steam](https://
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/steam.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/steam.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

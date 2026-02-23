@@ -1,5 +1,6 @@
 ---
-title: PGVectorStore
+title: "PGVectorStore integration"
+description: "Integrate with the PGVectorStore using LangChain Python."
 ---
 
 `PGVectorStore` is an implementation of a LangChain vectorstore using `postgres` as the backend.
@@ -45,7 +46,7 @@ VECTOR_SIZE = 1024  # @param {type: "int"}
 
 ## Initialization
 
-### PGEngine Connection Pool
+### PGEngine connection pool
 
 One of the requirements and arguments to establish PostgreSQL as a vector store is a `PGEngine` object. The `PGEngine`  configures a shared connection pool  to your Postgres database. This is an industry best practice to manage number of connections and to reduce latency through cached database connections.
 
@@ -100,7 +101,7 @@ await pg_engine.ainit_vectorstore_table(
 )
 ```
 
-#### Optional Tip: 💡
+#### Optional tip: 💡
 
 You can also specify a schema name by passing `schema_name` wherever you pass `table_name`. Eg:
 
@@ -217,7 +218,7 @@ docs = await store.asimilarity_search_by_vector(query_vector, k=2)
 print(docs)
 ```
 
-## Add a Index
+## Add a index
 
 Speed up vector search queries by applying a vector index. Learn more about [vector indexes](https://cloud.google.com/blog/products/databases/faster-similarity-search-performance-with-pgvector-indexes).
 
@@ -258,7 +259,7 @@ await store.adrop_vector_index()  # Delete index using the default name
 await store.adrop_vector_index("my-hnsw-index")  # Delete index using the index name
 ```
 
-### Create a custom Vector Store
+### Create a custom vector store
 
 Customize the vectorstore with special column names or with custom metadata columns.
 
@@ -268,7 +269,7 @@ Customize the vectorstore with special column names or with custom metadata colu
 * Use the `Column` class to create custom id or metadata columns. A Column is defined by a name and data type. Any Postgres [data type](https://www.postgresql.org/docs/current/datatype.html) can be used.
 * Use `store_metadata` to create a JSON column to store extra metadata.
 
-#### Optional Tip: 💡
+#### Optional tip: 💡
 
 To use non-uuid ids, you must customize the id column:
 
@@ -363,7 +364,7 @@ docs = await custom_store.asimilarity_search(query, filter={"content": {"$gte": 
 print(docs)
 ```
 
-### Create a Vector Store using existing table
+### Create a vector store using existing table
 
 A Vector Store can be built up on an existing table.
 
@@ -450,7 +451,7 @@ Note:
 
     `ALTER TABLE products ADD COLUMN embed vector(768) DEFAULT NULL`
 
-1. For new records, added via [`VectorStore`](https://reference.langchain.com/python/langchain_core/vectorstores/?h=#langchain_core.vectorstores.base.VectorStore) embeddings are automatically generated.
+1. For new records, added via [`VectorStore`](https://reference.langchain.com/python/langchain-core/vectorstores/base/VectorStore) embeddings are automatically generated.
 
 ## Clean up
 
@@ -478,9 +479,9 @@ For detailed documentation of all VectorStore features and configurations head t
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/pgvectorstore.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/pgvectorstore.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

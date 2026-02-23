@@ -1,5 +1,7 @@
 ---
-title: "Key-value stores"
+title: "Store integrations"
+sidebarTitle: "Key-value stores"
+description: "Integrate with stores using LangChain Python."
 ---
 
 ## Overview
@@ -28,7 +30,7 @@ Base stores are designed to work **multiple** key-value pairs at once for effici
 
 ## Custom stores
 
-You can also implement your own custom store by extending the [`BaseStore`](https://reference.langchain.com/python/langgraph/store/#langgraph.store.base.BaseStore) class. See the [store interface documentation](https://python.langchain.com/api_reference/core/stores/langchain_core.stores.BaseStore.html) for more details.
+You can also implement your own custom store by extending the [`BaseStore`](https://reference.langchain.com/python/langchain-core/stores/BaseStore) class. See the [store interface documentation](https://python.langchain.com/api_reference/core/stores/langchain_core.stores.BaseStore.html) for more details.
 
 ## All key-value stores
 
@@ -38,13 +40,14 @@ You can also implement your own custom store by extending the [`BaseStore`](http
     <Card title="ElasticsearchEmbeddingsCache" icon="link" href="/oss/python/integrations/stores/elasticsearch" arrow="true" cta="View guide" />
     <Card title="RedisStore" icon="link" href="/oss/python/integrations/stores/redis" arrow="true" cta="View guide" />
     <Card title="UpstashRedisByteStore" icon="link" href="/oss/python/integrations/stores/upstash_redis" arrow="true" cta="View guide" />
+    <Card title="BigtableByteStore" icon="link" href="/oss/python/integrations/stores/bigtable" arrow="true" cta="View guide" />
 </Columns>
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/stores/index.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/stores/index.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

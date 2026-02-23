@@ -1,5 +1,6 @@
 ---
-title: IMSDb
+title: "IMSDb integration"
+description: "Integrate with the IMSDb document loader using LangChain Python."
 ---
 
 >[IMSDb](https://imsdb.com/) is the `Internet Movie Script Database`.
@@ -22,7 +23,7 @@ data = loader.load()
 data[0].page_content[:500]
 ```
 
-```output
+```text
 '\n\r\n\r\n\r\n\r\n                                    BLACKKKLANSMAN\r\n                         \r\n                         \r\n                         \r\n                         \r\n                                      Written by\r\n\r\n                          Charlie Wachtel & David Rabinowitz\r\n\r\n                                         and\r\n\r\n                              Kevin Willmott & Spike Lee\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n                         FADE IN:\r\n                         \r\n          SCENE FROM "GONE WITH'
 ```
 
@@ -30,15 +31,15 @@ data[0].page_content[:500]
 data[0].metadata
 ```
 
-```output
+```python
 {'source': 'https://imsdb.com/scripts/BlacKkKlansman.html'}
 ```
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/imsdb.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/imsdb.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

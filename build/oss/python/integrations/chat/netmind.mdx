@@ -1,5 +1,6 @@
 ---
-title: ChatNetmind
+title: "ChatNetMind integration"
+description: "Integrate with the ChatNetMind chat model using LangChain Python."
 ---
 
 This will help you get started with Netmind [chat models](https://www.netmind.ai/). For detailed documentation of all ChatNetmind features and configurations head to the [API reference](https://github.com/protagolabs/langchain-netmind).
@@ -10,15 +11,15 @@ This will help you get started with Netmind [chat models](https://www.netmind.ai
 
 ### Integration details
 
-| Class                                                                                        | Package | Local | Serializable | [JS support](https://js.langchain.com/docs/integrations/chat/) | Downloads | Version |
-|:---------------------------------------------------------------------------------------------| :--- |:-----:|:------------:|:--------------------------------------------------------------:| :---: | :---: |
-| [ChatNetmind](https://python.langchain.com/api_reference/) | [langchain-netmind](https://python.langchain.com/api_reference/) |   ✅   |      ❌       |                               ❌                                | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-netmind?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-netmind?style=flat-square&label=%20) |
+| Class                                                                                        | Package | Serializable | [JS support](https://js.langchain.com/docs/integrations/chat/) | Downloads | Version |
+|:---------------------------------------------------------------------------------------------| :--- |:------------:|:--------------------------------------------------------------:| :---: | :---: |
+| [ChatNetmind](https://python.langchain.com/api_reference/) | [langchain-netmind](https://python.langchain.com/api_reference/) |      ❌       |                               ❌                                | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-netmind?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-netmind?style=flat-square&label=%20) |
 
 ### Model features
 
-| [Tool calling](/oss/python/langchain/tools) | [Structured output](/oss/python/langchain/structured-output) | JSON mode | [Image input](/oss/python/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/python/langchain/streaming#llm-tokens) | Native async | [Token usage](/oss/python/langchain/models#token-usage) | [Logprobs](/oss/python/langchain/models#log-probabilities) |
-|:-----------------------------------------------:|:---------------------------------------------------------:|:---------:|:---------------------------------------------------:|:-----------:|:-----------:|:----------------------------------------------------------:|:------------:|:-----------------------------------------------------------:|:---------------------------------------:|
-|                        ✅                        |                             ✅                             |     ✅     |                          ❌                          |      ❌      |      ❌      |                             ✅                              |      ✅       |                              ✅                              |                    ✅                    |
+| [Tool calling](/oss/python/langchain/tools) | [Structured output](/oss/python/langchain/structured-output) | [Image input](/oss/python/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/python/langchain/streaming#llm-tokens) | Native async | [Token usage](/oss/python/langchain/models#token-usage) | [Logprobs](/oss/python/langchain/models#log-probabilities) |
+|:-----------------------------------------------:|:---------------------------------------------------------:|:---------------------------------------------------:|:-----------:|:-----------:|:----------------------------------------------------------:|:------------:|:-----------------------------------------------------------:|:---------------------------------------:|
+|                        ✅                        |                             ✅                             |                          ❌                          |      ❌      |      ❌      |                             ✅                              |      ✅       |                              ✅                              |                    ✅                    |
 
 ## Setup
 
@@ -82,7 +83,7 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
-```output
+```text
 AIMessage(content="J'adore programmer.", additional_kwargs={'refusal': None}, response_metadata={'token_usage': {'completion_tokens': 13, 'prompt_tokens': 31, 'total_tokens': 44, 'completion_tokens_details': None, 'prompt_tokens_details': None}, 'model_name': 'deepseek-ai/DeepSeek-V3', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-ca6c2010-844d-4bf6-baac-6e248491b000-0', usage_metadata={'input_tokens': 31, 'output_tokens': 13, 'total_tokens': 44, 'input_token_details': {}, 'output_token_details': {}})
 ```
 
@@ -90,7 +91,7 @@ AIMessage(content="J'adore programmer.", additional_kwargs={'refusal': None}, re
 print(ai_msg.content)
 ```
 
-```output
+```text
 J'adore programmer.
 ```
 
@@ -105,9 +106,9 @@ For detailed documentation of all ChatNetmind features and configurations head t
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/netmind.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/netmind.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

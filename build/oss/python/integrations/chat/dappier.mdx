@@ -1,5 +1,6 @@
 ---
-title: Dappier AI
+title: "Dappier AI integration"
+description: "Integrate with the Dappier AI chat model using LangChain Python."
 ---
 
 **Dappier: Powering AI with Dynamic, Real-Time Data Models**
@@ -44,7 +45,7 @@ messages = [HumanMessage(content="Who won the super bowl in 2024?")]
 chat.invoke(messages)
 ```
 
-```output
+```text
 AIMessage(content='Hey there! The Kansas City Chiefs won Super Bowl LVIII in 2024. They beat the San Francisco 49ers in overtime with a final score of 25-22. It was quite the game! 🏈')
 ```
 
@@ -52,7 +53,7 @@ AIMessage(content='Hey there! The Kansas City Chiefs won Super Bowl LVIII in 202
 await chat.ainvoke(messages)
 ```
 
-```output
+```text
 AIMessage(content='The Kansas City Chiefs won Super Bowl LVIII in 2024! 🏈')
 ```
 
@@ -65,9 +66,9 @@ AIMessage(content='The Kansas City Chiefs won Super Bowl LVIII in 2024! 🏈')
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/dappier.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/dappier.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

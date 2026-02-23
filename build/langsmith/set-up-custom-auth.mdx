@@ -31,7 +31,7 @@ cd custom-auth
 ```
 
 ```bash uv
-uv add langgraph-cli[inmem]
+uv add "langgraph-cli[inmem]"
 langgraph new --template=new-langgraph-project-python custom-auth
 cd custom-auth
 ```
@@ -78,7 +78,7 @@ Now that you have a base LangGraph app, add authentication to it.
 In this tutorial, you will start with a hard-coded token for example purposes. You will get to a "production-ready" authentication scheme in the third tutorial.
 </Note>
 
-The [Auth](https://reference.langchain.com/python/langsmith/deployment/sdk/#langgraph_sdk.auth.Auth) object lets you register an authentication function that the LangSmith deployment will run on every request. This function receives each request and decides whether to accept or reject.
+The [Auth](https://reference.langchain.com/python/langgraph-sdk/auth/Auth) object lets you register an authentication function that the LangSmith deployment will run on every request. This function receives each request and decides whether to accept or reject.
 
 Create a new file `src/security/auth.py`. This is where your code will live to check if users are allowed to access your bot:
 
@@ -114,10 +114,10 @@ async def get_current_user(authorization: str | None) -> Auth.types.MinimalUserD
     }
 ```
 
-Notice that your [Auth.authenticate](https://reference.langchain.com/python/langsmith/deployment/sdk/#langgraph_sdk.auth.Auth.authenticate) handler does two important things:
+Notice that your [Auth.authenticate](https://reference.langchain.com/python/langgraph-sdk/auth/Auth/authenticate) handler does two important things:
 
 1. Checks if a valid token is provided in the request's [Authorization header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
-2. Returns the user's [MinimalUserDict](https://reference.langchain.com/python/langsmith/deployment/sdk/#langgraph_sdk.auth.types.MinimalUserDict)
+2. Returns the user's [MinimalUserDict](https://reference.langchain.com/python/langgraph-sdk/auth/types/MinimalUserDict)
 
 Now tell LangGraph to use authentication by adding the following to the [langgraph.json](https://reference.langchain.com/python/cloud/reference/cli/#configuration-file) configuration:
 
@@ -203,13 +203,13 @@ Now that you can control who accesses your bot, you might want to:
 
 1. Continue the tutorial by going to [Make conversations private](/langsmith/resource-auth) to learn about resource authorization.
 2. Read more about [authentication concepts](/langsmith/auth).
-3. Check out the API reference for [Auth](https://reference.langchain.com/python/langsmith/deployment/sdk/#langgraph_sdk.auth.Auth), [Auth.authenticate](https://reference.langchain.com/python/langsmith/deployment/sdk/#langgraph_sdk.auth.Auth.authenticate), and [MinimalUserDict](https://reference.langchain.com/python/langsmith/deployment/sdk/#langgraph_sdk.auth.types.MinimalUserDict) for more authentication details.
+3. Check out the API reference for [Auth](https://reference.langchain.com/python/langgraph-sdk/auth/Auth), [Auth.authenticate](https://reference.langchain.com/python/langgraph-sdk/auth/Auth/authenticate), and [MinimalUserDict](https://reference.langchain.com/python/langgraph-sdk/auth/types/MinimalUserDict) for more authentication details.
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/set-up-custom-auth.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/set-up-custom-auth.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

@@ -179,7 +179,7 @@ Now create the experiments and run completions on all examples. In the API, an "
 #  An experiment is a collection of runs with a reference to the dataset used
 #  API Reference: https://api.smith.langchain.com/redoc#tag/tracer-sessions/operation/create_tracer_session_api_v1_sessions_post
 
-model_names = ("gpt-3.5-turbo", "gpt-4o-mini")
+model_names = ("gpt-3.5-turbo", "gpt-4.1-mini")
 experiment_ids = []
 for model_name in model_names:
     resp = requests.post(
@@ -353,9 +353,9 @@ for example_id, runs in example_id_to_runs_map.items():
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/run-evals-api-only.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/run-evals-api-only.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

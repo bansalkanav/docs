@@ -3,8 +3,7 @@ title: How to set up an application with requirements.txt
 sidebarTitle: With requirements.txt
 ---
 
-import FrameworkAgnosticPy from '/snippets/langsmith/framework-agnostic-py.mdx';
-import FrameworkAgnosticJS from '/snippets/langsmith/framework-agnostic-js.mdx';
+import FrameworkAgnostic from '/snippets/langsmith/framework-agnostic.mdx';
 import PrereleaseBehavior from '/snippets/langsmith/pre-release-behavior.mdx';
 
 An application must be configured with a [configuration file](/langsmith/cli#configuration-file) in order to be deployed to LangSmith (or to be self-hosted). This how-to guide discusses the basic steps to set up an application for deployment using `requirements.txt` to specify project dependencies.
@@ -29,9 +28,7 @@ my-app/
 ```
 
 <Tip>
-<FrameworkAgnosticPy/>
-
-
+<FrameworkAgnostic/>
 </Tip>
 
 You can also set up with:
@@ -48,11 +45,11 @@ Dependencies can optionally be specified in one of the following files: `pyproje
 The dependencies below will be included in the image, you can also use them in your code, as long as with a compatible version range:
 
 ```
-langgraph>=0.6.0
-langgraph-sdk>=0.1.66
-langgraph-checkpoint>=2.0.23
-langchain-core>=0.2.38
-langsmith>=0.1.63
+langgraph>=0.4.10,<2
+langgraph-sdk>=0.3.5
+langgraph-checkpoint>=3.0.1,<5
+langchain-core>=0.3.66
+langsmith>=0.6.3
 orjson>=3.9.7,<3.10.17
 httpx>=0.25.0
 tenacity>=8.0.0
@@ -63,6 +60,11 @@ httptools>=0.5.0
 jsonschema-rs>=0.20.0
 structlog>=24.1.0
 cloudpickle>=3.0.0
+truststore>=0.1
+protobuf>=6.32.1,<7.0.0
+grpcio>=1.78.0,<1.79.0
+grpcio-tools>=1.78.0,<1.79.0
+grpcio-health-checking>=1.78.0,<1.79.0
 ```
 
 Example `requirements.txt` file:
@@ -111,7 +113,7 @@ my-app/
 
 ## Define graphs
 
-Implement your graphs. Graphs can be defined in a single file or multiple files. Make note of the variable names of each [CompiledStateGraph](https://reference.langchain.com/python/langgraph/graphs/#langgraph.graph.state.CompiledStateGraph) to be included in the application. The variable names will be used later when creating the [LangGraph configuration file](/langsmith/cli#configuration-file).
+Implement your graphs. Graphs can be defined in a single file or multiple files. Make note of the variable names of each [CompiledStateGraph](https://reference.langchain.com/python/langgraph/graph/state/CompiledStateGraph) to be included in the application. The variable names will be used later when creating the [LangGraph configuration file](/langsmith/cli#configuration-file).
 
 Example `agent.py` file, which shows how to import from other modules you define (code for the modules is not shown here, please see [this repository](https://github.com/langchain-ai/langgraph-example) to see their implementation):
 
@@ -207,9 +209,9 @@ After you set up your project and place it in a GitHub repository, it's time to 
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/setup-app-requirements-txt.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/setup-app-requirements-txt.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

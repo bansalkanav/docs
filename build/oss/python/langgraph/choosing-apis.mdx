@@ -57,6 +57,10 @@ workflow.add_node("process_search", search_node)
 workflow.add_conditional_edges("call_llm", should_continue)
 ```
 
+
+
+
+
 **2. State management across multiple components**
 
 When you need to share and coordinate state between different parts of your workflow, the Graph API's explicit state management is beneficial.
@@ -80,6 +84,10 @@ def validation_node(state):
     return {"validation_status": "valid" if is_valid else "invalid"}
 ```
 
+
+
+
+
 **3. Parallel processing with synchronization**
 
 When you need to run multiple operations in parallel and then combine their results, the Graph API handles this naturally.
@@ -102,6 +110,10 @@ workflow.add_edge("fetch_weather", "combine_data")
 workflow.add_edge("fetch_stocks", "combine_data")
 ```
 
+
+
+
+
 **4. Team development and documentation**
 
 The visual nature of the Graph API makes it easier for teams to understand, document, and maintain complex workflows.
@@ -113,6 +125,10 @@ workflow.add_node("ml_processing", ml_team_function)
 workflow.add_node("business_logic", product_team_function)
 workflow.add_node("output_formatting", frontend_team_function)
 ```
+
+
+
+
 
 ### When to use the Functional API
 
@@ -144,6 +160,10 @@ def workflow(user_input: str) -> str:
     return response
 ```
 
+
+
+
+
 **2. Linear workflows with simple logic**
 
 When your workflow is primarily sequential with straightforward conditional logic.
@@ -170,6 +190,10 @@ def essay_workflow(topic: str) -> dict:
     return {"essay": final_essay}
 ```
 
+
+
+
+
 **3. Rapid prototyping**
 
 When you want to quickly test ideas without the overhead of defining state schemas and graph structures.
@@ -183,6 +207,10 @@ def quick_prototype(data: dict) -> dict:
 
     return {"final_result": step2_result}
 ```
+
+
+
+
 
 **4. Function-scoped state management**
 
@@ -208,6 +236,10 @@ def document_processor(document: str) -> dict:
     # State is passed between functions as needed
     return generate_report(analysis).result()
 ```
+
+
+
+
 
 ## Combining both APIs
 
@@ -235,6 +267,10 @@ def orchestrator_node(state):
     processed_data = data_processor.invoke(state["raw_data"])
     return {"processed_data": processed_data}
 ```
+
+
+
+
 
 ## Migration between APIs
 
@@ -280,6 +316,10 @@ workflow.add_conditional_edges("analyze", confidence_check)
 # ... add remaining nodes and edges
 ```
 
+
+
+
+
 ### From Graph to Functional API
 
 When your graph becomes overly complex for simple linear processes:
@@ -300,6 +340,10 @@ def simple_workflow(input_data: str) -> str:
     return finalize_result(step2).result()
 ```
 
+
+
+
+
 ## Summary
 
 Choose the **Graph API** when you need explicit control over workflow structure, complex branching, parallel processing, or team collaboration benefits.
@@ -310,9 +354,9 @@ Both APIs provide the same core LangGraph features (persistence, streaming, huma
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/choosing-apis.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/choosing-apis.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>

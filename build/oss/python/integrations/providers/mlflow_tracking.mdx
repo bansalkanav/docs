@@ -1,5 +1,6 @@
 ---
-title: MLflow
+title: "MLflow integrations"
+description: "Integrate with MLflow using LangChain Python."
 ---
 
 >[MLflow](https://mlflow.org/) is a versatile, open-source platform for managing workflows and artifacts across the machine learning and generative AI lifecycle. It has built-in integrations with many popular AI and ML libraries, but can be used with any library, algorithm, or deployment tool.
@@ -33,7 +34,7 @@ os.environ["MLFLOW_TRACKING_URI"] = ""
 os.environ["OPENAI_API_KEY"] = ""
 ```
 
-## MLflow Tracing
+## MLflow tracing
 
 MLflow's tracing capability helps you visualize the execution flow of your LangChain applications. Here's how to enable it.
 
@@ -61,7 +62,7 @@ from langchain_openai import ChatOpenAI
 mlflow.langchain.autolog()
 
 # Create a simple chain
-llm = ChatOpenAI(model_name="gpt-4o")
+llm = ChatOpenAI(model_name="gpt-4.1")
 
 prompt = ChatPromptTemplate.from_messages(
     [
@@ -110,7 +111,7 @@ def count_words(text: str) -> str:
 
 
 # Create a LangGraph agent
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(model="gpt-4.1")
 tools = [count_words]
 graph = create_agent(llm, tools)
 
@@ -133,9 +134,9 @@ For more information on using MLflow with LangChain, please visit:
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/mlflow_tracking.mdx)
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/mlflow_tracking.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>
