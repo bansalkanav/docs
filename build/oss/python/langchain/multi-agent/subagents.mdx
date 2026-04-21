@@ -14,18 +14,20 @@ graph LR
     D --> B
     E --> B
     B --> F[User response]
+
+    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
+    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
+
+    class A,F trigger
+    class B,C,D,E process
 ```
 
 ## Key characteristics
 
 * Centralized control: All routing passes through the main agent
-* No direct user interaction: Subagents return results to the main agent, not the user (though you can use [interrupts](/oss/python/langgraph/interrupts#interrupt) within a subagent to allow user interaction)
+* No direct user interaction: Subagents return results to the main agent, not the user (though you can use [interrupts](/oss/python/langgraph/interrupts#pause-using-interrupt) within a subagent to allow user interaction)
 * Subagents via tools: Subagents are invoked via tools
 * Parallel execution: The main agent can invoke multiple subagents in a single turn
-
-<Note>
-**Subgraph state inspection may not be available with this pattern.** LangGraph can only inspect subgraph state for subgraphs it can [statically discover](/oss/python/langgraph/use-subgraphs#view-subgraph-state). Because subagents are called inside tool functions, they are not statically discoverable, so [`get_state` with `subgraphs`](/oss/python/langgraph/use-subgraphs#view-subgraph-state) will not return subagent state. If you need to read nested graph state (e.g., during an [interrupt](/oss/python/langgraph/interrupts#interrupt)), invoke the subagent from a [node function](/oss/python/langgraph/use-subgraphs#invoke-a-graph-from-a-node) in a custom graph instead.
-</Note>
 
 <Note>
 **Supervisor vs. Router**: A supervisor agent (this pattern) is different from a [router](/oss/python/langchain/multi-agent/router). The supervisor is a full agent that maintains conversation context and dynamically decides which subagents to call across multiple turns. A router is typically a single classification step that dispatches to agents without maintaining ongoing conversation state.
@@ -36,7 +38,7 @@ graph LR
 Use the subagents pattern when you have multiple distinct domains (e.g., calendar, email, CRM, database), subagents don't need to converse directly with users, or you want centralized workflow control. For simpler cases with just a few [tools](/oss/python/langchain/tools), use a [single agent](/oss/python/langchain/agents).
 
 <Tip>
-**Need user interaction within a subagent?** While subagents typically return results to the main agent rather than conversing directly with users, you can use [interrupts](/oss/python/langgraph/interrupts#interrupt) within a subagent to pause execution and gather user input. This is useful when a subagent needs clarification or approval before proceeding. The main agent remains the orchestrator, but the subagent can collect information from the user mid-task.
+**Need user interaction within a subagent?** While subagents typically return results to the main agent rather than conversing directly with users, you can use [interrupts](/oss/python/langgraph/interrupts#pause-using-interrupt) within a subagent to pause execution and gather user input. This is useful when a subagent needs clarification or approval before proceeding. The main agent remains the orchestrator, but the subagent can collect information from the user mid-task.
 </Tip>
 
 ## Basic implementation
@@ -98,7 +100,7 @@ Not to be confused with Python's `async`/`await`. Here, "async" means the main a
 
 ### Synchronous (default)
 
-By default, subagent calls are **synchronous**—the main agent waits for each subagent to complete before continuing. Use sync when the main agent's next action depends on the subagent's result.
+By default, subagent calls are **synchronous**: the main agent waits for each subagent to complete before continuing. Use sync when the main agent's next action depends on the subagent's result.
 
 ```mermaid
 sequenceDiagram
@@ -190,6 +192,12 @@ graph LR
     D --> B
     E --> B
     B --> F[User response]
+
+    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
+    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
+
+    class A,F trigger
+    class B,C,D,E process
 ```
 
 The key idea is wrapping subagents as tools that the main agent can call:
@@ -233,6 +241,14 @@ graph LR
     F --> C
     C --> B
     B --> G[User response]
+
+    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
+    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
+    classDef decision fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
+
+    class A,G trigger
+    class B,D,E,F process
+    class C decision
 ```
 
 **Key characteristics:**
@@ -254,12 +270,12 @@ from langchain.agents import create_agent
 
 # Sub-agents developed by different teams
 research_agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     prompt="You are a research specialist..."
 )
 
 writer_agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     prompt="You are a writing specialist..."
 )
 
@@ -290,7 +306,7 @@ def task(
 
 # Main coordinator agent
 main_agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[task],
     system_prompt=(
         "You coordinate specialized sub-agents. "
@@ -482,11 +498,21 @@ def call_subagent1(
     })
 ```
 
+
+
+## Checkpointing and state inspection
+
+By default, subagents use the **inherited checkpointer** mode—each invocation starts with fresh state, supports [interrupts](/oss/python/langgraph/interrupts#pause-using-interrupt), and runs safely in parallel. If you need a subagent to maintain its own persistent conversation history across invocations, compile it with `checkpointer=True` (continuations mode). See [subgraph persistence](/oss/python/langgraph/use-subgraphs#subgraph-persistence) for a full comparison of modes.
+
+Because subagents are called inside tool functions, LangGraph cannot [statically discover](/oss/python/langgraph/use-subgraphs#view-subgraph-state) them. This means [`get_state` with `subgraphs`](/oss/python/langgraph/use-subgraphs#view-subgraph-state) will not return subagent state. If you need to read nested graph state (e.g., during an [interrupt](/oss/python/langgraph/interrupts#pause-using-interrupt)), invoke the subagent from a [node function](/oss/python/langgraph/use-subgraphs#call-a-subgraph-inside-a-node) in a custom graph instead. See [subgraph persistence](/oss/python/langgraph/use-subgraphs#subgraph-persistence) for details on how each mode affects state visibility.
+
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/multi-agent/subagents.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

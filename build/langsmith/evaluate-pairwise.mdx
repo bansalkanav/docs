@@ -95,7 +95,7 @@ from langsmith import evaluate
 
 # See the prompt: https://smith.langchain.com/hub/langchain-ai/pairwise-evaluation-2
 prompt = hub.pull("langchain-ai/pairwise-evaluation-2")
-model = init_chat_model("gpt-4.1")
+model = init_chat_model("gpt-5.4")
 chain = prompt | model
 
 def ranked_preference(inputs: dict, outputs: list[dict]) -> list:
@@ -243,9 +243,11 @@ You may filter to runs where the first experiment was better or vice versa by cl
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/evaluate-pairwise.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

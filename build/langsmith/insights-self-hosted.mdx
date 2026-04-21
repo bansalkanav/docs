@@ -40,6 +40,19 @@ config:
     encryptionKey: "<your-encryption-key>"
 ```
 
+<Note>
+If you are using an Istio Gateway, you must use LangSmith version **0.13.38** or later and set the following environment variable on the agent bootstrap job:
+
+```yaml
+backend:
+  agentBootstrap:
+    enabled: true
+    extraEnv:
+      - name: CLIO_INCLUDE_PATH_SUFFIX
+        value: "false"
+```
+</Note>
+
 ### Generate an encryption key
 
 Insights requires a Fernet encryption key to securely store secrets. Generate one using Python:
@@ -54,9 +67,11 @@ You can store the encryption key in a predefined Kubernetes secret using the `in
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/insights-self-hosted.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

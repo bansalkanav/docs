@@ -6,6 +6,13 @@ title: Quickstart
 
 This quickstart demonstrates how to build a calculator agent using the LangGraph Graph API or the Functional API.
 
+<Tip>
+    **Using an AI coding assistant?**
+
+    - Install the [LangChain Docs MCP server](/use-these-docs) to give your agent access to up-to-date LangChain documentation and examples.
+    - Install [LangChain Skills](https://github.com/langchain-ai/langchain-skills) to improve your agent's performance on LangChain ecosystem tasks.
+</Tip>
+
 - [Use the Graph API](#use-the-graph-api) if you prefer to define your agent as a graph of nodes and edges.
 - [Use the Functional API](#use-the-functional-api) if you prefer to define your agent as a single function.
 
@@ -30,7 +37,7 @@ import { tool } from "@langchain/core/tools";
 import * as z from "zod";
 
 const model = new ChatAnthropic({
-  model: "claude-sonnet-4-5-20250929",
+  model: "claude-sonnet-4-6",
   temperature: 0,
 });
 
@@ -234,7 +241,7 @@ import { tool } from "@langchain/core/tools";
 import * as z from "zod";
 
 const model = new ChatAnthropic({
-  model: "claude-sonnet-4-5-20250929",
+  model: "claude-sonnet-4-6",
   temperature: 0,
 });
 
@@ -395,7 +402,7 @@ import { tool } from "@langchain/core/tools";
 import * as z from "zod";
 
 const model = new ChatAnthropic({
-  model: "claude-sonnet-4-5-20250929",
+  model: "claude-sonnet-4-6",
   temperature: 0,
 });
 
@@ -542,7 +549,7 @@ import * as z from "zod";
 // Step 1: Define tools and model
 
 const model = new ChatAnthropic({
-  model: "claude-sonnet-4-5-20250929",
+  model: "claude-sonnet-4-6",
   temperature: 0,
 });
 
@@ -637,9 +644,11 @@ for (const message of result) {
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/quickstart.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -382,7 +382,7 @@ graph = builder.compile(checkpointer=checkpointer)  # [!code highlight]
 
 
 
-If you want the subgraph to have its own memory, you can compile it with the appropriate checkpointer option. This is useful in [multi-agent](/oss/python/langchain/multi-agent) systems, if you want agents to keep track of their internal message histories.
+You can configure subgraph-specific checkpointing behavior. See [subgraph persistence](/oss/python/langgraph/use-subgraphs#subgraph-persistence) for details on persistence levels including interrupt support and stateful continuations.
 
 ```python
 subgraph_builder = StateGraph(...)
@@ -837,7 +837,7 @@ items = store.search(
     from langgraph.graph import START, MessagesState, StateGraph
     from langgraph.runtime import Runtime  # [!code highlight]
 
-    model = init_chat_model("gpt-4.1-mini")
+    model = init_chat_model("gpt-5.4-mini")
 
     # Create store with semantic search enabled
     embeddings = init_embeddings("openai:text-embedding-3-small")
@@ -901,7 +901,7 @@ Most LLMs have a maximum supported context window (denominated in tokens). One w
 
 
 
-To trim message history, use the [`trim_messages`](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.utils.trim_messages.html) function:
+To trim message history, use the [`trim_messages`](https://reference.langchain.com/python/langchain-core/messages/utils/trim_messages) function:
 
 ```python
 from langchain_core.messages.utils import (  # [!code highlight]
@@ -938,7 +938,7 @@ builder.add_node(call_model)
   from langchain.chat_models import init_chat_model
   from langgraph.graph import StateGraph, START, MessagesState
 
-  model = init_chat_model("claude-sonnet-4-5-20250929")
+  model = init_chat_model("claude-sonnet-4-6")
   summarization_model = model.bind(max_tokens=128)
 
   def call_model(state: MessagesState):
@@ -1121,7 +1121,7 @@ def summarize_conversation(state: State):
   from langgraph.checkpoint.memory import InMemorySaver
   from langmem.short_term import SummarizationNode, RunningSummary  # [!code highlight]
 
-  model = init_chat_model("claude-sonnet-4-5-20250929")
+  model = init_chat_model("claude-sonnet-4-6")
   summarization_model = model.bind(max_tokens=128)
 
   class State(MessagesState):
@@ -1468,9 +1468,11 @@ We recommend running migrations as a dedicated deployment step, or you can ensur
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/add-memory.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -3,7 +3,7 @@ title: Human-in-the-loop
 ---
 
 The Human-in-the-Loop (HITL) [middleware](/oss/javascript/langchain/middleware/built-in#human-in-the-loop) lets you add human oversight to agent tool calls.
-When a model proposes an action that might require review — for example, writing to a file or executing SQL — the middleware can pause execution and wait for a decision.
+When a model proposes an action that might require review—for example, writing to a file or executing SQL—the middleware can pause execution and wait for a decision.
 
 It does this by checking each tool call against a configurable policy. If intervention is needed, the middleware issues an [interrupt](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt) that halts execution. The graph state is saved using LangGraph's [persistence layer](/oss/javascript/langgraph/persistence), so execution can pause safely and resume later.
 
@@ -41,7 +41,7 @@ import { createAgent, humanInTheLoopMiddleware } from "langchain"; // [!code hig
 import { MemorySaver } from "@langchain/langgraph"; // [!code highlight]
 
 const agent = createAgent({
-    model: "gpt-4.1",
+    model: "gpt-5.4",
     tools: [writeFileTool, executeSQLTool, readDataTool],
     middleware: [
         humanInTheLoopMiddleware({
@@ -104,7 +104,7 @@ const agent = createAgent({
 
 ## Responding to interrupts
 
-When you invoke the agent, it runs until it either completes or an interrupt is raised. An interrupt is triggered when a tool call matches the policy you configured in `interrupt_on`. In that case, the invocation result will include an `__interrupt__` field with the actions that require review. You can then present those actions to a reviewer and resume execution once decisions are provided.
+When you invoke the agent, it runs until it either completes or an interrupt is raised. An interrupt is triggered when a tool call matches the policy you configured in `interrupt_on`. With `version="v2"`, the result is a `GraphOutput` with an `interrupts` attribute containing the actions that require review. You can then present those actions to a reviewer and resume execution once decisions are provided.
 
 
 
@@ -171,7 +171,7 @@ await agent.invoke(
     new Command({
         // Decisions are provided as a list, one per action under review.
         // The order of decisions must match the order of actions
-        // listed in the `__interrupt__` request.
+        // in the interrupt request.
         resume: {
             decisions: [
                 {
@@ -196,7 +196,7 @@ await agent.invoke(
         new Command({
             // Decisions are provided as a list, one per action under review.
             // The order of decisions must match the order of actions
-            // listed in the `__interrupt__` request.
+            // in the interrupt request.
             resume: {
                 decisions: [
                     {
@@ -234,7 +234,7 @@ await agent.invoke(
         new Command({
             // Decisions are provided as a list, one per action under review.
             // The order of decisions must match the order of actions
-            // listed in the `__interrupt__` request.
+            // in the interrupt request.
             resume: {
                 decisions: [
                     {
@@ -285,7 +285,7 @@ When multiple actions are under review, provide a decision for each action in th
 
 ## Streaming with human-in-the-loop
 
-You can use `stream()` instead of `invoke()` to get real-time updates while the agent runs and handles interrupts. Use `stream_mode=['updates', 'messages']` to stream both agent progress and LLM tokens.
+You can use `stream()` instead of `invoke()` to get real-time updates while the agent runs and handles interrupts. Use `stream_mode=['updates', 'messages']` with `version="v2"` to stream both agent progress and LLM tokens in the unified v2 format.
 
 
 
@@ -350,9 +350,11 @@ Review the [execution lifecycle](#execution-lifecycle) above to understand how t
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/human-in-the-loop.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

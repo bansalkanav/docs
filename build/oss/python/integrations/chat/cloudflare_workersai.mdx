@@ -3,7 +3,7 @@ title: "ChatCloudflareWorkersAI integration"
 description: "Integrate with the ChatCloudflareWorkersAI chat model using LangChain Python."
 ---
 
-This will help you get started with CloudflareWorkersAI [chat models](/oss/python/langchain/models). For detailed documentation of all ChatCloudflareWorkersAI features and configurations head to the [API reference](https://python.langchain.com/docs/integrations/chat/cloudflare_workersai/).
+This will help you get started with CloudflareWorkersAI [chat models](/oss/python/langchain/models). For detailed documentation of all `ChatCloudflareWorkersAI` features and configurations head to the [API reference](https://python.langchain.com/docs/integrations/chat/cloudflare_workersai/).
 
 ## Overview
 
@@ -11,7 +11,7 @@ This will help you get started with CloudflareWorkersAI [chat models](/oss/pytho
 
 | Class | Package | Serializable | [JS support](https://js.langchain.com/docs/integrations/chat/cloudflare) | Downloads | Version |
 | :--- | :--- |:------------:|:------------------------------------------------------------------------:| :---: | :---: |
-| [ChatCloudflareWorkersAI](https://python.langchain.com/docs/integrations/chat/cloudflare_workersai/) | [langchain-cloudflare](https://pypi.org/project/langchain-cloudflare/) |      ❌       |                                     ❌                                     | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-cloudflare?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-cloudflare?style=flat-square&label=%20) |
+| [`ChatCloudflareWorkersAI`](https://python.langchain.com/docs/integrations/chat/cloudflare_workersai/) | [`langchain-cloudflare`](https://pypi.org/project/langchain-cloudflare/) |      ❌       |                                     ❌                                     | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-cloudflare?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-cloudflare?style=flat-square&label=%20) |
 
 ### Model features
 
@@ -42,7 +42,7 @@ if not os.getenv("CF_ACCOUNT_ID"):
     )
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.langchain.com/langsmith/home) API key by uncommenting below:
+If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
 
 ```python
 os.environ["LANGSMITH_TRACING"] = "true"
@@ -181,9 +181,11 @@ result.tool_calls
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/cloudflare_workersai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

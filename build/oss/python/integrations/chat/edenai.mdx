@@ -136,7 +136,7 @@ llm = ChatEdenAI(provider="openai", temperature=0.2, max_tokens=500)
 class GetWeather(BaseModel):
     """Get the current weather in a given location"""
 
-    location: str = Field(..., description="The city and state, e.g. San Francisco, CA")
+    location: str = Field(description="The city and state, e.g. San Francisco, CA")
 
 
 llm_with_tools = llm.bind_tools([GetWeather])
@@ -244,9 +244,11 @@ list(llm_with_tools.stream("What's 9 + 9"))
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/edenai.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

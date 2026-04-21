@@ -14,7 +14,7 @@ description: "Integrate with Upstage using LangChain Python."
 | API | Description | Import | Example usage |
 | --- | --- | --- | --- |
 | Chat | Build assistants using Solar Chat | `from langchain_upstage import ChatUpstage` | [Go](/oss/python/integrations/chat/upstage) |
-| Text Embedding | Embed strings to vectors | `from langchain_upstage import UpstageEmbeddings` | [Go](/oss/python/integrations/text_embedding/upstage) |
+| Text Embedding | Embed strings to vectors | `from langchain_upstage import UpstageEmbeddings` | [Go](/oss/python/integrations/embeddings/upstage) |
 | Groundedness Check | Verify groundedness of assistant's response | `from langchain_upstage import UpstageGroundednessCheck` | [Go](/oss/python/integrations/tools/upstage_groundedness_check) |
 | Document Parse | Serialize documents with tables and figures | `from langchain_upstage import UpstageDocumentParseLoader` | [Go](/oss/python/integrations/document_loaders/upstage) |
 
@@ -52,7 +52,7 @@ print(response)
 
 ## Embedding models
 
-See [a usage example](/oss/python/integrations/text_embedding/upstage).
+See [a usage example](/oss/python/integrations/embeddings/upstage).
 
 ```python
 from langchain_upstage import UpstageEmbeddings
@@ -107,9 +107,11 @@ print(response)
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/upstage.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -61,7 +61,7 @@ export const run = async () => {
   const toolkit = new AWSSfnToolkit({
     name: "onboard-new-client-workflow",
     description:
-      "Onboard new client workflow. Can also be used to get status of any excuting workflow or state machine.",
+      "Onboard new client workflow. Can also be used to get status of any executing workflow or state machine.",
     stateMachineArn:
       "arn:aws:states:us-east-1:1234567890:stateMachine:my-state-machine", // Update with your state machine ARN accordingly
     region: "<your Sfn's region>",
@@ -90,9 +90,11 @@ export const run = async () => {
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/tools/sfn_agent.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

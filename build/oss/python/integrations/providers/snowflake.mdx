@@ -13,7 +13,7 @@ This page covers how to use the `Snowflake` ecosystem within `LangChain`.
 Snowflake offers their open-weight `arctic` line of embedding models for free
 on [Hugging Face](https://huggingface.co/Snowflake/snowflake-arctic-embed-m-v1.5). The most recent model, snowflake-arctic-embed-m-v1.5 feature [matryoshka embedding](https://arxiv.org/abs/2205.13147) which allows for effective vector truncation.
 You can use these models via the
-[HuggingFaceEmbeddings](/oss/python/integrations/text_embedding/huggingfacehub) connector:
+[HuggingFaceEmbeddings](/oss/python/integrations/embeddings/huggingfacehub) connector:
 
 <CodeGroup>
 ```bash pip
@@ -42,9 +42,11 @@ from langchain_community.document_loaders import SnowflakeLoader
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/snowflake.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

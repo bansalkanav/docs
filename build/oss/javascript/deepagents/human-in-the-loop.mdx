@@ -3,9 +3,10 @@ title: Human-in-the-loop
 description: Learn how to configure human approval for sensitive tool operations
 ---
 
-import HitlBasicConfig from '/snippets/hitl-basic-config.mdx';
+import HitlBasicConfigPy from '/snippets/hitl-basic-config-py.mdx';
+import HitlBasicConfigJs from '/snippets/hitl-basic-config-js.mdx';
 
-Some tool operations may be sensitive and require human approval before execution. Deep agents support human-in-the-loop workflows through LangGraph's interrupt capabilities. You can configure which tools require approval using the `interrupt_on` parameter.
+Some tool operations may be sensitive and require human approval before execution. Deep Agents support human-in-the-loop workflows through LangGraph's interrupt capabilities. You can configure which tools require approval using the `interrupt_on` parameter.
 
 ```mermaid
 graph LR
@@ -19,6 +20,16 @@ graph LR
 
     Execute --> Agent
     Cancel --> Agent
+
+    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
+    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
+    classDef decision fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
+    classDef alert fill:#FEE2E2,stroke:#DC2626,stroke-width:2px,color:#7F1D1D
+
+    class Agent trigger
+    class Check,Human decision
+    class Execute process
+    class Cancel alert
 ```
 
 ## Basic configuration
@@ -29,7 +40,10 @@ The `interrupt_on` parameter accepts a dictionary mapping tool names to interrup
 - **`False`**: Disable interrupts for this tool
 - **`{"allowed_decisions": [...]}`**: Custom configuration with specific allowed decisions
 
-<HitlBasicConfig />
+
+
+<HitlBasicConfigJs />
+
 
 ## Decision types
 
@@ -64,11 +78,11 @@ When an interrupt is triggered, the agent pauses execution and returns control. 
 
 
 ```typescript
-import { v4 as uuidv4 } from "uuid";
+import { v7 as uuid7 } from "uuid";
 import { Command } from "@langchain/langgraph";
 
 // Create config with thread_id for state persistence
-const config = { configurable: { thread_id: uuidv4() } };
+const config = { configurable: { thread_id: uuid7() } };
 
 // Invoke the agent
 let result = await agent.invoke({
@@ -119,7 +133,7 @@ When the agent calls multiple tools that require approval, all interrupts are ba
 
 
 ```typescript
-const config = { configurable: { thread_id: uuidv4() } };
+const config = { configurable: { thread_id: uuid7() } };
 
 let result = await agent.invoke({
   messages: [{
@@ -213,7 +227,7 @@ const agent = createDeepAgent({
 ```
 
 
-When a subagent triggers an interrupt, the handling is the same – check for `__interrupt__` and resume with `Command`.
+When a subagent triggers an interrupt, the handling is the same—check for `interrupts` on the result and resume with `Command`.
 
 ### Interrupts within tool calls
 
@@ -380,9 +394,11 @@ Configure different tools based on their risk level:
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/human-in-the-loop.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

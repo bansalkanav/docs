@@ -58,7 +58,7 @@ from langchain.agents.middleware import PIIMiddleware
 
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[customer_service_tool, email_tool],
     middleware=[
         # Redact emails in user input before sending to model
@@ -133,7 +133,7 @@ from langgraph.types import Command
 
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[search_tool, send_email_tool, delete_database_tool],
     middleware=[
         HumanInTheLoopMiddleware(
@@ -225,7 +225,7 @@ class ContentFilterMiddleware(AgentMiddleware):
 from langchain.agents import create_agent
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[search_tool, calculator_tool],
     middleware=[
         ContentFilterMiddleware(
@@ -279,7 +279,7 @@ def content_filter(state: AgentState, runtime: Runtime) -> dict[str, Any] | None
 from langchain.agents import create_agent
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[search_tool, calculator_tool],
     middleware=[content_filter],
 )
@@ -313,7 +313,7 @@ class SafetyGuardrailMiddleware(AgentMiddleware):
 
     def __init__(self):
         super().__init__()
-        self.safety_model = init_chat_model("gpt-4.1-mini")
+        self.safety_model = init_chat_model("gpt-5.4-mini")
 
     @hook_config(can_jump_to=["end"])
     def after_agent(self, state: AgentState, runtime: Runtime) -> dict[str, Any] | None:
@@ -342,7 +342,7 @@ class SafetyGuardrailMiddleware(AgentMiddleware):
 from langchain.agents import create_agent
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[search_tool, calculator_tool],
     middleware=[SafetyGuardrailMiddleware()],
 )
@@ -359,7 +359,7 @@ from langchain.messages import AIMessage
 from langchain.chat_models import init_chat_model
 from typing import Any
 
-safety_model = init_chat_model("gpt-4.1-mini")
+safety_model = init_chat_model("gpt-5.4-mini")
 
 @after_agent(can_jump_to=["end"])
 def safety_guardrail(state: AgentState, runtime: Runtime) -> dict[str, Any] | None:
@@ -389,7 +389,7 @@ def safety_guardrail(state: AgentState, runtime: Runtime) -> dict[str, Any] | No
 from langchain.agents import create_agent
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[search_tool, calculator_tool],
     middleware=[safety_guardrail],
 )
@@ -414,7 +414,7 @@ from langchain.agents import create_agent
 from langchain.agents.middleware import PIIMiddleware, HumanInTheLoopMiddleware
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[search_tool, send_email_tool],
     middleware=[
         # Layer 1: Deterministic input filter (before agent)
@@ -441,13 +441,15 @@ agent = create_agent(
 - [Middleware documentation](/oss/python/langchain/middleware) - Complete guide to custom middleware
 - [Middleware API reference](https://reference.langchain.com/python/langchain/middleware/) - Complete guide to custom middleware
 - [Human-in-the-loop](/oss/python/langchain/human-in-the-loop) - Add human review for sensitive operations
-- [Testing agents](/oss/python/langchain/test) - Strategies for testing safety mechanisms
+- [Testing agents](/oss/python/langchain/test/) - Strategies for testing safety mechanisms
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/guardrails.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -49,6 +49,7 @@ We will cover the following concepts:
 
 
 ### LangSmith
+
 Set up [LangSmith](https://smith.langchain.com) to inspect what is happening inside your chain or agent. Then set the following environment variables:
 
     ```shell
@@ -324,7 +325,7 @@ import requests
 
 
 # Initialize an LLM
-model = init_chat_model("gpt-4.1")
+model = init_chat_model("gpt-5.4")
 
 # Get the database, store it locally
 url = "https://storage.googleapis.com/benchmarks-artifacts/chinook/Chinook.db"
@@ -456,7 +457,7 @@ for step in agent.stream(
 ):
     if "messages" in step:
         step["messages"][-1].pretty_print()
-    elif "__interrupt__" in step:
+    if "__interrupt__" in step:
         print("INTERRUPTED:")
         interrupt = step["__interrupt__"][0]
         for request in interrupt.value["action_requests"]:
@@ -484,15 +485,19 @@ Refer to the [human-in-the-loop guide](/oss/python/langchain/human-in-the-loop) 
 
 
 
+
+
 ## Next steps
 
 For deeper customization, check out [this tutorial](/oss/python/langgraph/sql-agent) for implementing a SQL agent directly using LangGraph primitives.
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/sql-agent.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

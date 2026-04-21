@@ -45,7 +45,7 @@ bun add @langchain/langgraph @langchain/core
 import { ChatAnthropic } from "@langchain/anthropic";
 
 const llm = new ChatAnthropic({
-  model: "claude-sonnet-4-5-20250929",
+  model: "claude-sonnet-4-6",
   apiKey: "<your_anthropic_key>"
 });
 ```
@@ -1161,9 +1161,11 @@ for await (const step of stream) {
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/workflows-agents.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -5,15 +5,22 @@ description: Build your first deep agent in minutes
 
 This guide walks you through creating your first deep agent with planning, file system tools, and subagent capabilities. You'll build a research agent that can conduct research and write reports.
 
+<Tip>
+    **Using an AI coding assistant?**
+
+    - Install the [LangChain Docs MCP server](/use-these-docs) to give your agent access to up-to-date LangChain documentation and examples.
+    - Install [LangChain Skills](https://github.com/langchain-ai/langchain-skills) to improve your agent's performance on LangChain ecosystem tasks.
+</Tip>
+
 ## Prerequisites
 
 Before you begin, make sure you have an API key from a model provider (e.g., Anthropic, OpenAI).
 
 <Note>
-    Deep agents require a model that supports [tool calling](/oss/python/langchain/models#tool-calling). See [customization](/oss/python/deepagents/customization#model) for how to configure your model.
+    Deep Agents require a model that supports [tool calling](/oss/python/langchain/models#tool-calling). See [customization](/oss/python/deepagents/customization#model) for how to configure your model.
 </Note>
 
-### Step 1: Install dependencies
+## Step 1: Install dependencies
 
 <CodeGroup>
     ```bash pip
@@ -34,14 +41,65 @@ Before you begin, make sure you have an API key from a model provider (e.g., Ant
     This guide uses [Tavily](https://tavily.com/) as an example search provider, but you can substitute any search API (e.g., DuckDuckGo, SerpAPI, Brave Search).
 </Note>
 
-### Step 2: Set up your API keys
+## Step 2: Set up your API keys
 
-```bash
-export ANTHROPIC_API_KEY="your-api-key"
-export TAVILY_API_KEY="your-tavily-api-key"
-```
+<Tabs>
+    <Tab title="Google">
+        ```bash
+        export GOOGLE_API_KEY="your-api-key"
+        export TAVILY_API_KEY="your-tavily-api-key"
+        ```
+    </Tab>
+    <Tab title="OpenAI">
+        ```bash
+        export OPENAI_API_KEY="your-api-key"
+        export TAVILY_API_KEY="your-tavily-api-key"
+        ```
+    </Tab>
+    <Tab title="Anthropic">
+        ```bash
+        export ANTHROPIC_API_KEY="your-api-key"
+        export TAVILY_API_KEY="your-tavily-api-key"
+        ```
+    </Tab>
+    <Tab title="OpenRouter">
+        ```bash
+        export OPENROUTER_API_KEY="your-api-key"
+        export TAVILY_API_KEY="your-tavily-api-key"
+        ```
+    </Tab>
+    <Tab title="Fireworks">
+        ```bash
+        export FIREWORKS_API_KEY="your-api-key"
+        export TAVILY_API_KEY="your-tavily-api-key"
+        ```
+    </Tab>
+    <Tab title="Baseten">
+        ```bash
+        export BASETEN_API_KEY="your-api-key"
+        export TAVILY_API_KEY="your-tavily-api-key"
+        ```
+    </Tab>
+    <Tab title="Ollama">
+        ```bash
+        # Local: Ollama must be running on your machine
+        # Cloud: Set your Ollama API key for hosted inference
+        export OLLAMA_API_KEY="your-api-key"
+        export TAVILY_API_KEY="your-tavily-api-key"
+        ```
+    </Tab>
+    <Tab title="Other">
+        ```bash
+        # Set the API key for your provider
+        export <PROVIDER>_API_KEY="your-api-key"
+        export TAVILY_API_KEY="your-tavily-api-key"
+        ```
 
-### Step 3: Create a search tool
+        Deep Agents work with any [LangChain chat model](/oss/python/deepagents/models#supported-models). Set the API key for your provider.
+    </Tab>
+</Tabs>
+
+## Step 3: Create a search tool
 
 ```python
 import os
@@ -69,7 +127,7 @@ def internet_search(
 
 
 
-### Step 4: Create a deep agent
+## Step 4: Create a deep agent
 
 ```python
 # System prompt to steer the agent to be an expert researcher
@@ -81,17 +139,113 @@ You have access to an internet search tool as your primary means of gathering in
 
 Use this to run an internet search for a given query. You can specify the max number of results to return, the topic, and whether raw content should be included.
 """
-
-agent = create_deep_agent(
-    tools=[internet_search],
-    system_prompt=research_instructions
-)
 ```
 
+Pass a `model` string in `provider:model` format, or an initialized model instance. Defaults to `anthropic:claude-sonnet-4-6`. See [supported models](/oss/python/deepagents/models#supported-models) for all providers and [suggested models](/oss/python/deepagents/models#suggested-models) for tested recommendations.
+
+<Tabs>
+    <Tab title="Google">
+        ```python
+        agent = create_deep_agent(
+            model="google_genai:gemini-3.1-pro-preview",
+            tools=[internet_search],
+            system_prompt=research_instructions,
+        )
+        ```
+    </Tab>
+    <Tab title="OpenAI">
+        ```python
+        agent = create_deep_agent(
+            model="openai:gpt-5.4",
+            tools=[internet_search],
+            system_prompt=research_instructions,
+        )
+        ```
+    </Tab>
+    <Tab title="Anthropic">
+        ```python
+        agent = create_deep_agent(
+            model="anthropic:claude-sonnet-4-6",
+            tools=[internet_search],
+            system_prompt=research_instructions,
+        )
+        ```
+    </Tab>
+    <Tab title="OpenRouter">
+        ```python
+        agent = create_deep_agent(
+            model="openrouter:anthropic/claude-sonnet-4-6",
+            tools=[internet_search],
+            system_prompt=research_instructions,
+        )
+        ```
+    </Tab>
+    <Tab title="Fireworks">
+        ```python
+        agent = create_deep_agent(
+            model="fireworks:accounts/fireworks/models/qwen3p5-397b-a17b",
+            tools=[internet_search],
+            system_prompt=research_instructions,
+        )
+        ```
+    </Tab>
+    <Tab title="Baseten">
+        ```python
+        agent = create_deep_agent(
+            model="baseten:zai-org/GLM-5",
+            tools=[internet_search],
+            system_prompt=research_instructions,
+        )
+        ```
+    </Tab>
+    <Tab title="Ollama">
+        ```python
+        agent = create_deep_agent(
+            model="ollama:devstral-2",
+            tools=[internet_search],
+            system_prompt=research_instructions,
+        )
+        ```
+    </Tab>
+    <Tab title="Other">
+        Pass any [supported model string](/oss/python/deepagents/models#supported-models), or an initialized model instance:
+
+        <CodeGroup>
+            ```python model string
+            agent = create_deep_agent(
+                model="provider:model-name",
+                tools=[internet_search],
+                system_prompt=research_instructions,
+            )
+            ```
+            ```python init_chat_model
+            from langchain.chat_models import init_chat_model
+
+            model = init_chat_model("provider:model-name")
+            agent = create_deep_agent(
+                model=model,
+                tools=[internet_search],
+                system_prompt=research_instructions,
+            )
+            ```
+            ```python model class
+            from langchain_<provider> import Chat<Provider>
+
+            model = Chat<Provider>(model="model-name")
+            agent = create_deep_agent(
+                model=model,
+                tools=[internet_search],
+                system_prompt=research_instructions,
+            )
+            ```
+        </CodeGroup>
+    </Tab>
+</Tabs>
 
 
 
-### Step 5: Run the agent
+
+## Step 5: Run the agent
 
 ```python
 result = agent.invoke({"messages": [{"role": "user", "content": "What is langgraph?"}]})
@@ -107,9 +261,9 @@ print(result["messages"][-1].content)
 
 Your deep agent automatically:
 
-1. **Plans its approach** using the built-in [`write_todos`](/oss/python/deepagents/harness#to-do-list-tracking) tool to break down the research task.
+1. **Plans its approach** using the built-in [`write_todos`](/oss/python/deepagents/harness#planning-capabilities) tool to break down the research task.
 1. **Conducts research** by calling the `internet_search` tool to gather information.
-1. **Manages context** by using file system tools ([`write_file`](/oss/python/deepagents/harness#file-system-access), [`read_file`](/oss/python/deepagents/harness#file-system-access)) to offload large search results.
+1. **Manages context** by using file system tools ([`write_file`](/oss/python/deepagents/harness#virtual-filesystem-access), [`read_file`](/oss/python/deepagents/harness#virtual-filesystem-access)) to offload large search results.
 1. **Spawns subagents** as needed to delegate complex subtasks to specialized subagents.
 1. **Synthesizes a report** to compile findings into a coherent response.
 
@@ -119,7 +273,7 @@ For agents, patterns, and applications you can build with Deep Agents, see [Exam
 
 ## Streaming
 
-Deep agents have built-in [streaming](/oss/python/langchain/streaming/overview) for real-time updates from agent execution using LangGraph.
+Deep Agents have built-in [streaming](/oss/python/langchain/streaming/overview) for real-time updates from agent execution using LangGraph.
 This allows you to observe output progressively and review and debug agent and subagent work, such as tool calls, tool results, and LLM responses.
 
 ## Next steps
@@ -127,14 +281,16 @@ This allows you to observe output progressively and review and debug agent and s
 Now that you've built your first deep agent:
 
 - **Customize your agent**: Learn about [customization options](/oss/python/deepagents/customization), including custom system prompts, tools, and subagents.
-- **Add long-term memory**: Enable [persistent memory](/oss/python/deepagents/long-term-memory) across conversations.
-- **Deploy to production**: Learn about [deployment options](/oss/python/langgraph/deploy) for LangGraph applications.
+- **Add long-term memory**: Enable [persistent memory](/oss/python/deepagents/memory) across conversations.
+- **Deploy to production**: Learn about [deployment options](/oss/python/deepagents/deploy) for Deep Agents.
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/quickstart.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

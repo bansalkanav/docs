@@ -68,7 +68,7 @@ from langchain_openai import ChatOpenAI
 To use the tool, bind it to the LLM model:
 
 ```python
-model = ChatOpenAI(model="gpt-4.1-mini")
+model = ChatOpenAI(model="gpt-5.4-mini")
 model_with_tools = model.bind_tools([prolog_tool])
 ```
 
@@ -163,9 +163,11 @@ See [langchain-prolog.readthedocs.io/en/latest/modules.html](https://langchain-p
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/prolog_tool.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

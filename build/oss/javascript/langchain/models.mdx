@@ -45,9 +45,11 @@ const response = await model.invoke("Why do parrots talk?");
 See [`initChatModel`](https://reference.langchain.com/javascript/langchain/chat_models/universal/initChatModel) for more detail, including information on how to pass model [parameters](#parameters).
 
 
-### Supported models
+### Supported providers and models
 
-LangChain supports all major model providers, including OpenAI, Anthropic, Google, Azure, AWS Bedrock, and more. Each provider offers a variety of models with different capabilities. For a full list of supported models in LangChain, see the [integrations page](/oss/javascript/integrations/providers/overview).
+LangChain supports all major model providers through dedicated integration packages. Each provider package implements the same standard interface, so you can swap providers without rewriting application logic. New model names work immediately — no LangChain update required — because provider packages pass model names directly to the provider's API.
+
+Browse the [full list of supported providers](/oss/javascript/integrations/providers/overview), or see [Providers and models](/oss/javascript/concepts/providers-and-models) for a conceptual overview of how providers, packages, and model names work together in LangChain.
 
 ### Key methods
 
@@ -94,8 +96,8 @@ A chat model takes parameters that can be used to configure its behavior. The fu
 </ParamField>
 
 
-<ParamField body="maxRetries" type="number">
-    The maximum number of attempts the system will make to resend a request if it fails due to issues like network timeouts or rate limits.
+<ParamField body="maxRetries" type="number" default="6">
+    The maximum number of attempts the system will make to resend a request if it fails due to issues like network timeouts or rate limits. Retries use exponential backoff with jitter. Network errors, rate limits (429), and server errors (5xx) are retried automatically. Client errors such as 401 (unauthorized) or 404 are not retried. For long-running [agent](/oss/javascript/deepagents/overview) tasks on unreliable networks, consider increasing this to 10–15.
 </ParamField>
 
 
@@ -104,8 +106,8 @@ Using `initChatModel`, pass these parameters as inline parameters:
 
 ```typescript Initialize using model parameters
 const model = await initChatModel(
-    "claude-sonnet-4-5-20250929",
-    { temperature: 0.7, timeout: 30, max_tokens: 1000 }
+    "claude-sonnet-4-6",
+    { temperature: 0.7, timeout: 30, maxTokens: 1000, maxRetries: 6 }
 )
 ```
 
@@ -229,7 +231,7 @@ console.log(full.contentBlocks);
 ```
 
 
-The resulting message can be treated the same as a message that was generated with [`invoke()`](#invoke) – for example, it can be aggregated into a message history and passed back to the model as conversational context.
+The resulting message can be treated the same as a message that was generated with [`invoke()`](#invoke)—for example, it can be aggregated into a message history and passed back to the model as conversational context.
 
 <Warning>
     Streaming only works if all steps in the program know how to process a stream of chunks. For instance, an application that isn't streaming-capable would be one that needs to store the entire output in memory before it can be processed.
@@ -396,7 +398,7 @@ const getWeather = tool(
   },
 );
 
-const model = new ChatOpenAI({ model: "gpt-4.1" });
+const model = new ChatOpenAI({ model: "gpt-5.4" });
 const modelWithTools = model.bindTools([getWeather]);  // [!code highlight]
 
 const response = await modelWithTools.invoke("What's the weather like in Boston?");
@@ -623,6 +625,34 @@ Models can be requested to provide their response in a format matching a given s
         console.log(response)  // {'title': 'Inception', 'year': 2010, ...}
         ```
     </Tab>
+    <Tab title="Standard Schema">
+        Any schema from a library implementing the [Standard Schema](https://standardschema.dev/) specification is also supported. Standard Schema objects are validated at runtime via the schema's `~standard.validate()` method.
+
+        ```typescript
+        import * as v from "valibot";
+        import { toStandardJsonSchema } from "@valibot/to-json-schema";
+
+        const Movie = toStandardJsonSchema(
+          v.object({
+            title: v.pipe(v.string(), v.description("The title of the movie")),
+            year: v.pipe(v.number(), v.description("The year the movie was released")),
+            director: v.pipe(v.string(), v.description("The director of the movie")),
+            rating: v.pipe(v.number(), v.description("The movie's rating out of 10")),
+          })
+        );
+
+        const modelWithStructure = model.withStructuredOutput(Movie);
+
+        const response = await modelWithStructure.invoke("Provide details about the movie Inception");
+        console.log(response);
+        // {
+        //   title: "Inception",
+        //   year: 2010,
+        //   director: "Christopher Nolan",
+        //   rating: 8.8,
+        // }
+        ```
+    </Tab>
 </Tabs>
 
 
@@ -633,7 +663,8 @@ Models can be requested to provide their response in a format matching a given s
 
     - **Method parameter**: Some providers support different methods (`'jsonSchema'`, `'functionCalling'`, `'jsonMode'`)
     - **Include raw**: Use [`includeRaw: true`](https://reference.langchain.com/javascript/classes/_langchain_core.language_models_chat_models.BaseChatModel.html#withStructuredOutput) to get both the parsed output and the raw [`AIMessage`](https://reference.langchain.com/javascript/langchain-core/messages/AIMessage)
-    - **Validation**: Zod models provide automatic validation, while JSON Schema requires manual validation
+    - **Validation**: Zod and Standard Schema objects provide automatic validation, while JSON Schema requires manual validation
+    - **Standard Schema**: Any schema library implementing the [Standard Schema](https://standardschema.dev/) spec is supported and validated at runtime
 
     See your [provider's integration page](/oss/javascript/integrations/providers/overview) for supported methods and configuration options.
 </Note>
@@ -707,7 +738,7 @@ It can be useful to return the raw [`AIMessage`](https://reference.langchain.com
 
 
 
-LangChain chat models can expose a dictionary of supported features and capabilities through a `.profile` property:
+LangChain chat models can expose a dictionary of supported features and capabilities through a `profile` property:
 
 ```typescript
 model.profile;
@@ -720,7 +751,7 @@ model.profile;
 // }
 ```
 
-Refer to the full set of fields in the [API reference](https://reference.langchain.com/javascript/interfaces/_langchain_core.language_models_profile.ModelProfile.html).
+Refer to the full set of fields in the [API reference](https://reference.langchain.com/javascript/langchain-core/language_models/profile/ModelProfile).
 
 Much of the model profile data is powered by the [models.dev](https://github.com/sst/models.dev) project, an open source initiative that provides model capability data. This data is augmented with additional fields for purposes of use with LangChain. These augmentations are kept aligned with the upstream project as it evolves.
 
@@ -729,6 +760,7 @@ Model profile data allow applications to work around model capabilities dynamica
 1. [Summarization middleware](/oss/javascript/langchain/middleware/built-in#summarization) can trigger summarization based on a model's context window size.
 2. [Structured output](/oss/javascript/langchain/structured-output) strategies in `createAgent` can be inferred automatically (e.g., by checking support for native structured output features).
 3. Model inputs can be gated based on supported [modalities](#multimodal) and maximum input tokens.
+4. The [Deep Agents CLI](/oss/javascript/deepagents/cli) filters the [interactive model switcher](/oss/javascript/deepagents/cli/providers#which-models-appear-in-the-switcher) to models whose profiles report `tool_calling` support and text I/O, and displays context window sizes and capability flags in the selector detail view.
 
 <Accordion title="Modify profile data">
     Model profile data can be changed if it is missing, stale, or incorrect.
@@ -840,7 +872,7 @@ Many providers offer prompt caching features to reduce latency and cost on repea
     - [`ChatOpenAI`](https://reference.langchain.com/javascript/langchain-openai/ChatOpenAI) (via `prompt_cache_key`)
     - Anthropic's [`AnthropicPromptCachingMiddleware`](/oss/javascript/integrations/chat/anthropic#prompt-caching)
     - [Gemini](https://reference.langchain.com/python/integrations/langchain_google_genai/).
-    - [AWS Bedrock](/oss/javascript/integrations/chat/bedrock#prompt-caching)
+    - [AWS Bedrock](/oss/javascript/integrations/chat/bedrock)
 
 <Warning>
     Prompt caching is often only engaged above a minimum input token threshold. See [provider pages](/oss/javascript/integrations/chat) for details.
@@ -858,7 +890,7 @@ If a model invokes a tool server-side, the content of the response message will 
 ```typescript
 import { initChatModel } from "langchain";
 
-const model = await initChatModel("gpt-4.1-mini");
+const model = await initChatModel("gpt-5.4-mini");
 const modelWithTools = model.bindTools([{ type: "web_search" }])
 
 const message = await modelWithTools.invoke("What was a positive news story from today?");
@@ -871,11 +903,19 @@ See the [integration page](/oss/javascript/integrations/chat) for your given pro
 
 
 
-### Base URL or proxy
+### Base URL and proxy settings
 
-For many chat model integrations, you can configure the base URL for API requests, which allows you to use model providers that have OpenAI-compatible APIs or to use a proxy server.
+You can configure a custom base URL for providers that implement the OpenAI Chat Completions API.
 
-<Accordion title="Base URL" icon="link">
+<Warning>
+    `model_provider="openai"` (or direct `ChatOpenAI` usage) targets the official OpenAI API specification. Provider-specific fields from routers and proxies may not be extracted or preserved.
+
+    For OpenRouter and LiteLLM, prefer the dedicated integrations:
+    - [OpenRouter via `ChatOpenRouter`](/oss/javascript/integrations/chat/openrouter) (`langchain-openrouter`)
+    - [LiteLLM via `ChatLiteLLM` / `ChatLiteLLMRouter`](/oss/javascript/integrations/chat) (`langchain-litellm`)
+</Warning>
+
+<Accordion title="Custom base URL" icon="link">
 
 
     Many model providers offer OpenAI-compatible APIs (e.g., [Together AI](https://www.together.ai/), [vLLM](https://github.com/vllm-project/vllm)). You can use `initChatModel` with these providers by specifying the appropriate `base_url` parameter:
@@ -908,7 +948,7 @@ Certain models can be configured to return token-level log probabilities represe
 
 ```typescript
 const model = new ChatOpenAI({
-    model: "gpt-4.1",
+    model: "gpt-5.4",
     logprobs: true,
 });
 
@@ -922,9 +962,7 @@ responseMessage.response_metadata.logprobs.content.slice(0, 5);
 
 A number of model providers return token usage information as part of the invocation response. When available, this information will be included on the [`AIMessage`](https://reference.langchain.com/javascript/langchain-core/messages/AIMessage) objects produced by the corresponding model. For more details, see the [messages](/oss/javascript/langchain/messages) guide.
 
-<Note>
-    Some provider APIs, notably OpenAI and Azure OpenAI chat completions, require users opt-in to receiving token usage data in streaming contexts. See the [streaming usage metadata](/oss/javascript/integrations/chat/openai#streaming-usage-metadata) section of the integration guide for details.
-</Note>
+
 
 
 
@@ -953,7 +991,7 @@ const response = await model.invoke(
 
 
 These configuration values are particularly useful when:
-- Debugging with [LangSmith](https://docs.langchain.com/langsmith/home) tracing
+- Debugging with [LangSmith](/langsmith/home) tracing
 - Implementing custom logging or monitoring
 - Controlling resource usage in production
 - Tracking invocations across complex pipelines
@@ -993,9 +1031,11 @@ These configuration values are particularly useful when:
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/models.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

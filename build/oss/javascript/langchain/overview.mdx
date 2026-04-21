@@ -1,12 +1,12 @@
 ---
 title: LangChain overview
 sidebarTitle: Overview
-description: LangChain is an open source framework with a pre-built agent architecture and integrations for any model or tool — so you can build agents that adapt as fast as the ecosystem evolves
+description: LangChain is an open source framework with a prebuilt agent architecture and integrations for any model or tool—so you can build agents that adapt as fast as the ecosystem evolves
 ---
 
 LangChain is the easy way to start building completely custom agents and applications powered by LLMs.
 With under 10 lines of code, you can connect to OpenAI, Anthropic, Google, and [more](/oss/javascript/integrations/providers/overview).
-LangChain provides a pre-built agent architecture and model integrations to help you get started quickly and seamlessly incorporate LLMs into your agents and applications.
+LangChain provides a prebuilt agent architecture and model integrations to help you get started quickly and seamlessly incorporate LLMs into your agents and applications.
 
 <Tip>
 **LangChain vs. LangGraph vs. Deep Agents**
@@ -27,8 +27,8 @@ We recommend you use LangChain if you want to quickly build agents and autonomou
 
 
 ```ts
-import * as z from "zod";
-// npm install @langchain/anthropic to call the model
+// First install: npm install langchain @langchain/anthropic
+import { z } from "zod";
 import { createAgent, tool } from "langchain";
 
 const getWeather = tool(
@@ -43,7 +43,7 @@ const getWeather = tool(
 );
 
 const agent = createAgent({
-  model: "claude-sonnet-4-5-20250929",
+  model: "anthropic:claude-sonnet-4-6",
   tools: [getWeather],
 });
 
@@ -57,6 +57,10 @@ console.log(
 
 See the [Installation instructions](/oss/javascript/langchain/install) and [Quickstart guide](/oss/javascript/langchain/quickstart) to get started building your own agents and applications with LangChain.
 
+<Tip>
+Use [LangSmith](/langsmith/home) to trace requests, debug agent behavior, and evaluate outputs. Set `LANGSMITH_TRACING=true` and your API key to get started.
+</Tip>
+
 ## <Icon icon="star" size={20} /> Core benefits
 
 <Columns cols={2}>
@@ -68,20 +72,22 @@ See the [Installation instructions](/oss/javascript/langchain/install) and [Quic
         LangChain's agent abstraction is designed to be easy to get started with, letting you build a simple agent in under 10 lines of code. But it also provides enough flexibility to allow you to do all the context engineering your heart desires.
     </Card>
 
-    <Card title="Built on top of LangGraph" icon="topology-ring" href="/oss/javascript/langgraph/overview" arrow cta="Learn more">
+    <Card title="Built on top of LangGraph" icon="/images/brand/langgraph-icon.png" href="/oss/javascript/langgraph/overview" arrow cta="Learn more">
         LangChain's agents are built on top of LangGraph. This allows us to take advantage of LangGraph's durable execution, human-in-the-loop support, persistence, and more.
     </Card>
 
-    <Card title="Debug with LangSmith" icon="eye" href="/langsmith/home" arrow cta="Learn more">
+    <Card title="Debug with LangSmith" icon="/images/brand/observability-icon-dark.png" href="/langsmith/observability" arrow cta="Learn more">
         Gain deep visibility into complex agent behavior with visualization tools that trace execution paths, capture state transitions, and provide detailed runtime metrics.
     </Card>
 </Columns>
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/overview.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

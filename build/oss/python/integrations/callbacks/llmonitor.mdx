@@ -101,7 +101,7 @@ os.environ["SERPAPI_API_KEY"] = ""
 handler = LLMonitorCallbackHandler()
 llm = ChatOpenAI(temperature=0, callbacks=[handler])
 tools = load_tools(["serpapi", "llm-math"], llm=llm)
-agent = create_agent("gpt-4.1-mini", tools)
+agent = create_agent("gpt-5.4-mini", tools)
 
 input_message = {
     "role": "user",
@@ -131,9 +131,11 @@ For any question or issue with integration you can reach out to the LLMonitor te
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/callbacks/llmonitor.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

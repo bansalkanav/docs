@@ -3,7 +3,7 @@ title: "BoxRetriever integration"
 description: "Integrate with the BoxRetriever retriever using LangChain Python."
 ---
 
-This will help you get started with the Box [retriever](/oss/python/langchain/retrieval). For detailed documentation of all BoxRetriever features and configurations head to the [API reference](https://python.langchain.com/api_reference/box/retrievers/langchain_box.retrievers.box.BoxRetriever.html).
+This will help you get started with the Box [retriever](/oss/python/langchain/retrieval).
 
 # Overview
 
@@ -21,7 +21,7 @@ Files without a text representation will be skipped.
 
 | Retriever | Self-host | Cloud offering | Package |
 | :--- | :--- | :---: | :---: |
-[BoxRetriever](https://python.langchain.com/api_reference/box/retrievers/langchain_box.retrievers.box.BoxRetriever.html) | ❌ | ✅ | langchain-box |
+`BoxRetriever` | ❌ | ✅ | `langchain-box` |
 
 ## Setup
 
@@ -42,7 +42,7 @@ import os
 box_developer_token = getpass.getpass("Enter your Box Developer Token: ")
 ```
 
-If you want to get automated tracing from individual queries, you can also set your [LangSmith](https://docs.langchain.com/langsmith/home) API key by uncommenting below:
+If you want to get automated tracing from individual queries, you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
 
 ```python
 os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -238,19 +238,17 @@ The connector will add this field to the list of fields the integration needs to
 
 ---
 
-## API reference
-
-For detailed documentation of all BoxRetriever features and configurations head to the [API reference](https://python.langchain.com/api_reference/box/retrievers/langchain_box.retrievers.box.BoxRetriever.html).
-
 ## Help
 
 If you have questions, you can check out our [developer documentation](https://developer.box.com) or reach out to use in our [developer community](https://community.box.com).
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/retrievers/box.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

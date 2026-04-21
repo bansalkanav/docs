@@ -5,7 +5,7 @@ sidebarTitle: Use the Functional API
 
 
 
-The [**Functional API**](/oss/javascript/langgraph/functional-api) allows you to add LangGraph's key features — [persistence](/oss/javascript/langgraph/persistence), [memory](/oss/javascript/langgraph/add-memory), [human-in-the-loop](/oss/javascript/langgraph/interrupts), and [streaming](/oss/javascript/langgraph/streaming) — to your applications with minimal changes to your existing code.
+The [**Functional API**](/oss/javascript/langgraph/functional-api) allows you to add LangGraph's key features ([persistence](/oss/javascript/langgraph/persistence), [memory](/oss/javascript/langgraph/add-memory), [human-in-the-loop](/oss/javascript/langgraph/interrupts), and [streaming](/oss/javascript/langgraph/streaming)) to your applications with minimal changes to your existing code.
 
 <Tip>
 For conceptual information on the functional API, see [Functional API](/oss/javascript/langgraph/functional-api).
@@ -37,7 +37,7 @@ await myWorkflow.invoke({ value: 1, anotherValue: 2 });
 
 
   ```typescript
-  import { v4 as uuidv4 } from "uuid";
+  import { v7 as uuid7 } from "uuid";
   import { entrypoint, task, MemorySaver } from "@langchain/langgraph";
 
   // Task that checks if a number is even
@@ -63,7 +63,7 @@ await myWorkflow.invoke({ value: 1, anotherValue: 2 });
   );
 
   // Run the workflow with a unique thread ID
-  const config = { configurable: { thread_id: uuidv4() } };
+  const config = { configurable: { thread_id: uuid7() } };
   const result = await workflow.invoke({ number: 7 }, config);
   console.log(result);
   ```
@@ -78,7 +78,7 @@ await myWorkflow.invoke({ value: 1, anotherValue: 2 });
 
 
   ```typescript
-  import { v4 as uuidv4 } from "uuid";
+  import { v7 as uuid7 } from "uuid";
   import { ChatOpenAI } from "@langchain/openai";
   import { entrypoint, task, MemorySaver } from "@langchain/langgraph";
 
@@ -106,7 +106,7 @@ await myWorkflow.invoke({ value: 1, anotherValue: 2 });
   );
 
   // Execute the workflow
-  const config = { configurable: { thread_id: uuidv4() } };
+  const config = { configurable: { thread_id: uuid7() } };
   const result = await workflow.invoke("the history of flight", config);
   console.log(result);
   ```
@@ -139,7 +139,7 @@ const graph = entrypoint(
 
 
   ```typescript
-  import { v4 as uuidv4 } from "uuid";
+  import { v7 as uuid7 } from "uuid";
   import { ChatOpenAI } from "@langchain/openai";
   import { entrypoint, task, MemorySaver } from "@langchain/langgraph";
 
@@ -168,7 +168,7 @@ const graph = entrypoint(
   );
 
   // Run the workflow
-  const config = { configurable: { thread_id: uuidv4() } };
+  const config = { configurable: { thread_id: uuid7() } };
   const result = await workflow.invoke(["quantum computing", "climate change", "history of aviation"], config);
   console.log(result);
   ```
@@ -211,7 +211,7 @@ const someWorkflow = entrypoint(
 
 
   ```typescript
-  import { v4 as uuidv4 } from "uuid";
+  import { v7 as uuid7 } from "uuid";
   import { entrypoint, MemorySaver, StateGraph, StateSchema } from "@langchain/langgraph";
   import * as z from "zod";
 
@@ -240,7 +240,7 @@ const someWorkflow = entrypoint(
   );
 
   // Execute the workflow
-  const config = { configurable: { thread_id: uuidv4() } };
+  const config = { configurable: { thread_id: uuid7() } };
   console.log(await workflow.invoke(5, config)); // Output: { bar: 10 }
   ```
 
@@ -275,7 +275,7 @@ const myWorkflow = entrypoint(
 
 
   ```typescript
-  import { v4 as uuidv4 } from "uuid";
+  import { v7 as uuid7 } from "uuid";
   import { entrypoint, MemorySaver } from "@langchain/langgraph";
 
   // Initialize a checkpointer
@@ -299,7 +299,7 @@ const myWorkflow = entrypoint(
   );
 
   // Execute the main workflow
-  const config = { configurable: { thread_id: uuidv4() } };
+  const config = { configurable: { thread_id: uuid7() } };
   console.log(await main.invoke({ x: 6, y: 7 }, config)); // Output: { product: 42 }
   ```
 
@@ -681,7 +681,7 @@ function reviewToolCall(toolCall: ToolCall): ToolCall | ToolMessage {
 ```
 
 
-We can now update our [entrypoint](/oss/javascript/langgraph/functional-api#entrypoint) to review the generated tool calls. If a tool call is accepted or revised, we execute in the same way as before. Otherwise, we just append the [`ToolMessage`](https://reference.langchain.com/javascript/langchain-core/messages/ToolMessage) supplied by the human. The results of prior tasks — in this case the initial model call — are persisted, so that they are not run again following the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt).
+We can now update our [entrypoint](/oss/javascript/langgraph/functional-api#entrypoint) to review the generated tool calls. If a tool call is accepted or revised, we execute in the same way as before. Otherwise, we just append the [`ToolMessage`](https://reference.langchain.com/javascript/langchain-core/messages/ToolMessage) supplied by the human. The results of prior tasks—in this case the initial model call—are persisted, so that they are not run again following the [`interrupt`](https://reference.langchain.com/javascript/langchain-langgraph/index/interrupt).
 
 
 
@@ -897,7 +897,7 @@ import {
 } from "@langchain/langgraph";
 import { ChatAnthropic } from "@langchain/anthropic";
 
-const model = new ChatAnthropic({ model: "claude-sonnet-4-5-20250929" });
+const model = new ChatAnthropic({ model: "claude-sonnet-4-6" });
 
 const callModel = task(
   "callModel",
@@ -962,9 +962,11 @@ for await (const chunk of await workflow.stream([inputMessage2], {
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-functional-api.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

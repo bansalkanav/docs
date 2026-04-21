@@ -6,7 +6,7 @@ sidebarTitle: Upload files with traces
 <Check>
 Before diving into this content, it would be helpful to read the following guides:
 
-* [Trace with LangSmith using the traceable decorator or wrapper](/langsmith/annotate-code#use-traceable--traceable)
+* [Trace with LangSmith using the traceable decorator or wrapper](/langsmith/annotate-code#use-%40traceable-%2F-traceable)
 </Check>
 
 <Note>
@@ -27,7 +27,7 @@ In the Python SDK, you can use the `Attachment` type to add files to your traces
 * `mime_type` (str): The MIME type of the file (e.g., `"image/png"`).
 * `data` (bytes | Path): The binary content of the file, or the file path.
 
-You can also define an attachment with a tuple tuple of the form `(mime_type, data)` for convenience.
+You can also define an attachment with a tuple of the form `(mime_type, data)` for convenience.
 
 Simply decorate a function with `@traceable` and include your `Attachment` instances as arguments. Note that to use the file path instead of the raw bytes, you need to set the `dangerously_allow_filesystem` flag to `True` in your traceable decorator.
 
@@ -167,9 +167,11 @@ Here is how the above would look in the LangSmith UI. You can expand each attach
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/upload-files-with-traces.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

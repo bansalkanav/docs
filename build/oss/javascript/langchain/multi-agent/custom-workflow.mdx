@@ -11,6 +11,14 @@ graph LR
     B -->|path_b| D((Agentic step))
     C --> G([Output])
     D --> G([Output])
+
+    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
+    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
+    classDef decision fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
+
+    class A,G trigger
+    class C,D process
+    class B decision
 ```
 
 ## Key characteristics
@@ -40,7 +48,7 @@ For a complete example of a custom workflow, see the tutorial below.
 
 ## Basic implementation
 
-The core insight is that you can call a LangChain agent directly inside any LangGraph node, combining the flexibility of custom workflows with the convenience of pre-built agents:
+The core insight is that you can call a LangChain agent directly inside any LangGraph node, combining the flexibility of custom workflows with the convenience of prebuilt agents:
 
 
 ```typescript
@@ -90,6 +98,12 @@ graph LR
     B --> C[(Retrieve)]
     C --> D((Agent))
     D --> E([Response])
+
+    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
+    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
+
+    class A,E trigger
+    class B,C,D process
 ```
 
 <Tip>
@@ -146,11 +160,11 @@ const getLatestNews = tool(
 );
 
 const agent = createAgent({
-  model: "openai:gpt-4.1",
+  model: "openai:gpt-5.4",
   tools: [getLatestNews],
 });
 
-const model = new ChatOpenAI({ model: "gpt-4.1" });
+const model = new ChatOpenAI({ model: "gpt-5.4" });
 
 const RewrittenQuery = z.object({ query: z.string() });
 
@@ -200,9 +214,11 @@ console.log(result.answer);
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/multi-agent/custom-workflow.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

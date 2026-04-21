@@ -17,8 +17,7 @@ An agent runs until a stop condition is met - i.e., when the model emits a final
     "fontFamily": "monospace",
     "flowchart": {
       "curve": "curve"
-    },
-    "themeVariables": {"edgeLabelBackground": "transparent"}
+    }
   }
 }%%
 graph TD
@@ -34,10 +33,12 @@ graph TD
   TOOL --"observation"--> LLM
   LLM --"finish"--> ANSWER
 
-  classDef blueHighlight fill:#0a1c25,stroke:#0a455f,color:#bae6fd;
-  classDef greenHighlight fill:#0b1e1a,stroke:#0c4c39,color:#9ce4c4;
+  classDef blueHighlight fill:#DBEAFE,stroke:#2563EB,color:#1E3A8A;
+  classDef greenHighlight fill:#DCFCE7,stroke:#16A34A,color:#14532D;
   class QUERY blueHighlight;
   class ANSWER blueHighlight;
+  class LLM greenHighlight;
+  class TOOL greenHighlight;
 ```
 
 <Info>
@@ -106,8 +107,8 @@ from langchain.agents import create_agent
 from langchain.agents.middleware import wrap_model_call, ModelRequest, ModelResponse
 
 
-basic_model = ChatOpenAI(model="gpt-4.1-mini")
-advanced_model = ChatOpenAI(model="gpt-4.1")
+basic_model = ChatOpenAI(model="gpt-5.4-mini")
+advanced_model = ChatOpenAI(model="gpt-5.4")
 
 @wrap_model_call
 def dynamic_model_selection(request: ModelRequest, handler) -> ModelResponse:
@@ -229,7 +230,7 @@ There are two approaches depending on whether tools are known ahead of time:
             return handler(request)
 
         agent = create_agent(
-            model="gpt-4.1",
+            model="gpt-5.4",
             tools=[public_search, private_search, advanced_search],
             middleware=[state_based_tools]
         )
@@ -275,7 +276,7 @@ There are two approaches depending on whether tools are known ahead of time:
             return handler(request)
 
         agent = create_agent(
-            model="gpt-4.1",
+            model="gpt-5.4",
             tools=[search_tool, analysis_tool, export_tool],
             middleware=[store_based_tools],
             context_schema=Context,
@@ -329,7 +330,7 @@ There are two approaches depending on whether tools are known ahead of time:
             return handler(request)
 
         agent = create_agent(
-            model="gpt-4.1",
+            model="gpt-5.4",
             tools=[read_data, write_data, delete_data],
             middleware=[context_based_tools],
             context_schema=Context
@@ -441,7 +442,7 @@ def handle_tool_errors(request, handler):
         )
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[search, get_weather],
     middleware=[handle_tool_errors]
 )
@@ -602,7 +603,7 @@ def user_role_prompt(request: ModelRequest) -> str:
     return base_prompt
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[web_search],
     middleware=[user_role_prompt],
     context_schema=Context
@@ -624,7 +625,7 @@ For more details on message types and formatting, see [Messages](/oss/python/lan
 
 ### Name
 
-Set an optional [`name`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) for the agent. This is used as the node identifier when adding the agent as a subgraph in [multi-agent systems](/oss/python/langgraph/multi-agent):
+Set an optional [`name`](https://reference.langchain.com/python/langchain/agents/factory/create_agent) for the agent. This is used as the node identifier when adding the agent as a subgraph in [multi-agent systems](/oss/python/langchain/multi-agent):
 
 ```python
 agent = create_agent(
@@ -644,6 +645,8 @@ agent = create_agent(
 
 You can invoke an agent by passing an update to its [`State`](/oss/python/langgraph/graph-api#state). All agents include a [sequence of messages](/oss/python/langgraph/use-graph-api#messagesstate) in their state; to invoke the agent, pass a new message:
 
+
+
 ```python
 result = agent.invoke(
     {"messages": [{"role": "user", "content": "What's the weather in San Francisco?"}]}
@@ -656,6 +659,10 @@ For streaming steps and / or tokens from the agent, refer to the [streaming](/os
 
 Otherwise, the agent follows the LangGraph [Graph API](/oss/python/langgraph/use-graph-api) and supports all associated methods, such as `stream` and `invoke`.
 
+<Tip>
+Use [LangSmith](/langsmith/home) to trace, debug, and evaluate your agents.
+</Tip>
+
 ## Advanced concepts
 
 ### Structured output
@@ -664,7 +671,7 @@ In some situations, you may want the agent to return an output in a specific for
 
 #### ToolStrategy
 
-`ToolStrategy` uses artificial tool calling to generate structured output. This works with any model that supports tool calling. `ToolStrategy` should be used when provider-native structured output (via [`ProviderStrategy`](#ProviderStrategy)) is not available or reliable.
+`ToolStrategy` uses artificial tool calling to generate structured output. This works with any model that supports tool calling. `ToolStrategy` should be used when provider-native structured output (via [`ProviderStrategy`](#providerstrategy)) is not available or reliable.
 
 ```python wrap
 from pydantic import BaseModel
@@ -678,7 +685,7 @@ class ContactInfo(BaseModel):
     phone: str
 
 agent = create_agent(
-    model="gpt-4.1-mini",
+    model="gpt-5.4-mini",
     tools=[search_tool],
     response_format=ToolStrategy(ContactInfo)
 )
@@ -699,7 +706,7 @@ result["structured_response"]
 from langchain.agents.structured_output import ProviderStrategy
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     response_format=ProviderStrategy(ContactInfo)
 )
 ```
@@ -845,9 +852,11 @@ For comprehensive middleware documentation including decorators like [`@before_m
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/agents.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

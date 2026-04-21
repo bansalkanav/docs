@@ -9,7 +9,7 @@ The Naver Search Tool provides a simple interface to search Naver and get result
 
 | Class | Package | Serializable | JS support |  Version |
 | :--- | :--- | :---: | :---: | :---: |
-| NaverSearchResults | [langchain-naver-community](https://pypi.org/project/langchain-naver-community/) | ❌ | ❌ |  ![PyPI - Version](https://img.shields.io/pypi/v/langchain-naver-community?style=flat-square&label=%20) |
+| `NaverSearchResults` | [`langchain-naver-community`](https://pypi.org/project/langchain-naver-community/) | ❌ | ❌ |  ![PyPI - Version](https://img.shields.io/pypi/v/langchain-naver-community?style=flat-square&label=%20) |
 
 ### Tool features
 
@@ -106,7 +106,7 @@ The Naver Search tool can be integrated into LangChain agents for more complex t
 ```python
 from langchain_openai import ChatOpenAI
 
-model = ChatOpenAI(model="gpt-4.1-mini")
+model = ChatOpenAI(model="gpt-5.4-mini")
 
 system_prompt = """
 You are a helpful assistant that can search the web for information.
@@ -137,9 +137,11 @@ result["messages"][-1].content
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/naver_search.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -127,7 +127,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain.agents import create_agent
 
 # Initialize the model
-model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
+model = ChatAnthropic(model="claude-sonnet-4-6")
 
 # Create agent with Drasi tool
 agent = create_agent(model, [tool])
@@ -266,9 +266,11 @@ For detailed documentation of all Drasi features and configurations, head to the
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/drasi.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

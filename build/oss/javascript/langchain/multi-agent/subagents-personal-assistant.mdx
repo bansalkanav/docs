@@ -159,6 +159,7 @@ You are a calendar scheduling assistant.
 Parse natural language scheduling requests (e.g., 'next Tuesday at 2pm')
 into proper ISO datetime formats.
 Use get_available_time_slots to check availability when needed.
+If there is no suitable time slot, stop and confirm unavailability in your response.
 Use create_calendar_event to schedule events.
 Always confirm what was scheduled in your final response.
 `.trim();
@@ -566,7 +567,7 @@ const getAvailableTimeSlots = tool(
 // ============================================================================
 
 const llm = new ChatAnthropic({
-  model: "claude-haiku-4-5-20251001",
+  model: "gpt-5.4",
 });
 
 const calendarAgent = createAgent({
@@ -577,6 +578,7 @@ You are a calendar scheduling assistant.
 Parse natural language scheduling requests (e.g., 'next Tuesday at 2pm')
 into proper ISO datetime formats.
 Use get_available_time_slots to check availability when needed.
+If there is no suitable time slot, stop and confirm unavailability in your response.
 Use create_calendar_event to schedule events.
 Always confirm what was scheduled in your final response.
   `.trim(),
@@ -990,9 +992,11 @@ Learn about [handoffs](/oss/javascript/langchain/multi-agent/handoffs) for agent
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/multi-agent/subagents-personal-assistant.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

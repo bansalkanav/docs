@@ -29,7 +29,7 @@ uv add langgraph
 <Tip>
 **Set up LangSmith for better debugging**
 
-Sign up for [LangSmith](https://smith.langchain.com) to quickly spot issues and improve the performance of your LangGraph projects. LangSmith lets you use trace data to debug, test, and monitor your LLM apps built with LangGraph — read more about how to get started in the [docs](/langsmith/observability).
+Sign up for [LangSmith](https://smith.langchain.com) to quickly spot issues and improve the performance of your LangGraph projects. LangSmith lets you use trace data to debug, test, and monitor your LLM apps built with LangGraph—read more about how to get started in the [docs](/langsmith/observability).
 </Tip>
 
 ## Define and update state
@@ -41,14 +41,16 @@ Here we show how to define and update [state](/oss/python/langgraph/graph-api#st
 
 ### Define state
 
-[State](/oss/python/langgraph/graph-api#state) in LangGraph can be a `TypedDict`, `Pydantic` model, or dataclass. Below we will use `TypedDict`. See [this section](#use-pydantic-models-for-graph-state) for detail on using Pydantic.
+[State](/oss/python/langgraph/graph-api#state) in LangGraph can be a `TypedDict`, `Pydantic` model, or dataclass. Below we will use `TypedDict`. See [Use Pydantic models for graph state](#use-pydantic-models-for-graph-state) for detail on using Pydantic.
 
 
 
 
-By default, graphs will have the same input and output schema, and the state determines that schema. See [this section](#define-input-and-output-schemas) for how to define distinct input and output schemas.
+By default, graphs will have the same input and output schema, and the state determines that schema. See [Define input and output schemas](#define-input-and-output-schemas) for how to define distinct input and output schemas.
 
 Let's consider a simple example using [messages](/oss/python/langgraph/graph-api#messagesstate). This represents a versatile formulation of state for many LLM applications. See our [concepts page](/oss/python/langgraph/graph-api#working-with-messages-in-graph-state) for more detail.
+
+
 
 ```python
 from langchain.messages import AnyMessage
@@ -100,7 +102,7 @@ graph = builder.compile()
 
 
 
-LangGraph provides built-in utilities for visualizing your graph. Let's inspect our graph. See [this section](#visualize-your-graph) for detail on visualization.
+LangGraph provides built-in utilities for visualizing your graph. Let's inspect our graph. See [Visualize your graph](#visualize-your-graph) for detail on visualization.
 
 ```python
 from IPython.display import Image, display
@@ -248,7 +250,7 @@ Hi
 Hello!
 ```
 
-This is a versatile representation of state for applications involving [chat models](https://python.langchain.com/docs/concepts/chat_models/). LangGraph includes a pre-built `MessagesState` for convenience, so that we can have:
+This is a versatile representation of state for applications involving [chat models](https://python.langchain.com/docs/concepts/chat_models/). LangGraph includes a prebuilt `MessagesState` for convenience, so that we can have:
 
 ```python
 from langgraph.graph import MessagesState
@@ -688,7 +690,7 @@ print(graph.invoke({}, context={"my_runtime_value": "b"}))  # [!code highlight]
 
   MODELS = {
       "anthropic": init_chat_model("claude-haiku-4-5-20251001"),
-      "openai": init_chat_model("gpt-4.1-mini"),
+      "openai": init_chat_model("gpt-5.4-mini"),
   }
 
   def call_model(state: MessagesState, runtime: Runtime[ContextSchema]):
@@ -716,7 +718,7 @@ print(graph.invoke({}, context={"my_runtime_value": "b"}))  # [!code highlight]
 
   ```
   claude-haiku-4-5-20251001
-  gpt-4.1-mini-2025-04-14
+  gpt-5.4-mini
   ```
 
 
@@ -741,7 +743,7 @@ print(graph.invoke({}, context={"my_runtime_value": "b"}))  # [!code highlight]
 
   MODELS = {
       "anthropic": init_chat_model("claude-haiku-4-5-20251001"),
-      "openai": init_chat_model("gpt-4.1-mini"),
+      "openai": init_chat_model("gpt-5.4-mini"),
   }
 
   def call_model(state: MessagesState, runtime: Runtime[ContextSchema]):
@@ -856,6 +858,116 @@ In addition, for exceptions from popular http request libraries such as `request
 
 </Accordion>
 
+### Access execution info inside a node
+
+You can access execution identity and retry information via `runtime.execution_info`. This surfaces thread, run, and checkpoint identifiers as well as retry state, without needing to read from `config` directly.
+
+| Attribute | Type | Description |
+| --------- | ---- | ----------- |
+| `thread_id` | `str \| None` | Thread ID for the current execution. `None` without a checkpointer. |
+| `run_id` | `str \| None` | Run ID for the current execution. `None` when not provided in config. |
+| `checkpoint_id` | `str` | Checkpoint ID for the current execution. |
+| `checkpoint_ns` | `str` | Checkpoint namespace for the current execution. |
+| `task_id` | `str` | Task ID for the current execution. |
+| `node_attempt` | `int` | Current execution attempt number (1-indexed). `1` on the first try, `2` on the first retry, etc. |
+| `node_first_attempt_time` | `float \| None` | Unix timestamp (seconds) of when the first attempt started. Stays the same across retries. |
+
+#### Access thread and run IDs
+
+Use `execution_info` to access the thread ID, run ID, and other identity fields inside a node:
+
+```python
+from langgraph.graph import StateGraph, START, END
+from langgraph.runtime import Runtime
+from typing_extensions import TypedDict
+
+class State(TypedDict):
+    result: str
+
+def my_node(state: State, runtime: Runtime):
+    info = runtime.execution_info
+    print(f"Thread: {info.thread_id}, Run: {info.run_id}")  # [!code highlight]
+    return {"result": "done"}
+
+builder = StateGraph(State)
+builder.add_node("my_node", my_node)
+builder.add_edge(START, "my_node")
+builder.add_edge("my_node", END)
+graph = builder.compile()
+```
+
+#### Adjust behavior based on retry state
+
+When a node has a retry policy, use `execution_info` to inspect the current attempt number and switch to a fallback after the first attempt fails:
+
+```python
+from langgraph.graph import StateGraph, START, END
+from langgraph.runtime import Runtime
+from langgraph.types import RetryPolicy
+from typing_extensions import TypedDict
+
+class State(TypedDict):
+    result: str
+
+def my_node(state: State, runtime: Runtime):
+    info = runtime.execution_info
+    if info.node_attempt > 1:  # [!code highlight]
+        # use a fallback on retries
+        return {"result": call_fallback_api()}
+    return {"result": call_primary_api()}
+
+builder = StateGraph(State)
+builder.add_node("my_node", my_node, retry_policy=RetryPolicy(max_attempts=3))
+builder.add_edge(START, "my_node")
+builder.add_edge("my_node", END)
+graph = builder.compile()
+```
+
+`execution_info` is available on the `Runtime` object even without a retry policy — `node_attempt` defaults to `1` and `node_first_attempt_time` is set to the time the node starts executing.
+
+### Access server info inside a node
+
+When your graph runs on LangGraph Server, you can access server-specific metadata via `runtime.server_info`. This surfaces the assistant ID, graph ID, and authenticated user without needing to read from config metadata or configurable keys directly.
+
+| Attribute | Type | Description |
+| --------- | ---- | ----------- |
+| `assistant_id` | `str` | The assistant ID for the current deployment. |
+| `graph_id` | `str` | The graph ID for the current deployment. |
+| `user` | `BaseUser \| None` | The authenticated user, if [custom auth](/langsmith/custom-auth) is configured. |
+
+```python
+from langgraph.graph import StateGraph, START, END
+from langgraph.runtime import Runtime
+from typing_extensions import TypedDict
+
+class State(TypedDict):
+    result: str
+
+def my_node(state: State, runtime: Runtime):
+    server = runtime.server_info
+    if server is not None:
+        print(f"Assistant: {server.assistant_id}, Graph: {server.graph_id}")  # [!code highlight]
+        if server.user is not None:
+            print(f"User: {server.user.identity}")
+    return {"result": "done"}
+
+builder = StateGraph(State)
+builder.add_node("my_node", my_node)
+builder.add_edge(START, "my_node")
+builder.add_edge("my_node", END)
+graph = builder.compile()
+```
+
+`server_info` is `None` when the graph is not running on LangGraph Server (e.g., during local development or testing).
+
+<Note>
+Requires `deepagents>=0.5.0` (or `langgraph>=1.1.5`) for `runtime.execution_info` and `runtime.server_info`.
+</Note>
+
+
+
+
+
 ## Add node caching
 
 Node caching is useful in cases where you want to avoid repeating operations, like when doing something expensive (either in terms of time or cost). LangGraph lets you add individualized caching policies to nodes in a graph.
@@ -938,7 +1050,7 @@ Let's demonstrate an end-to-end example. We will create a sequence of three step
 2. Update the same value
 3. Populate a different value
 
-Let's first define our [state](/oss/python/langgraph/graph-api#state). This governs the [schema of the graph](/oss/python/langgraph/graph-api#schema), and can also specify how to apply updates. See [this section](#process-state-updates-with-reducers) for more detail.
+Let's first define our [state](/oss/python/langgraph/graph-api#state). This governs the [schema of the graph](/oss/python/langgraph/graph-api#schema), and can also specify how to apply updates. See [Process state updates with reducers](#process-state-updates-with-reducers) for more detail.
 
 In our case, we will just keep track of two values:
 
@@ -973,7 +1085,7 @@ def step_3(state: State):
 <Note>
 Note that when issuing updates to the state, each node can just specify the value of the key it wishes to update.
 
-By default, this will **overwrite** the value of the corresponding key. You can also use [reducers](/oss/python/langgraph/graph-api#reducers) to control how updates are processed— for example, you can append successive updates to a key instead. See [this section](#process-state-updates-with-reducers) for more detail.
+By default, this will **overwrite** the value of the corresponding key. You can also use [reducers](/oss/python/langgraph/graph-api#reducers) to control how updates are processed—for example, you can append successive updates to a key instead. See [Process state updates with reducers](#process-state-updates-with-reducers) for more detail.
 </Note>
 
 Finally, we define the graph. We use [StateGraph](/oss/python/langgraph/graph-api#stategraph) to define a graph that operates on this state.
@@ -1026,7 +1138,7 @@ graph = builder.compile()
 
 
 
-LangGraph provides built-in utilities for visualizing your graph. Let's inspect our sequence. See [this guide](#visualize-your-graph) for detail on visualization.
+LangGraph provides built-in utilities for visualizing your graph. Let's inspect our sequence. See [Visualize your graph](#visualize-your-graph) for detail on visualization.
 
 ```python
 from IPython.display import Image, display
@@ -1175,7 +1287,7 @@ Importantly, updates from a parallel superstep may not be ordered consistently. 
 
 <Tip>
 **Set max concurrency**
-You can control the maximum number of concurrent tasks by setting `max_concurrency` in the [configuration](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.config.RunnableConfig.html) when invoking the graph.
+You can control the maximum number of concurrent tasks by setting `max_concurrency` in the [configuration](https://reference.langchain.com/python/langchain-core/runnables/config/RunnableConfig) when invoking the graph.
 
 ```python
 graph.invoke({"value_1": "c"}, {"configurable": {"max_concurrency": 10}})
@@ -1415,7 +1527,7 @@ for step in graph.stream({"topic": "animals"}):
 
 When creating a graph with a loop, we require a mechanism for terminating execution. This is most commonly done by adding a [conditional edge](/oss/python/langgraph/graph-api#conditional-edges) that routes to the [END](/oss/python/langgraph/graph-api#end-node) node once we reach some termination condition.
 
-You can also set the graph recursion limit when invoking or streaming the graph. The recursion limit sets the number of [supersteps](/oss/python/langgraph/graph-api#graphs) that the graph is allowed to execute before it raises an error. Read more about the concept of recursion limits [here](/oss/python/langgraph/graph-api#recursion-limit).
+You can also set the graph recursion limit when invoking or streaming the graph. The recursion limit sets the number of [super-steps](/oss/python/langgraph/graph-api#graphs) that the graph is allowed to execute before it raises an error. Read more about the [recursion limit concept](/oss/python/langgraph/graph-api#recursion-limit).
 
 Let's consider a simple graph with a loop to better understand how these mechanisms work.
 
@@ -1445,8 +1557,7 @@ graph = builder.compile()
 
 
 
-To control the recursion limit, specify `"recursionLimit"` in the config. This will raise a `GraphRecursionError`, which you can catch and handle:
-
+To control the recursion limit, specify `"recursion_limit"` in the config. This will raise a `GraphRecursionError`, which you can catch and handle:
 ```python
 from langgraph.errors import GraphRecursionError
 
@@ -1940,16 +2051,18 @@ Called C
 A common use case is updating graph state from inside a tool. For example, in a customer support application you might want to look up customer information based on their account number or ID in the beginning of the conversation. To update the graph state from the tool, you can return `Command(update={"my_custom_key": "foo", "messages": [...]})` from the tool:
 
 ```python
+from langchain.tools import ToolRuntime
+
 @tool
-def lookup_user_info(tool_call_id: Annotated[str, InjectedToolCallId], config: RunnableConfig):
+def lookup_user_info(runtime: ToolRuntime):
     """Use this to look up user information to better assist them with their questions."""
-    user_info = get_user_info(config.get("configurable", {}).get("user_id"))
+    user_info = get_user_info(runtime.server_info.user.identity)  # [!code highlight]
     return Command(
         update={
             # update the state keys
             "user_info": user_info,
             # update the message history
-            "messages": [ToolMessage("Successfully looked up user information", tool_call_id=tool_call_id)]
+            "messages": [ToolMessage("Successfully looked up user information", tool_call_id=runtime.tool_call_id)]
         }
     )
 ```
@@ -2126,9 +2239,11 @@ except ImportError:
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-graph-api.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

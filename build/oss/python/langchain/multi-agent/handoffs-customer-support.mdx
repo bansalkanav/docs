@@ -43,10 +43,10 @@ flowchart TD
     Escalate --> Close
 
     %% === Styling ===
-    classDef startEnd fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
-    classDef decisionNode fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    classDef actionNode fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    classDef escalateNode fill:#f44336,stroke:#c62828,stroke-width:2px,color:#fff
+    classDef startEnd fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
+    classDef decisionNode fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
+    classDef actionNode fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
+    classDef escalateNode fill:#FEE2E2,stroke:#DC2626,stroke-width:2px,color:#7F1D1D
 
     class Start,Close startEnd
     class Warranty,IssueType,OutOfWarranty decisionNode
@@ -372,10 +372,10 @@ Test the complete workflow:
 
 ```python
 from langchain.messages import HumanMessage
-import uuid
+from langchain_core.utils.uuid import uuid7
 
 # Configuration for this conversation thread
-thread_id = str(uuid.uuid4())
+thread_id = str(uuid7())
 config = {"configurable": {"thread_id": thread_id}}
 
 # Turn 1: Initial message - starts with warranty_collector step
@@ -497,7 +497,7 @@ agent = create_agent(
     middleware=[
         apply_step_config,
         SummarizationMiddleware(  # [!code highlight]
-            model="gpt-4.1-mini",
+            model="gpt-5.4-mini",
             trigger=("tokens", 4000),
             keep=("messages", 10)
         )
@@ -595,7 +595,7 @@ A single agent dynamically changes its behavior based on the current_step state,
 creating a state machine for sequential information collection.
 """
 
-import uuid
+from langchain_core.utils.uuid import uuid7
 
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command
@@ -779,7 +779,7 @@ agent = create_agent(
     middleware=[
         apply_step_config,
         SummarizationMiddleware(
-            model="gpt-4.1-mini",
+            model="gpt-5.4-mini",
             trigger=("tokens", 4000),
             keep=("messages", 10)
         )
@@ -793,7 +793,7 @@ agent = create_agent(
 # ============================================================================
 
 if __name__ == "__main__":
-    thread_id = str(uuid.uuid4())
+    thread_id = str(uuid7())
     config = {"configurable": {"thread_id": thread_id}}
 
     result = agent.invoke(
@@ -832,9 +832,11 @@ if __name__ == "__main__":
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/multi-agent/handoffs-customer-support.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

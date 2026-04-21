@@ -179,7 +179,7 @@ import os
 
 from langchain_openai import ChatOpenAI
 
-openai_model = ChatOpenAI(model="gpt-4.1", openai_api_key=os.environ["OPENAI_API_KEY"])
+openai_model = ChatOpenAI(model="gpt-5.4", openai_api_key=os.environ["OPENAI_API_KEY"])
 model = openai_model.bind_tools(tools)
 model_response = model.invoke(
     "Get me an ad for clothing. I am a young man looking to go out with friends."
@@ -199,9 +199,11 @@ You can learn more about ADS4GPTs and the tools at our [GitHub](https://github.c
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/ads4gpts.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -71,7 +71,7 @@ model_deployment = os.getenv(
 model_name = os.getenv("OPENAI_EMBEDDINGS_MODEL_NAME", "text-embedding-ada-002")
 
 
-openai_embeddings: [`OpenAIEmbeddings`](https://reference.langchain.com/python/langchain-openai/embeddings/base/OpenAIEmbeddings) = OpenAIEmbeddings(
+openai_embeddings: @[`OpenAIEmbeddings`] = OpenAIEmbeddings(
     deployment=model_deployment, model=model_name
 )
 ```
@@ -233,9 +233,11 @@ print(docs["source_documents"])
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/documentdb.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

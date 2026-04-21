@@ -19,7 +19,7 @@ The `langchain-scraperapi` package adds three ready-to-use LangChain tools backe
 
 | Package | Serializable | JS support |  Package latest |
 | :--- | :---: | :---: | :---: |
-| [langchain-scraperapi](https://pypi.org/project/langchain-scraperapi/) | ❌ | ❌ |  ![PyPI - Version](https://img.shields.io/pypi/v/langchain-scraperapi?style=flat-square&label=%20) |
+| [`langchain-scraperapi`](https://pypi.org/project/langchain-scraperapi/) | ❌ | ❌ |  ![PyPI - Version](https://img.shields.io/pypi/v/langchain-scraperapi?style=flat-square&label=%20) |
 
 ## Setup
 
@@ -167,7 +167,7 @@ os.environ["SCRAPERAPI_API_KEY"] = "your-api-key"
 os.environ["OPENAI_API_KEY"] = "your-api-key"
 
 tools = [ScraperAPITool(output_format="markdown")]
-model = ChatOpenAI(model="gpt-4.1", temperature=0)
+model = ChatOpenAI(model="gpt-5.4", temperature=0)
 
 agent = create_agent(
     model=model,
@@ -195,9 +195,11 @@ The LangChain wrappers surface these parameters directly.
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/scraperapi.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -29,7 +29,7 @@ import { createRetrievalChain } from "@langchain/classic/chains/retrieval";
 
 // Initialize the necessary components
 const llm = new ChatOpenAI({
-  model: "gpt-4.1-mini",
+  model: "gpt-5.4-mini",
 });
 const embeddings = new OpenAIEmbeddings();
 const apiKey = "Your SerpApi API key";
@@ -74,9 +74,11 @@ In this example, the `SerpAPILoader` is used to load web search results, which a
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/web_loaders/serpapi.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

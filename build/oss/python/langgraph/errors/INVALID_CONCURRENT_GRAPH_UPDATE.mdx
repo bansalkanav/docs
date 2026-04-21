@@ -5,7 +5,7 @@ title: INVALID_CONCURRENT_GRAPH_UPDATE
 A LangGraph [`StateGraph`](https://langchain-ai.github.io/langgraph/reference/graphs/#langgraph.graph.state.StateGraph) received concurrent updates to its state from multiple nodes to a state property that doesn't
 support it.
 
-One way this can occur is if you are using a [fanout](/oss/python/langgraph/graph-api#map-reduce-and-the-send-api)
+One way this can occur is if you are using a [fanout](/oss/python/langgraph/use-graph-api#map-reduce-and-the-send-api)
 or other parallel execution in your graph and you have defined a graph like this:
 
 ```python
@@ -61,9 +61,11 @@ The following may help resolve this error:
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

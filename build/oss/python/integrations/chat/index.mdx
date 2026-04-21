@@ -37,6 +37,7 @@ description: "Integrate with chat models using LangChain Python."
 | [`ChatDatabricks`](/oss/python/integrations/chat/databricks) | ✅ | ✅ | ❌ |
 | [`ChatPerplexity`](/oss/python/integrations/chat/perplexity) | ❌ | ✅ | ✅ |
 | [`ChatOpenRouter`](/oss/python/integrations/chat/openrouter) | ✅ | ✅ | ✅ |
+| [`ChatLiteLLM`](/oss/python/integrations/chat/litellm) | ✅ | ✅ | ✅ |
 
 ### Routers & proxies
 
@@ -45,6 +46,7 @@ Routers and proxies give you access to models from multiple providers through a 
 | Provider | Integration | Description |
 |-|-|-|
 | [OpenRouter](https://openrouter.ai/) | [`ChatOpenRouter`](/oss/python/integrations/chat/openrouter) | Unified access to models from OpenAI, Anthropic, Google, Meta, and more |
+| [LiteLLM](https://www.litellm.ai/) | [`ChatLiteLLM`](/oss/python/integrations/chat/litellm) | Unified interface for OpenAI, Anthropic, Azure, Hugging Face, and more with routing and fallbacks |
 
 ## Chat Completions API
 
@@ -108,7 +110,7 @@ Certain model providers offer endpoints that are compatible with OpenAI's [Chat 
 />
 
 <Card
-    title="AzureAIChatCompletionsModel"
+    title="AzureAIOpenAIApiChatModel"
     icon="link"
     href="/oss/python/integrations/chat/azure_ai"
     arrow="true"
@@ -763,9 +765,11 @@ Certain model providers offer endpoints that are compatible with OpenAI's [Chat 
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/index.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

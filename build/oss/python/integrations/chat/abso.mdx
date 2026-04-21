@@ -3,9 +3,9 @@ title: "ChatAbso integration"
 description: "Integrate with the ChatAbso chat model using LangChain Python."
 ---
 
-This will help you get started with ChatAbso [chat models](https://python.langchain.com/docs/concepts/chat_models/). For detailed documentation of all ChatAbso features and configurations, head to the [API reference](https://python.langchain.com/api_reference/en/latest/chat_models/langchain_abso.chat_models.ChatAbso.html).
+This will help you get started with `ChatAbso` [chat models](/oss/python/langchain/models).
 
-- You can find the full documentation for the Abso router [here] ([abso.ai](https://abso.ai))
+You can also review the full [Abso router documentation](https://abso.ai).
 
 ## Overview
 
@@ -13,7 +13,7 @@ This will help you get started with ChatAbso [chat models](https://python.langch
 
 | Class | Package | Serializable | [JS support](https://js.langchain.com/docs/integrations/chat/abso) | Downloads | Version |
 | :--- | :--- | :---: |  :---: | :---: | :---: |
-| [ChatAbso](https://python.langchain.com/api_reference/en/latest/chat_models/langchain_abso.chat_models.ChatAbso.html) | [langchain-abso](https://python.langchain.com/api_reference/en/latest/abso_api_reference.html) | ❌ | ❌ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-abso?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-abso?style=flat-square&label=%20) |
+| `ChatAbso` | `langchain-abso` | ❌ | ❌ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-abso?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-abso?style=flat-square&label=%20) |
 
 ## Setup
 
@@ -48,7 +48,7 @@ Now we can instantiate our model object and generate chat completions:
 ```python
 from langchain_abso import ChatAbso
 
-llm = ChatAbso(fast_model="gpt-4.1", slow_model="o3-mini")
+llm = ChatAbso(fast_model="gpt-5.4", slow_model="o3-mini")
 ```
 
 ## Invocation
@@ -71,15 +71,13 @@ print(ai_msg.content)
 
 ---
 
-## API reference
-
-For detailed documentation of all ChatAbso features and configurations head to the API reference: [python.langchain.com/api_reference/en/latest/chat_models/langchain_abso.chat_models.ChatAbso.html](https://python.langchain.com/api_reference/en/latest/chat_models/langchain_abso.chat_models.ChatAbso.html)
-
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/abso.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

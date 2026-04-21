@@ -1,0 +1,50 @@
+---
+keywords: [moonshot, chat, llm, kimi]
+---
+
+# Moonshot
+
+>[Moonshot AI](https://platform.moonshot.cn/) is a Chinese AI company that provides large language model services, including the Kimi series of models.
+
+This page covers how to use Moonshot within LangChain.
+
+## Installation and setup
+
+Install the Moonshot integration package:
+
+```bash
+pip install langchain-moonshot
+```
+
+Get a Moonshot API key from the [Moonshot console](https://platform.moonshot.cn/console/api-keys) and set it as an environment variable:
+
+```bash
+export MOONSHOT_API_KEY="your-api-key-here"
+```
+
+## Chat model
+
+See a [detailed usage example](/oss/python/integrations/chat/moonshot).
+
+```python
+from langchain_moonshot import ChatMoonshot
+```
+
+## LLM
+
+See a [detailed usage example](/oss/python/integrations/llms/moonshot).
+
+```python
+from langchain_community.llms.moonshot import Moonshot
+```
+
+---
+
+<div className="source-links">
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/moonshot.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
+</Callout>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>
+</div>

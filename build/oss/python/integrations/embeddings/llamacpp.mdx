@@ -1,0 +1,55 @@
+---
+title: "Llama.cpp integration"
+description: "Integrate with the Llama.cpp embedding model using LangChain Python."
+---
+
+>[llama.cpp python](https://github.com/abetlen/llama-cpp-python) library is a simple Python bindings for `@ggerganov`
+>[llama.cpp](https://github.com/ggerganov/llama.cpp).
+>
+>This package provides:
+>
+> - Low-level access to C API via ctypes interface.
+> - High-level Python API for text completion
+>   - `OpenAI`-like API
+>   - `LangChain` compatibility
+>   - `LlamaIndex` compatibility
+> - OpenAI compatible web server
+>   - Local Copilot replacement
+>   - Function Calling support
+>   - Vision API support
+>   - Multiple Models
+
+```python
+pip install -qU  llama-cpp-python
+```
+
+```python
+from langchain_community.embeddings import LlamaCppEmbeddings
+```
+
+```python
+llama = LlamaCppEmbeddings(model_path="/path/to/model/ggml-model-q4_0.bin")
+```
+
+```python
+text = "This is a test document."
+```
+
+```python
+query_result = llama.embed_query(text)
+```
+
+```python
+doc_result = llama.embed_documents([text])
+```
+
+---
+
+<div className="source-links">
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/embeddings/llamacpp.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
+</Callout>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>
+</div>

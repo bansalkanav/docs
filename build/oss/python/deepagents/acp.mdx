@@ -2,6 +2,7 @@
 title: Agent Client Protocol (ACP)
 description: Expose Deep Agents over the Agent Client Protocol (ACP) to integrate with code editors and IDEs.
 ---
+
 [Agent Client Protocol (ACP)](https://agentclientprotocol.com/get-started/introduction) standardizes communication between coding agents and code editors or IDEs.
 With the ACP protocol, you can make use of your custom deep agents with any ACP-compatible client, allowing your code editor to provide project context and receive rich updates.
 
@@ -23,7 +24,10 @@ uv add deepagents-acp
 ```
 </CodeGroup>
 
-Then expose a Deep Agent over ACP.
+
+
+
+Then expose a deep agent over ACP.
 
 This starts an ACP server in stdio mode (it reads requests from stdin and writes responses to stdout). In practice, you usually run this as a command launched by an ACP client (for example, your editor), which then communicates with the server over stdio.
 
@@ -39,7 +43,8 @@ from deepagents_acp.server import AgentServerACP
 
 async def main() -> None:
     agent = create_deep_agent(
-        # You can customize your Deep Agent here: set a custom prompt,
+        model="google_genai:gemini-3.1-pro-preview",
+        # You can customize your deep agent here: set a custom prompt,
         # add your own tools, attach middleware, or compose subagents.
         system_prompt="You are a helpful coding assistant",
         checkpointer=MemorySaver(),
@@ -56,13 +61,17 @@ if __name__ == "__main__":
 
 
 
+
 <Card title="Example coding agent" icon="brand-github" href="https://github.com/langchain-ai/deepagents/blob/main/libs/acp/examples/demo_agent.py">
   The `deepagents-acp` package includes an example coding agent with filesystem and shell that you can run out of the box.
 </Card>
 
+
+
+
 ## Clients
 
-Deep agents works anywhere you can run an ACP agent server. Some notable ACP clients include:
+Deep agents work anywhere you can run an ACP agent server. Some notable ACP clients include:
 
 - [Zed](https://zed.dev/docs/ai/external-agents)
 - [JetBrains IDEs](https://www.jetbrains.com/help/ai-assistant/acp.html)
@@ -105,6 +114,10 @@ Then set `ANTHROPIC_API_KEY` in `.env`.
 
 4. Open Zed's Agents panel and start a DeepAgents thread.
 
+
+
+
+
 ### Toad
 
 If you want to run an ACP agent server as a local dev tool, you can use [Toad](https://github.com/batrachian/toad) to manage the process.
@@ -117,6 +130,15 @@ toad acp "python path/to/your_server.py" .
 toad acp "uv run python path/to/your_server.py" .
 ```
 
+
+
+
+
+
+
+
+
+
 <Info>
     See the upstream ACP docs for protocol details and editor support:
     - Introduction: https://agentclientprotocol.com/get-started/introduction
@@ -125,9 +147,11 @@ toad acp "uv run python path/to/your_server.py" .
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/acp.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

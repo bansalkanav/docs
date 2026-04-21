@@ -8,7 +8,9 @@ import SkillsUsageTabsJs from '/snippets/skills-usage-tabs-js.mdx';
 
 Skills are reusable agent capabilities that provide specialized workflows and domain knowledge.
 
-You can use [Agent Skills](https://agentskills.io/) to provide your deep agent with new capabilities and expertise.
+
+
+You can use [Agent Skills](https://agentskills.io/) to provide your deep agent with new capabilities and expertise. For ready-to-use skills that improve your agent's performance on LangChain ecosystem tasks, see the [LangChain Skills](https://github.com/langchain-ai/langchain-skills) repository.
 
 Deep agent skills follow the [Agent Skills specification](https://agentskills.io/specification).
 
@@ -90,7 +92,7 @@ Use the fetch_url tool to read the selected documentation URLs.
 After reading the documentation, complete the user's request.
 ```
 
-For more example skills, see [Deep Agent example skills](https://github.com/langchain-ai/deepagents/tree/main/libs/cli/examples/skills).
+For more example skills, see [Deep Agents example skills](https://github.com/langchain-ai/deepagents/tree/main/libs/cli/examples/skills).
 
 
 
@@ -164,6 +166,7 @@ Pass the skills directory when creating your deep agent:
 
     Paths must be specified using forward slashes and are relative to the backend's root.
 
+    - If omitted, no skills are loaded.
     - When using `StateBackend` (default), provide skill files with `invoke(files={...})`. Use `create_file_data()` from `deepagents.backends.utils` to format file contents; raw strings are not supported.
     - With `FilesystemBackend`, skills are loaded from disk relative to the backend's `root_dir`.
 
@@ -174,6 +177,30 @@ Pass the skills directory when creating your deep agent:
 
 
 
+<Note>
+    The SDK only loads the sources you pass in `skills`. It does not automatically scan CLI directories such as `~/.deepagents/...` or `~/.agents/...`.
+
+    For CLI storage conventions, see [App data](/oss/python/deepagents/data-locations).
+
+    <Accordion
+        title="Emulating CLI source order in SDK"
+    >
+        If you want CLI-style layering in SDK code, pass all desired sources explicitly in lowest-to-highest precedence order:
+
+        ```text
+        [
+        "<user-home>/.deepagents/{agent}/skills/",
+        "<user-home>/.agents/skills/",
+        "<project-root>/.deepagents/skills/",
+        "<project-root>/.agents/skills/",
+        ]
+        ```
+
+        Then pass that ordered list as `skills` when creating your agent.
+    </Accordion>
+</Note>
+
+
 ## Source precedence
 
 When multiple skill sources contain a skill with the same name, the skill from the source listed later in the `skills` array takes precedence (last one wins). This lets you layer skills from different origins.
@@ -182,6 +209,7 @@ When multiple skill sources contain a skill with the same name, the skill from t
 # If both sources contain a skill named "web-search",
 # the one from "/skills/project/" wins (loaded last).
 agent = create_deep_agent(
+    model="google_genai:gemini-3.1-pro-preview",
     skills=["/skills/user/", "/skills/project/"],
     ...
 )
@@ -189,15 +217,6 @@ agent = create_deep_agent(
 
 
 
-
-{/* When using the [Deep Agents CLI](/oss/python/deepagents/data-locations), the precedence order from lowest to highest is:
-
-1. `~/.deepagents/{agent}/skills/` — User-level, agent-specific
-2. `~/.agents/skills/` — User-level, tool-agnostic
-3. `.deepagents/skills/` — Project-level, agent-specific
-4. `.agents/skills/` — Project-level, tool-agnostic (highest priority)
-
-For more details on file locations and precedence, see [App data](/oss/python/deepagents/data-locations). */}
 
 ## Skills for subagents
 
@@ -220,7 +239,7 @@ research_subagent = {
 }
 
 agent = create_deep_agent(
-    model="claude-sonnet-4-5-20250929",
+    model="google_genai:gemini-3.1-pro-preview",
     skills=["/skills/main/"],  # Main agent and GP subagent get these
     subagents=[research_subagent],  # Researcher gets only its own skills
 )
@@ -235,12 +254,12 @@ For more information on subagent configuration and skills inheritance, see [Suba
 
 When skills are configured, a "Skills System" section is injected into the agent's system prompt. The agent uses this information to follow a three-step process:
 
-1. **Match** — When a user prompt arrives, the agent checks whether any skill's description matches the task.
-2. **Read** — If a skill applies, the agent reads the full `SKILL.md` file using the path shown in its skills list.
-3. **Execute** — The agent follows the skill's instructions and accesses any supporting files (scripts, templates, reference docs) as needed.
+1. **Match**—When a user prompt arrives, the agent checks whether any skill's description matches the task.
+2. **Read**—If a skill applies, the agent reads the full `SKILL.md` file using the path shown in its skills list.
+3. **Execute**—The agent follows the skill's instructions and accesses any supporting files (scripts, templates, reference docs) as needed.
 
 <Tip>
-    Write clear, specific descriptions in your `SKILL.md` frontmatter. The agent decides whether to use a skill based on the description alone — detailed descriptions lead to better skill matching.
+    Write clear, specific descriptions in your `SKILL.md` frontmatter. The agent decides whether to use a skill based on the description alone—detailed descriptions lead to better skill matching.
 </Tip>
 
 ## Skills vs. memory
@@ -265,9 +284,11 @@ These are a few general guidelines for using tools and skills:
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/skills.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

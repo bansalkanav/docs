@@ -19,7 +19,7 @@ rate_limiter = InMemoryRateLimiter(
     max_bucket_size=10,  # Controls the maximum burst size.
 )
 
-model = init_chat_model("gpt-4.1", rate_limiter=rate_limiter)
+model = init_chat_model("gpt-5.4", rate_limiter=rate_limiter)
 
 def app(inputs: dict) -> dict:
     response = model.invoke(...)
@@ -45,13 +45,13 @@ If you're using `langchain` components you can add retries to all model calls wi
 ```python Python
 from langchain import init_chat_model
 
-model_with_retry = init_chat_model("gpt-4.1-mini").with_retry(stop_after_attempt=6)
+model_with_retry = init_chat_model("gpt-5.4-mini").with_retry(stop_after_attempt=6)
 ```
 
 ```typescript TypeScript
 import { initChatModel } from "langchain";
 
-const model = await initChatModel("gpt-4.1", {
+const model = await initChatModel("gpt-5.4", {
     modelProvider: "openai",
 });
 
@@ -60,7 +60,7 @@ const modelWithRetry = model.withRetry({ stopAfterAttept: 2 });
 
 </CodeGroup>
 
-See the `langchain` [Python](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.language_models.BaseChatModel.with_retry) and [JS](https://v03.api.js.langchain.com/classes/_langchain_core.language_models_chat_models.BaseChatModel.html#withRetry) API references for more.
+See the `langchain` [Python](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.language_models.BaseChatModel.with_retry) and [JS](https://reference.langchain.com/javascript/langchain-core/language_models/chat_models/BaseChatModel/withRetry) API references for more.
 
 #### Without `langchain`
 
@@ -94,9 +94,11 @@ await evaluate(..., {
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/rate-limiting.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

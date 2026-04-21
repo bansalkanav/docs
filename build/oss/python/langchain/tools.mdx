@@ -2,6 +2,14 @@
 title: Tools
 ---
 
+import ToolReturnValuesPy from '/snippets/code-samples/tool-return-values-py.mdx';
+import ToolReturnValuesJs from '/snippets/code-samples/tool-return-values-js.mdx';
+import ToolReturnObjectPy from '/snippets/code-samples/tool-return-object-py.mdx';
+import ToolReturnObjectJs from '/snippets/code-samples/tool-return-object-js.mdx';
+import ToolReturnCommandPy from '/snippets/code-samples/tool-return-command-py.mdx';
+import ToolReturnCommandJs from '/snippets/code-samples/tool-return-command-js.mdx';
+import ToolUpdateStatePy from '/snippets/code-samples/tool-update-state-py.mdx';
+
 Tools extend what [agents](/oss/python/langchain/agents) can do—letting them fetch real-time data, execute code, query external databases, and take actions in the world.
 
 Under the hood, tools are callable functions with well-defined inputs and outputs that get passed to a [chat model](/oss/python/langchain/models). The model decides when to invoke a tool based on the conversation context, and what input arguments to provide.
@@ -146,6 +154,8 @@ Tools can access runtime information through the [`ToolRuntime`](https://referen
 | **Context** | Immutable configuration passed at invocation time (user IDs, session info) | Personalize responses based on user identity |
 | **Store** | Long-term memory - persistent data that survives across conversations | Save user preferences, maintain knowledge base |
 | **Stream Writer** | Emit real-time updates during tool execution | Show progress for long-running operations |
+| **Execution Info** | Identity and retry information for the current execution (thread ID, run ID, attempt number) | Access thread/run IDs, adjust behavior based on retry state |
+| **Server Info** | Server-specific metadata when running on LangGraph Server (assistant ID, graph ID, authenticated user) | Access assistant ID, graph ID, or authenticated user info |
 | **Config** | [`RunnableConfig`](https://reference.langchain.com/python/langchain-core/runnables/config/RunnableConfig) for the execution | Access callbacks, tags, and metadata |
 | **Tool Call ID** | Unique identifier for the current tool invocation | Correlate tool calls for logs and model invocations |
 
@@ -186,6 +196,16 @@ graph LR
     K --> O
     L --> O
     F --> P
+
+    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
+    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
+    classDef output fill:#F3E8FF,stroke:#9333EA,stroke-width:2px,color:#581C87
+    classDef neutral fill:#F3F4F6,stroke:#9CA3AF,stroke-width:2px,color:#374151
+
+    class A trigger
+    class B,C,D,E,F process
+    class G,H,I,J,K,L neutral
+    class M,N,O,P output
 ```
 
 ### Short-term memory (State)
@@ -233,17 +253,10 @@ def get_user_preference(
 
 #### Update state
 
-Use [`Command`](https://reference.langchain.com/python/langgraph/types/Command) to update the agent's state. This is useful for tools that need to update custom state fields:
+Use [`Command`](https://reference.langchain.com/python/langgraph/types/Command) to update the agent's state. This is useful for tools that need to update custom state fields.
+Include a `ToolMessage` in the update so the model can see the result of the tool call:
 
-```python
-from langgraph.types import Command
-from langchain.tools import tool
-
-@tool
-def set_user_name(new_name: str) -> Command:
-    """Set the user's name in the conversation state."""
-    return Command(update={"user_name": new_name})
-```
+<ToolUpdateStatePy />
 
 <Tip>
     When tools update state variables, consider defining a [reducer](/oss/python/langgraph/graph-api#reducers) for those fields. Since LLMs can call multiple tools in parallel, a reducer determines how to resolve conflicts when the same state field is updated by concurrent tool calls.
@@ -292,7 +305,7 @@ def get_account_info(runtime: ToolRuntime[UserContext]) -> str:
         return f"Account holder: {user['name']}\nType: {user['account_type']}\nBalance: ${user['balance']}"
     return "User not found"
 
-model = ChatOpenAI(model="gpt-4.1")
+model = ChatOpenAI(model="gpt-5.4")
 agent = create_agent(
     model,
     tools=[get_account_info],
@@ -305,6 +318,7 @@ result = agent.invoke(
     context=UserContext(user_id="user123")
 )
 ```
+
 
 
 
@@ -324,7 +338,7 @@ from typing import Any
 from langgraph.store.memory import InMemoryStore
 from langchain.agents import create_agent
 from langchain.tools import tool, ToolRuntime
-
+from langchain_openai import ChatOpenAI
 
 # Access memory
 @tool
@@ -341,6 +355,8 @@ def save_user_info(user_id: str, user_info: dict[str, Any], runtime: ToolRuntime
     store = runtime.store
     store.put(("users",), user_id, user_info)
     return "Successfully saved user info."
+
+model = ChatOpenAI(model="gpt-5.4")
 
 store = InMemoryStore()
 agent = create_agent(
@@ -363,6 +379,7 @@ agent.invoke({
 # - Age: 25
 # - Email: foo@langchain.dev
 ```
+
 
 
 
@@ -390,6 +407,62 @@ def get_weather(city: str, runtime: ToolRuntime) -> str:
 
 <Note>
 If you use `runtime.stream_writer` inside your tool, the tool must be invoked within a LangGraph execution context. See [Streaming](/oss/python/langchain/streaming) for more details.
+</Note>
+
+
+
+
+### Execution info
+
+Access thread ID, run ID, and retry state from within a tool via `runtime.execution_info`:
+
+```python
+from langchain.tools import tool, ToolRuntime
+
+@tool
+def log_execution_context(runtime: ToolRuntime) -> str:
+    """Log execution identity information."""
+    info = runtime.execution_info
+    print(f"Thread: {info.thread_id}, Run: {info.run_id}")  # [!code highlight]
+    print(f"Attempt: {info.node_attempt}")
+    return "done"
+```
+
+
+
+
+<Note>
+Requires `deepagents>=0.5.0` (or `langgraph>=1.1.5`).
+</Note>
+
+
+
+
+### Server info
+
+When your tool runs on LangGraph Server, access the assistant ID, graph ID, and authenticated user via `runtime.server_info`:
+
+```python
+from langchain.tools import tool, ToolRuntime
+
+@tool
+def get_assistant_scoped_data(runtime: ToolRuntime) -> str:
+    """Fetch data scoped to the current assistant."""
+    server = runtime.server_info
+    if server is not None:
+        print(f"Assistant: {server.assistant_id}, Graph: {server.graph_id}")  # [!code highlight]
+        if server.user is not None:
+            print(f"User: {server.user.identity}")  # [!code highlight]
+    return "done"
+```
+
+`server_info` is `None` when the tool is not running on LangGraph Server (e.g., during local development or testing).
+
+
+
+
+<Note>
+Requires `deepagents>=0.5.0` (or `langgraph>=1.1.5`).
 </Note>
 
 
@@ -432,6 +505,71 @@ builder.add_node("tools", tool_node)
 
 
 
+
+### Tool return values
+
+You can choose different return values for your tools:
+
+- Return a `string` for human-readable results.
+- Return an `object` for structured results the model should parse.
+- Return a `Command` with optional message when you need to write to state.
+
+#### Return a string
+
+Return a string when the tool should provide plain text for the model to read and use in its next response.
+
+<ToolReturnValuesPy />
+
+
+
+
+
+Behavior:
+
+- The return value is converted to a `ToolMessage`.
+- The model sees that text and decides what to do next.
+- No agent state fields are changed unless the model or another tool does so later.
+
+Use this when the result is naturally human-readable text.
+
+#### Return an object
+
+Return an object (for example, a `dict`) when your tool produces structured data that the model should inspect.
+
+<ToolReturnObjectPy />
+
+
+
+
+
+Behavior:
+
+- The object is serialized and sent back as tool output.
+- The model can read specific fields and reason over them.
+- Like string returns, this does not directly update graph state.
+
+Use this when downstream reasoning benefits from explicit fields instead of free-form text.
+
+#### Return a Command
+
+Return a [`Command`](https://reference.langchain.com/python/langgraph/types/Command) when the tool needs to update graph state (for example, setting user preferences or app state).
+You can return a `Command` with or without including a `ToolMessage`.
+If the model needs to see that the tool succeeded (for example, to confirm a preference change), include a `ToolMessage` in the update, using `runtime.tool_call_id` for the `tool_call_id` parameter.
+
+<ToolReturnCommandPy />
+
+
+
+
+
+Behavior:
+
+- The command updates state using `update`.
+- Updated state is available to subsequent steps in the same run.
+- Use reducers for fields that may be updated by parallel tool calls.
+
+Use this when the tool is not just returning data, but also mutating agent state.
+
 ### Error handling
 
 Configure how tool errors are handled. See the [`ToolNode`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.tool_node.ToolNode) API reference for all options.
@@ -461,6 +599,7 @@ tool_node = ToolNode(tools, handle_tool_errors=(ValueError, TypeError))
 
 
 
+
 ### Route with tools_condition
 
 Use [`tools_condition`](https://reference.langchain.com/python/langgraph/agents/#langgraph.prebuilt.tool_node.tools_condition) for conditional routing based on whether the LLM made tool calls:
@@ -483,6 +622,7 @@ graph = builder.compile()
 
 
 
+
 ### State injection
 
 Tools can access the current graph state through [`ToolRuntime`](https://reference.langchain.com/python/langchain/tools/#langchain.tools.ToolRuntime):
@@ -501,6 +641,7 @@ tool_node = ToolNode([get_message_count])
 ```
 
 
+
 For more details on accessing state, context, and long-term memory from tools, see [Access context](#access-context).
 
 ## Prebuilt tools
@@ -517,9 +658,11 @@ Refer to the individual [chat model integration pages](/oss/python/integrations/
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/tools.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

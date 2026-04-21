@@ -134,9 +134,9 @@ Let's use this retriever to prepare a (self) query for a person:
 
 ```typescript
 const queryPrompt = "Which person is not active?"
-const retreivedDocs = await retriever.invoke(queryPrompt);
+const retrievedDocs = await retriever.invoke(queryPrompt);
 
-for (const doc of retreivedDocs){
+for (const doc of retrievedDocs){
   console.log("-".repeat(80));
   console.log(doc.pageContent + " " + JSON.stringify(doc.metadata));
 }
@@ -149,9 +149,11 @@ Second {"name":"bob","is_active":false,"id":2,"height":5.7}
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/retrievers/self_query/hanavector_self_query.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -5,9 +5,10 @@ title: Quickstart
 This quickstart takes you from a simple setup to a fully functional AI agent in just a few minutes.
 
 <Tip>
-    **LangChain Docs MCP server**
+    **Using an AI coding assistant?**
 
-    If you're using an AI coding assistant or IDE (e.g. Claude Code or Cursor), you should install the [LangChain Docs MCP server](/use-these-docs) to get the most out of it. This ensures your agent has access to up-to-date LangChain documentation and examples.
+    - Install the [LangChain Docs MCP server](/use-these-docs) to give your agent access to up-to-date LangChain documentation and examples.
+    - Install [LangChain Skills](https://github.com/langchain-ai/langchain-skills) to improve your agent's performance on LangChain ecosystem tasks.
 </Tip>
 
 ## Requirements
@@ -22,7 +23,7 @@ Although these examples use Claude, you can use [any supported model](/oss/javas
 
 ## Build a basic agent
 
-Start by creating a simple agent that can answer questions and call tools. The agent will use Claude Sonnet 4.5 as its language model, a basic weather function as a tool, and a simple prompt to guide its behavior.
+Start by creating a simple agent that can answer questions and call tools. The agent will use Claude Sonnet 4.6 as its language model, a basic weather function as a tool, and a simple prompt to guide its behavior.
 
 
 
@@ -42,7 +43,7 @@ const getWeather = tool(
 );
 
 const agent = createAgent({
-  model: "claude-sonnet-4-5-20250929",
+  model: "claude-sonnet-4-6",
   tools: [getWeather],
 });
 
@@ -65,7 +66,7 @@ Next, build a practical weather forecasting agent that demonstrates key producti
 1. **Detailed system prompts** for better agent behavior
 2. **Create tools** that integrate with external data
 3. **Model configuration** for consistent responses
-4. **Structured output** for predictable results
+4. **[Structured output](/oss/javascript/langchain/structured-output)** for predictable results
 5. **Conversational memory** for chat-like interactions
 6. **Create and run the agent** to test the fully functional agent
 
@@ -161,7 +162,7 @@ Let's walk through each step:
         import { initChatModel } from "langchain";
 
         const model = await initChatModel(
-          "claude-sonnet-4-5-20250929",
+          "claude-sonnet-4-6",
           { temperature: 0.5, timeout: 10, maxTokens: 1000 }
         );
         ```
@@ -172,7 +173,7 @@ Let's walk through each step:
     <Step title="Define response format">
 
 
-        Optionally, define a structured response format if you need the agent responses to match
+        Optionally, define a [structured response format](/oss/javascript/langchain/structured-output) if you need the agent responses to match
         a specific schema.
 
         ```ts
@@ -209,7 +210,7 @@ Let's walk through each step:
         import { createAgent } from "langchain";
 
         const agent = createAgent({
-          model: "claude-sonnet-4-5-20250929",
+          model: "claude-sonnet-4-6",
           systemPrompt: systemPrompt,
           tools: [getUserLocation, getWeather],
           responseFormat,
@@ -294,7 +295,7 @@ const getUserLocation = tool(
 
 // Configure model
 const model = await initChatModel(
-  "claude-sonnet-4-5-20250929",
+  "claude-sonnet-4-6",
   { temperature: 0 }
 );
 
@@ -361,9 +362,11 @@ Congratulations! You now have an AI agent that can:
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/quickstart.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

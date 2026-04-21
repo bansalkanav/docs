@@ -25,7 +25,7 @@ pip install -qU langchain-community clickhouse-connect
 
 There are no credentials for this notebook, just make sure you have installed the packages as shown above.
 
-If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.langchain.com/langsmith/home) API key by uncommenting below:
+If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
 
 ```python
 os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -189,7 +189,7 @@ for res in results:
 
 #### Other search methods
 
-There are a variety of other search methods that are not covered in this notebook, such as MMR search or searching by vector. For a full list of the search abilities available for `Clickhouse` vector store check out the [API reference](https://python.langchain.com/api_reference/community/vectorstores/langchain_community.vectorstores.clickhouse.Clickhouse.html).
+There are a variety of other search methods that are not covered in this notebook, such as MMR search or searching by vector.
 
 ### Query by turning into retriever
 
@@ -213,19 +213,17 @@ For guides on how to use this vector store for retrieval-augmented generation (R
 - [How-to: Question and answer with RAG](https://python.langchain.com/docs/how_to/#qa-with-rag)
 - [Retrieval conceptual docs](https://python.langchain.com/docs/concepts/retrieval)
 
-For more, check out a complete RAG template using Astra DB [here](https://github.com/langchain-ai/langchain/tree/master/templates/rag-astradb).
+For more, check out the [complete RAG template using Astra DB](https://github.com/langchain-ai/langchain/tree/master/templates/rag-astradb).
 
 ---
 
-## API reference
-
-For detailed documentation of all `Clickhouse` features and configurations head to the [API reference](https://python.langchain.com/api_reference/community/vectorstores/langchain_community.vectorstores.clickhouse.Clickhouse.html).
-
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/vectorstores/clickhouse.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

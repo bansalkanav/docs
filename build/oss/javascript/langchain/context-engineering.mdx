@@ -91,7 +91,7 @@ Control what goes into each model call - instructions, available tools, which mo
         The full list of messages (conversation history) sent to the LLM.
     </Card>
     <Card title="Tools" icon="tool" href="#tools">
-        Utilities the agent has access to to take actions.
+        Utilities the agent has access to for taking actions.
     </Card>
     <Card title="Model" icon="cpu" href="#model">
         The actual model (including configuration) to be called.
@@ -117,7 +117,7 @@ The system prompt sets the LLM's behavior and capabilities. Different users, con
     import { createAgent } from "langchain";
 
     const agent = createAgent({
-      model: "gpt-4.1",
+      model: "gpt-5.4",
       tools: [...],
       middleware: [
         dynamicSystemPromptMiddleware((state) => {
@@ -154,7 +154,7 @@ The system prompt sets the LLM's behavior and capabilities. Different users, con
     type Context = z.infer<typeof contextSchema>;
 
     const agent = createAgent({
-      model: "gpt-4.1",
+      model: "gpt-5.4",
       tools: [...],
       contextSchema,
       middleware: [
@@ -197,7 +197,7 @@ The system prompt sets the LLM's behavior and capabilities. Different users, con
     type Context = z.infer<typeof contextSchema>;
 
     const agent = createAgent({
-      model: "gpt-4.1",
+      model: "gpt-5.4",
       tools: [...],
       contextSchema,
       middleware: [
@@ -272,7 +272,7 @@ Reference these files when answering questions.`;
     });
 
     const agent = createAgent({
-      model: "gpt-4.1",
+      model: "gpt-5.4",
       tools: [...],
       middleware: [injectFileContext],
     });
@@ -392,7 +392,15 @@ ${rules.join("\n")}`;
 
 The examples above use `wrap_model_call` to make **transient** updates - modifying what messages are sent to the model for a single call without changing what's saved in state.
 
-For **persistent** updates that modify state (like the summarization example in [Life-cycle Context](#summarization)), use life-cycle hooks like `before_model` or `after_model` to permanently update the conversation history. See the [middleware documentation](/oss/javascript/langchain/middleware) for more details.
+For **persistent** updates that modify state, you can:
+
+
+
+- Return a [`Command`](https://reference.langchain.com/javascript/langchain-langgraph/index/Command) directly from `wrapModelCall` to inject state updates from the model call layer.
+- Use life-cycle hooks like `beforeModel`, `afterModel`, or `wrapToolCall` (for tool returns) to update the conversation history. See the [middleware documentation](/oss/javascript/langchain/middleware) for more details.
+
+
+See [State updates](/oss/javascript/langchain/middleware/custom#state-updates) for more information.
 </Note>
 
 ### Tools
@@ -558,9 +566,9 @@ might change during an agent run.
     import { createMiddleware, initChatModel } from "langchain";
 
     // Initialize models once outside the middleware
-    const largeModel = initChatModel("claude-sonnet-4-5-20250929");
-    const standardModel = initChatModel("gpt-4.1");
-    const efficientModel = initChatModel("gpt-4.1-mini");
+    const largeModel = initChatModel("claude-sonnet-4-6");
+    const standardModel = initChatModel("gpt-5.4");
+    const efficientModel = initChatModel("gpt-5.4-mini");
 
     const stateBasedModel = createMiddleware({
       name: "StateBasedModel",
@@ -599,9 +607,9 @@ might change during an agent run.
 
     // Initialize available models once
     const MODEL_MAP = {
-      "gpt-4.1": initChatModel("gpt-4.1"),
-      "gpt-4.1-mini": initChatModel("gpt-4.1-mini"),
-      "claude-sonnet": initChatModel("claude-sonnet-4-5-20250929"),
+      "gpt-5.4": initChatModel("gpt-5.4"),
+      "gpt-5.4-mini": initChatModel("gpt-5.4-mini"),
+      "claude-sonnet": initChatModel("claude-sonnet-4-6"),
     };
 
     const storeBasedModel = createMiddleware({
@@ -645,9 +653,9 @@ might change during an agent run.
     });
 
     // Initialize models once outside the middleware
-    const premiumModel = initChatModel("claude-sonnet-4-5-20250929");
-    const standardModel = initChatModel("gpt-4.1");
-    const budgetModel = initChatModel("gpt-4.1-mini");
+    const premiumModel = initChatModel("claude-sonnet-4-6");
+    const standardModel = initChatModel("gpt-5.4");
+    const budgetModel = initChatModel("gpt-5.4-mini");
 
     const contextBasedModel = createMiddleware({
       name: "ContextBasedModel",
@@ -786,16 +794,14 @@ Dynamic response format selection adapts schemas based on user preferences, conv
         const store = request.runtime.store;  // [!code highlight]
         const userPrefs = await store.get(["preferences"], userId);  // [!code highlight]
 
-        if (userPrefs) {
-          const style = userPrefs.value?.responseStyle || "concise";
-          if (style === "verbose") {
-            request.responseFormat = verboseResponse;  // [!code highlight]
-          } else {
-            request.responseFormat = conciseResponse;  // [!code highlight]
-          }
-        }
+        const style = userPrefs?.value?.responseStyle || "concise";
+        const responseFormat =
+          style === "verbose" ? verboseResponse : conciseResponse;  // [!code highlight]
 
-        return handler(request);
+        return handler({
+          ...request,
+          responseFormat,
+        });
       },
     });
     ```
@@ -968,7 +974,7 @@ Most real-world tools need more than just the LLM's parameters. They need user I
     );
 
     const agent = createAgent({
-      model: "gpt-4.1",
+      model: "gpt-5.4",
       tools: [fetchUserData],
       contextSchema,
     });
@@ -1089,11 +1095,11 @@ LangChain offers built-in middleware for this:
 import { createAgent, summarizationMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4.1",
+  model: "gpt-5.4",
   tools: [...],
   middleware: [
     summarizationMiddleware({
-      model: "gpt-4.1-mini",
+      model: "gpt-5.4-mini",
       trigger: { tokens: 4000 },
       keep: { messages: 20 },
     }),
@@ -1132,9 +1138,11 @@ For a complete list of built-in middleware, available hooks, and how to create c
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/context-engineering.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

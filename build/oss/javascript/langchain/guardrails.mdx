@@ -58,7 +58,7 @@ The PII middleware supports multiple strategies for handling detected PII:
 import { createAgent, piiRedactionMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4.1",
+  model: "gpt-5.4",
   tools: [customerServiceTool, emailTool],
   middleware: [
     // Redact emails in user input before sending to model
@@ -133,7 +133,7 @@ import { createAgent, humanInTheLoopMiddleware } from "langchain";
 import { MemorySaver, Command } from "@langchain/langgraph";
 
 const agent = createAgent({
-  model: "gpt-4.1",
+  model: "gpt-5.4",
   tools: [searchTool, sendEmailTool, deleteDatabaseTool],
   middleware: [
     humanInTheLoopMiddleware({
@@ -227,7 +227,7 @@ const contentFilterMiddleware = (bannedKeywords: string[]) => {
 import { createAgent } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4.1",
+  model: "gpt-5.4",
   tools: [searchTool, calculatorTool],
   middleware: [
     contentFilterMiddleware(["hack", "exploit", "malware"]),
@@ -251,7 +251,7 @@ Use "after agent" hooks to validate final outputs once before returning to the u
 import { createMiddleware, AIMessage, initChatModel } from "langchain";
 
 const safetyGuardrailMiddleware = () => {
-  const safetyModel = initChatModel("gpt-4.1-mini");
+  const safetyModel = initChatModel("gpt-5.4-mini");
 
   return createMiddleware({
     name: "SafetyGuardrailMiddleware",
@@ -299,7 +299,7 @@ const safetyGuardrailMiddleware = () => {
 import { createAgent } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4.1",
+  model: "gpt-5.4",
   tools: [searchTool, calculatorTool],
   middleware: [safetyGuardrailMiddleware()],
 });
@@ -320,7 +320,7 @@ You can stack multiple guardrails by adding them to the middleware array. They e
 import { createAgent, piiRedactionMiddleware, humanInTheLoopMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4.1",
+  model: "gpt-5.4",
   tools: [searchTool, sendEmailTool],
   middleware: [
     // Layer 1: Deterministic input filter (before agent)
@@ -357,13 +357,15 @@ const agent = createAgent({
 - [Middleware documentation](/oss/javascript/langchain/middleware) - Complete guide to custom middleware
 - [Middleware API reference](https://reference.langchain.com/python/langchain/middleware/) - Complete guide to custom middleware
 - [Human-in-the-loop](/oss/javascript/langchain/human-in-the-loop) - Add human review for sensitive operations
-- [Testing agents](/oss/javascript/langchain/test) - Strategies for testing safety mechanisms
+- [Testing agents](/oss/javascript/langchain/test/) - Strategies for testing safety mechanisms
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/guardrails.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

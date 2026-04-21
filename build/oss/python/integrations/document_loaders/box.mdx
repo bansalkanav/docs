@@ -5,7 +5,7 @@ description: "Integrate with the BoxLoader and BoxBlobLoader document loader usi
 
 The `langchain-box` package provides two methods to index your files from Box: `BoxLoader` and `BoxBlobLoader`. `BoxLoader` allows you to ingest text representations of files that have a text representation in Box. The `BoxBlobLoader` allows you download the blob for any document or image file for processing with the blob parser of your choice.
 
-This notebook details getting started with both of these. For detailed documentation of all BoxLoader features and configurations head to the API Reference pages for [BoxLoader](https://python.langchain.com/api_reference/box/document_loaders/langchain_box.document_loaders.box.BoxLoader.html) and [BoxBlobLoader](https://python.langchain.com/api_reference/box/document_loaders/langchain_box.blob_loaders.box.BoxBlobLoader.html).
+This notebook details getting started with both of these.
 
 ## Overview
 
@@ -25,15 +25,15 @@ The `BoxLoader` will skip files without a text representation, while the `BoxBlo
 
 | Class | Package | Local | Serializable | JS support|
 | :--- | :--- | :---: | :---: |  :---: |
-| [BoxLoader](https://python.langchain.com/api_reference/box/document_loaders/langchain_box.document_loaders.box.BoxLoader.html) | [langchain_box](https://python.langchain.com/api_reference/box/index.html) | ✅ | ❌ | ❌ |
-| [BoxBlobLoader](https://python.langchain.com/api_reference/box/document_loaders/langchain_box.blob_loaders.box.BoxBlobLoader.html) | [langchain_box](https://python.langchain.com/api_reference/box/index.html) | ✅ | ❌ | ❌ |
+| `BoxLoader` | [`langchain_box`](https://reference.langchain.com/python/langchain-box) | ✅ | ❌ | ❌ |
+| `BoxBlobLoader` | [`langchain_box`](https://reference.langchain.com/python/langchain-box) | ✅ | ❌ | ❌ |
 
 ### Loader features
 
 | Source | Document Lazy Loading | Async Support
 | :---: | :---: | :---: |
-| BoxLoader | ✅ | ❌ |
-| BoxBlobLoader | ✅ | ❌ |
+| `BoxLoader` | ✅ | ❌ |
+| `BoxBlobLoader` | ✅ | ❌ |
 
 ## Setup
 
@@ -58,7 +58,7 @@ box_developer_token = getpass.getpass("Enter your Box Developer Token: ")
 Enter your Box Developer Token:  ········
 ```
 
-To enable automated tracing of your model calls, set your [LangSmith](https://docs.langchain.com/langsmith/home) API key:
+To enable automated tracing of your model calls, set your [LangSmith](/langsmith/home) API key:
 
 ```python
 os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -263,19 +263,17 @@ The connector will add this field to the list of fields the integration needs to
 
 ---
 
-## API reference
-
-For detailed documentation of all BoxLoader features and configurations head to the [API reference](https://python.langchain.com/api_reference/box/document_loaders/langchain_box.document_loaders.box.BoxLoader.html)
-
 ## Help
 
 If you have questions, you can check out our [developer documentation](https://developer.box.com) or reach out to use in our [developer community](https://community.box.com).
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/box.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

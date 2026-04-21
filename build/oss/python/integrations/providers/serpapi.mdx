@@ -8,7 +8,7 @@ It is broken into two parts: installation and setup, and then references to the 
 
 ## Installation and setup
 - Install requirements with `pip install google-search-results`
-- Get a SerpApi API key from [here](https://serpapi.com/manage-api-key) and set it as an environment variable (`SERPAPI_API_KEY`)
+- Get a SerpApi API key from the [SerpAPI API key management page](https://serpapi.com/manage-api-key) and set it as an environment variable (`SERPAPI_API_KEY`)
 
 ## Wrappers
 
@@ -31,13 +31,15 @@ from langchain_community.agent_toolkits.load_tools import load_tools
 tools = load_tools(["serpapi"])
 ```
 
-For more information on this, see [this page](/oss/python/integrations/tools)
+For more information on this, see [Tools](/oss/python/integrations/tools)
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/providers/serpapi.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

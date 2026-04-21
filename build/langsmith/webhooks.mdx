@@ -133,6 +133,39 @@ When delivering events to your webhook endpoint we follow these guidelines
 - If your endpoint returns a 4xx status code, we declare the delivery failed and do not retry.
 - Anything your endpoint returns in the body will be ignored
 
+## Ensuring evaluations complete before the webhook fires
+
+By default, automation rules run on independent schedules. A webhook rule and an online evaluator rule scanning the same project can pick up the same run at different times, so the webhook may fire before the evaluator has had a chance to score the run.
+
+The recommended solution is to add a _feedback filter_ to your webhook rule. This tells LangSmith to send a run to your webhook only once it already carries the expected score, regardless of when it was evaluated.
+
+For example, you have an online evaluator that produces an `answer_usefulness` score, and a webhook rule that should only fire after that score is present.
+
+1. Open the webhook automation rule in the **Automations** tab of your tracing project.
+1. Edit the rule's filter to require the feedback key. In the filter builder, add a condition:
+
+   ```
+   has(feedback_key, "answer_usefulness")
+   ```
+
+1. Save the rule.
+
+Now the webhook rule will skip any run that does not yet have an `answer_usefulness` score. When the evaluator rule runs and attaches the score, the webhook rule's next polling cycle will pick up those runs and send them to your endpoint.
+
+<Tip>
+You can also filter on the score value itself, not just its presence. For example, to only send runs with a low usefulness score to your endpoint:
+
+```
+has(feedback_key, "answer_usefulness") and feedback_score < 0.5
+```
+
+For the full filter syntax, refer to [Filter traces](/langsmith/filter-traces-in-application).
+</Tip>
+
+<Note>
+Within a single automation rule, actions execute in a fixed order: annotation queue → dataset → webhook → evaluation. This means that if your webhook and evaluator are configured on the **same** rule, the webhook will always fire before the evaluation completes on that rule's run. To ensure the webhook receives evaluation scores, keep the webhook and evaluator as **separate rules** and use a feedback filter on the webhook rule as described in the example.
+</Note>
+
 ## Example with Modal
 
 ### Setup
@@ -166,8 +199,7 @@ Next, you will need to set up some secrets in Modal.
 First, LangSmith will need to authenticate to Modal by passing in a secret.
 The easiest way to do this is to pass in a secret in the query parameters.
 To validate this secret, we will need to add a secret in _Modal_ to validate it.
-We will do that by creating a Modal secret.
-You can see instructions for secrets [here](https://modal.com/docs/guide/secrets).
+We will do that by [creating a Modal secret](https://modal.com/docs/guide/secrets).
 For this purpose, let's call our secret `ls-webhook` and have it set an environment variable with the name `LS_WEBHOOK`.
 
 We can also set up a LangSmith secret - luckily there is already an integration template for this!
@@ -224,7 +256,7 @@ def f(data: dict, secret: str = Query(...)):
     return "success!"
 ```
 
-We can now deploy this easily with `modal deploy ...` (see docs [here](https://modal.com/docs/guide/managing-deployments)).
+We can now deploy this easily with `modal deploy ...` (see [managing Modal deployments](https://modal.com/docs/guide/managing-deployments)).
 
 You should now get something like:
 
@@ -255,9 +287,11 @@ Replace `{SECRET}` with the secret key you created to access the Modal service.
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/webhooks.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

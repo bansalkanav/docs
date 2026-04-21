@@ -106,7 +106,7 @@ async def main():
 
     # Initialize AI services
     stt = WhisperSTTService()
-    llm = OpenAILLMService(model="gpt-4.1-mini")
+    llm = OpenAILLMService(model="gpt-5.4-mini")
     tts = OpenAITTSService(voice="alloy")
 
     # Set up conversation context with system prompt
@@ -334,7 +334,7 @@ If you're getting import errors:
 
 If responses are slow:
 
-1. **Use faster models**: Switch to `gpt-4.1-mini` for the LLM (already in the tutorial).
+1. **Use faster models**: Switch to `gpt-5.4-mini` for the LLM (already in the tutorial).
 2. **Check network**: Ensure stable internet connection for API calls.
 3. **Local STT**: Consider using local Whisper instead of API-based services.
 
@@ -344,9 +344,11 @@ For issues with the advanced audio recording features, see the [complete demo do
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/trace-with-pipecat.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

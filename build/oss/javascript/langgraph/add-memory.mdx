@@ -137,7 +137,7 @@ const graph = builder.compile({ checkpointer });
 ```
 
 
-If you want the subgraph to have its own memory, you can compile it with the appropriate checkpointer option. This is useful in [multi-agent](/oss/javascript/langchain/multi-agent) systems, if you want agents to keep track of their internal message histories.
+You can configure subgraph-specific checkpointing behavior. See [subgraph persistence](/oss/javascript/langgraph/use-subgraphs#subgraph-persistence) for details on persistence levels including interrupt support and stateful continuations.
 
 
 
@@ -345,7 +345,7 @@ const items = await store.search(["user_123", "memories"], {
       messages: MessagesValue,
     });
 
-    const model = new ChatOpenAI({ model: "gpt-4.1-mini" });
+    const model = new ChatOpenAI({ model: "gpt-5.4-mini" });
 
     // Create store with semantic search enabled
     const embeddings = new OpenAIEmbeddings({ model: "text-embedding-3-small" });
@@ -847,9 +847,11 @@ We recommend running migrations as a dedicated deployment step, or you can ensur
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/add-memory.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

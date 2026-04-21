@@ -256,7 +256,7 @@ from langchain.agents import create_agent
 
 # Set up the tools and LLM
 tools = [vectara_rag_tool]
-model = ChatOpenAI(model="gpt-4.1-mini", temperature=0)
+model = ChatOpenAI(model="gpt-5.4-mini", temperature=0)
 
 # Construct the ReAct agent
 agent_executor = create_agent(model, tools)
@@ -315,9 +315,11 @@ For details checkout implementation of Vectara [tools](https://github.com/vectar
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/vectara.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

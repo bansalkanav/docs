@@ -5,6 +5,10 @@ sidebarTitle: Upgrade an installation
 
 For general upgrade instructions, please follow the instructions below. Certain versions may have specific upgrade instructions, which will be detailed in more specific upgrade guides.
 
+<Warning>
+Downgrades are not officially supported. LangSmith upgrades may include database migrations and other changes that are not backward-compatible. If you need to roll back to a previous version, contact [support](mailto:support@langchain.dev) for guidance.
+</Warning>
+
 ## Kubernetes(Helm)
 
 If you don't have the repo added, run the following command to add it:
@@ -153,9 +157,11 @@ The LangSmith UI should be visible/operational
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/self-host-upgrades.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

@@ -39,7 +39,7 @@ description: "Integrate with chat models using LangChain JavaScript."
         ```typescript
         import { ChatOpenAI } from "@langchain/openai";
 
-        const model = new ChatOpenAI({ model: "gpt-4.1-mini" });
+        const model = new ChatOpenAI({ model: "gpt-5.4-mini" });
         ```
         ```javascript
         await model.invoke("Hello, world!")
@@ -230,7 +230,7 @@ description: "Integrate with chat models using LangChain JavaScript."
     **While these LangChain classes support the indicated advanced feature**, you may need to refer to provider-specific documentation to learn which hosted models or backends support the feature.
 </Info>
 
-| Model | Stream | [Tool Calling](/oss/javascript/langchain/tools/) | [`withStructuredOutput()`](/oss/javascript/langchain/structured-output#the-.withstructuredoutput-method) | [Multimodal](/oss/javascript/langchain/messages#multimodal) |
+| Model | Stream | [Tool Calling](/oss/javascript/langchain/tools/) | [`withStructuredOutput()`](/oss/javascript/langchain/models#structured-output) | [`Multimodal`](/oss/javascript/langchain/messages#multimodal) |
 |-|-|-|-|-|
 | [`ChatOpenAI`](/oss/javascript/integrations/chat/openai/) | ✅ | ✅ | ✅ | ✅ |
 | [`ChatAnthropic`](/oss/javascript/integrations/chat/anthropic/) | ✅ | ✅ | ✅ | ✅ |
@@ -510,9 +510,11 @@ Certain model providers offer endpoints that are compatible with OpenAI's (legac
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/chat/index.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

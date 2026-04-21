@@ -97,7 +97,7 @@ LangGraph v1 comes with a few enhancements when interacting with a LangGraph app
 
 The low-level `toLangGraphEventStream` helper has been removed. Streaming responses are now handled natively by the SDK, and you can select the wire format via passing in the `encoding` format to `graph.stream`. This makes switching between SSE and normal JSON responses straightforward without changing UI logic.
 
-See the [migration guide](/oss/javascript/migrate/langgraph-v1#stream-encoding) for more information.
+See the [migration guide](/oss/javascript/migrate/langgraph-v1#event-stream-encoding) for more information.
 
 ### Custom transports in `useStream`
 
@@ -147,9 +147,11 @@ Please report any issues discovered with 1.0 on [GitHub](https://github.com/lang
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/releases/langgraph-v1.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

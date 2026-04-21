@@ -14,7 +14,7 @@ This covers how to load document objects from pages in a Confluence space.
 ## Credentials
 
 - You'll need to set up an access token and provide it along with your confluence username in order to authenticate the request
-- You'll also need the `space key` for the space containing the pages to load as documents. This can be found in the url when navigating to your space e.g. `https://example.atlassian.net/wiki/spaces/{SPACE_KEY}`
+- You'll also need the `space key` for the space containing the pages to load as documents. This can be found in the URL when navigating to your space e.g. `https://example.atlassian.net/wiki/spaces/{SPACE_KEY}`
 - And you'll need to install `html-to-text` to parse the pages into plain text
 
 ```bash npm
@@ -57,9 +57,11 @@ if (username && accessToken) {
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/document_loaders/web_loaders/confluence.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

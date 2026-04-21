@@ -33,7 +33,7 @@ const manualRunResult = await sendEmailAction.invoke({
 console.log(manualRunResult);
 
 // Run the action using the OpenAI Functions agent.
-const llm = new ChatOpenAI({ model: "gpt-4.1-mini", temperature: 0 });
+const llm = new ChatOpenAI({ model: "gpt-5.4-mini", temperature: 0 });
 const agent = await initializeAgentExecutorWithOptions([sendEmailAction], llm, {
   agentType: "openai-functions",
   verbose: true,
@@ -55,9 +55,11 @@ Connery Action is a structured tool, so you can only use it in the agents suppor
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/javascript/integrations/tools/connery.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

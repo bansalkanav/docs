@@ -5,7 +5,7 @@ sidebarTitle: Use the Functional API
 
 
 
-The [**Functional API**](/oss/python/langgraph/functional-api) allows you to add LangGraph's key features — [persistence](/oss/python/langgraph/persistence), [memory](/oss/python/langgraph/add-memory), [human-in-the-loop](/oss/python/langgraph/interrupts), and [streaming](/oss/python/langgraph/streaming) — to your applications with minimal changes to your existing code.
+The [**Functional API**](/oss/python/langgraph/functional-api) allows you to add LangGraph's key features ([persistence](/oss/python/langgraph/persistence), [memory](/oss/python/langgraph/add-memory), [human-in-the-loop](/oss/python/langgraph/interrupts), and [streaming](/oss/python/langgraph/streaming)) to your applications with minimal changes to your existing code.
 
 <Tip>
 For conceptual information on the functional API, see [Functional API](/oss/python/langgraph/functional-api).
@@ -30,7 +30,7 @@ my_workflow.invoke({"value": 1, "another_value": 2})
 
 <Accordion title="Extended example: simple workflow">
   ```python
-  import uuid
+  from langchain_core.utils.uuid import uuid7
   from langgraph.func import entrypoint, task
   from langgraph.checkpoint.memory import InMemorySaver
 
@@ -54,7 +54,7 @@ my_workflow.invoke({"value": 1, "another_value": 2})
       return format_message(even).result()
 
   # Run the workflow with a unique thread ID
-  config = {"configurable": {"thread_id": str(uuid.uuid4())}}
+  config = {"configurable": {"thread_id": str(uuid7())}}
   result = workflow.invoke({"number": 7}, config=config)
   print(result)
   ```
@@ -94,7 +94,7 @@ my_workflow.invoke({"value": 1, "another_value": 2})
       return compose_essay(topic).result()
 
   # Execute the workflow
-  config = {"configurable": {"thread_id": str(uuid.uuid4())}}
+  config = {"configurable": {"thread_id": str(uuid7())}}
   result = workflow.invoke("the history of flight", config=config)
   print(result)
   ```
@@ -153,7 +153,7 @@ def graph(numbers: list[int]) -> list[str]:
       return "\n\n".join(paragraphs)
 
   # Run the workflow
-  config = {"configurable": {"thread_id": str(uuid.uuid4())}}
+  config = {"configurable": {"thread_id": str(uuid7())}}
   result = workflow.invoke(["quantum computing", "climate change", "history of aviation"], config=config)
   print(result)
   ```
@@ -222,7 +222,7 @@ def some_workflow(some_input: dict) -> int:
       return {"bar": result["foo"]}
 
   # Execute the workflow
-  config = {"configurable": {"thread_id": str(uuid.uuid4())}}
+  config = {"configurable": {"thread_id": str(uuid7())}}
   print(workflow.invoke(5, config=config))  # Output: {'bar': 10}
   ```
 
@@ -269,7 +269,7 @@ def my_workflow(inputs: dict) -> int:
       return {"product": result}
 
   # Execute the main workflow
-  config = {"configurable": {"thread_id": str(uuid.uuid4())}}
+  config = {"configurable": {"thread_id": str(uuid7())}}
   print(main.invoke({"x": 6, "y": 7}, config=config))  # Output: {'product': 42}
   ```
 
@@ -627,7 +627,7 @@ def review_tool_call(tool_call: ToolCall) -> Union[ToolCall, ToolMessage]:
 
 
 
-We can now update our [entrypoint](/oss/python/langgraph/functional-api#entrypoint) to review the generated tool calls. If a tool call is accepted or revised, we execute in the same way as before. Otherwise, we just append the [`ToolMessage`](https://reference.langchain.com/python/langchain-core/messages/tool/ToolMessage) supplied by the human. The results of prior tasks — in this case the initial model call — are persisted, so that they are not run again following the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt).
+We can now update our [entrypoint](/oss/python/langgraph/functional-api#entrypoint) to review the generated tool calls. If a tool call is accepted or revised, we execute in the same way as before. Otherwise, we just append the [`ToolMessage`](https://reference.langchain.com/python/langchain-core/messages/tool/ToolMessage) supplied by the human. The results of prior tasks—in this case the initial model call—are persisted, so that they are not run again following the [`interrupt`](https://reference.langchain.com/python/langgraph/types/interrupt).
 
 ```python
 from langgraph.checkpoint.memory import InMemorySaver
@@ -849,7 +849,7 @@ from langgraph.func import entrypoint, task
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain_anthropic import ChatAnthropic
 
-model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
+model = ChatAnthropic(model="claude-sonnet-4-6")
 
 @task
 def call_model(messages: list[BaseMessage]):
@@ -893,9 +893,11 @@ for chunk in workflow.stream([input_message], config, stream_mode="values"):
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/use-functional-api.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>

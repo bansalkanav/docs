@@ -17,7 +17,7 @@ from langchain.agents import create_agent
 from langchain.agents.middleware import SummarizationMiddleware, HumanInTheLoopMiddleware
 
 agent = create_agent(
-    model="gpt-4.1",
+    model="gpt-5.4",
     tools=[...],
     middleware=[
         SummarizationMiddleware(...),
@@ -61,16 +61,21 @@ Middleware exposes hooks before and after each of those steps:
     <Card title="Middleware API reference" icon="book" href="https://reference.langchain.com/python/langchain/middleware/">
         Complete API reference for middleware.
     </Card>
-    <Card title="Testing agents" icon="scale" href="/oss/python/langchain/test">
+    <Card title="Middleware integrations" icon="plug" href="/oss/python/integrations/middleware/">
+        Provider-specific middleware for Anthropic, AWS, OpenAI, and more.
+    </Card>
+    <Card title="Testing agents" icon="scale" href="/oss/python/langchain/test/">
         Test your agents with LangSmith.
     </Card>
 </CardGroup>
 
 ---
 
+<div className="source-links">
 <Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/middleware/overview.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Callout icon="terminal-2">
     [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Callout>
+</div>
